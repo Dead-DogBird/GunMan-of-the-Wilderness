@@ -1,0 +1,44 @@
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+
+public class SniperOpPlayer : OpPlayer
+{
+    // Start is called before the first frame update
+    new void Start()
+    {
+        base.Start();
+    }
+    
+    // Update is called once per frame
+    new void Update()
+    {
+        base.Update();
+    }
+    
+    protected override void FireBullet(float x, float y, float spread)
+    {
+        if (isUlt)
+            upCount--;
+        base.FireBullet(x, y, spread);
+    }
+
+    private int upCount = 5;
+    private bool isUlt;
+    protected override async UniTaskVoid UltAct(string data)
+    {
+        m_as.PlayOneShot(UltClip);
+        isUlt = true;
+        upCount = 5;
+        Demege += 10;
+        BulletSpeed += 0.2f;
+        await UniTask.WaitUntil(() => upCount == 0);
+        isUlt = false;
+        upCount = 5;
+        Demege -= 10;
+        BulletSpeed -= 0.2f;
+
+
+    }
+}

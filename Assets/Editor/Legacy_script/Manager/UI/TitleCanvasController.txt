@@ -1,0 +1,120 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
+public class TitleCanvasController : MonoBehaviour
+{
+    [SerializeField]
+    private Canvas[] canvass;
+    [SerializeField]
+    private int focusCanvas = 0;
+
+
+    [SerializeField] private Text loginResultText;
+    [SerializeField] private Text signinResultText;
+
+    [SerializeField] private InputField loginID;
+    [SerializeField] private InputField loginPw;
+
+    [SerializeField] private InputField signinID; 
+    [SerializeField] private InputField signinPw;
+    [SerializeField] private InputField signinConfirmPw;
+
+    private string _idBuffer;
+    void Start()
+    {
+        if(ServerManager.Instance is not null)
+            ServerManager.Instance.CanvasController = this;
+    }
+
+    [SerializeField] private float toYPos = 246;
+    [SerializeField] private float lerp = 25;
+    // Update is called once per frame
+    void Update()
+    {
+        foreach (var canvas in canvass)
+        {
+            if (canvas == canvass[focusCanvas])
+            {
+                canvas.transform.localPosition += ((new Vector3(0, toYPos) - canvas.transform.localPosition) / lerp );
+            }
+
+            canvas.transform.localPosition += ((new Vector3(0, -1800) - canvas.transform.localPosition) / lerp );
+        }
+    }
+
+    public void MoveCanvasButton(int i)
+    {
+        focusCanvas = i;
+    }
+    public void TryLogin()
+    {
+        if (ServerManager.Instance.MyIp == null)
+        {
+            ServerManager.Instance.SendMessege("0, ");
+            LoginResult(-1);
+            return;
+        }
+        
+        ServerManager.Instance.SendMessege($"1,{loginID.text},{loginPw.text}");
+        _idBuffer = loginID.text;
+    }
+
+    public void TrySignin()
+    {
+        if (ServerManager.Instance.MyIp == null)
+        {
+            ServerManager.Instance.SendMessege("0, ");
+            SigninResult(-1);
+            return;
+        }
+        if (!string.Equals(signinPw.text, signinConfirmPw.text))
+        {
+            signinResultText.text = "비밀번호 확인이 맞지 않습니다.";
+            return;
+        }
+        ServerManager.Instance.SendMessege($"2,{signinID.text},{signinPw.text}");
+    }
+
+
+    public void LoginResult(int id)
+    {
+        switch (id)
+        {
+            case 1:
+                //로그인 로직
+                ServerManager.Instance.MyID = _idBuffer;
+                LoadingSceneManager.LoadScene("2.MainMenu");
+                break;
+            case 11:
+                loginResultText.text = "존재하지 않는 계정입니다.";
+                break;
+            case 12:
+                loginResultText.text = "비밀번호가 맞지 않습니다.";
+                break;
+            case -1:
+                loginResultText.text = "서버와 연결되지\n않았습니다.\n다시 시도해주세요.";
+                break;
+        }
+
+    }
+    public void SigninResult(int id)
+    {
+        if(id == 21)
+            signinResultText.text = "이미 존재하는 아이디 입니다.";
+
+        if (id == 2)
+        {
+            signinResultText.color = new Color(0/255f, 89/255f, 255/255f);
+            signinResultText.text = "계정이 생성되었습니다!";
+        }
+        if (id == -1)
+        loginResultText.text = "서버와 연결되지\n않았습니다.\n다시 시도해주세요.";
+    }
+
+    void MoveToMainmenu()
+    {
+        
+    }
+}

@@ -1,0 +1,43 @@
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+
+public class DMR_Player : Player_controll
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        base.Start();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        base.Update();
+    }
+    
+    
+    [SerializeField] private GameObject Turret;
+    private Turret myTurret;
+    public bool isTurretDestroy = true;
+    public override void ReceveAct(string act)
+    {
+        base.ReceveAct(act);
+        var data = act.Split(':');
+        if (data[0]== "TFire"&&!isTurretDestroy)
+        {
+            myTurret.TurretFire();
+        }
+    }
+
+    protected override async UniTaskVoid Ultact(string data)
+    {
+        m_as.PlayOneShot(UltClip);
+        isChargeUlt = false;
+        myTurret = Instantiate(Turret, transform.position, Quaternion.identity).GetComponent<Turret>();
+        myTurret.Owner = this;
+        await UniTask.WaitUntil(() => isTurretDestroy == true);
+        isChargeUlt = true;
+    }
+}

@@ -1,0 +1,42 @@
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+
+public class Sniper_Player : Player_controll
+{
+    // Start is called before the first frame update
+    new void Start()
+    {
+        base.Start();
+    }
+
+    // Update is called once per frame
+    new void Update()
+    {
+        base.Update();
+    }
+
+    private int _upBullet = 5;
+    protected override UniTaskVoid Fire()
+    {
+        if(isChargeUlt==false)
+            _upBullet--;
+        return base.Fire();
+    }
+
+    protected override async UniTaskVoid Ultact(string data)
+    {
+        m_as.PlayOneShot(UltClip);
+        IngameUIManager.Instance.GetSniperHud(true);
+        isChargeUlt = false;
+        Demege += 10;
+        BulletSpeed += 0.2f;
+        await UniTask.WaitUntil(() => _upBullet == 0);
+        isChargeUlt = true;
+        IngameUIManager.Instance.GetSniperHud(false);
+        Demege -= 10;
+        BulletSpeed -= 0.2f;
+        _upBullet = 5;
+    }
+}

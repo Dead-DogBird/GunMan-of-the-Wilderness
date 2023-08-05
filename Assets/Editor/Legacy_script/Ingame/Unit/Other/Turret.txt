@@ -1,0 +1,64 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+
+public class Turret : MonoBehaviour
+{
+   // public Player_controll Owner;
+   public DMR_Player Owner;
+    [SerializeField] private GameObject bullet;
+
+    public GameObject Thunder;
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+        Destroy(gameObject,5);
+        FireTurret().Forget();
+        Owner.isTurretDestroy = false;
+        Instantiate(Thunder, transform.position, Quaternion.identity);
+    }
+    
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    private void OnDestroy()
+    {
+        Owner.isTurretDestroy = true;
+        isDestroy = true;
+    }
+
+    private bool isDestroy = false;
+    async UniTaskVoid FireTurret()
+    {
+        while (!isDestroy)
+        {
+            if(!ServerManager.Instance.OpPlayer.isDie) 
+                ServerManager.Instance.SendIngameData($"TFire");
+            await UniTask.Delay(TimeSpan.FromSeconds(0.5f), ignoreTimeScale: false);
+        }
+    }
+
+    [SerializeField] private Color orbitColor;
+    public void TurretFire()
+    {
+        
+        Instantiate(Thunder, transform.position, Quaternion.identity);
+        Bullet temp = Instantiate(bullet, transform.position, Quaternion.identity).GetComponent<Bullet>();
+        temp.toVector =
+            temp.VectorRotation(
+                temp.PointDirection(transform.position, ServerManager.Instance.OpPlayer.transform.position));
+        temp.Damege = 40;
+        temp.speed = 0.5f;
+        temp.priColor = orbitColor;
+        temp.OrbitDelay = 0.004f;
+        temp.transform.rotation = Quaternion.Euler(0, 0, 
+            temp.PointDirection(transform.position,ServerManager.Instance.OpPlayer.transform.position));
+    }
+    
+}

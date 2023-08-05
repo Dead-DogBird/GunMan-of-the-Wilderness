@@ -1,0 +1,104 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Random = UnityEngine.Random;
+
+public class GameManager_old : MonoSingleton<GameManager>
+{
+    [SerializeField] private GameObject[] playerChars;
+    [SerializeField] private GameObject[] opplayerChars;
+    
+    private GameObject player;
+    private GameObject opplayer;
+    [SerializeField] private float gameTime_ = 150 ;
+    [SerializeField] private AudioClip[] musics;
+    AudioSource a_s;
+    public float GameTime {
+        get
+        {
+            return gameTime_;
+        }
+    }
+
+    private int myScore_;
+    private int opScore_;
+    public Transform[] RandomPoints;
+    public OrbitPoolManager orbitPoolManager;
+    public int myScore
+    {
+        set{}
+        get { return myScore_; }
+    }
+
+    public int opScore
+    {
+        set{}
+        get
+        {
+            return opScore_;
+        }
+    }
+
+    void Start()
+    {
+        a_s = GetComponent<AudioSource>();
+        ServerManager.Instance.EnterGameSecene();
+        orbitPoolManager = GetComponent<OrbitPoolManager>();
+        a_s.clip = musics[Random.Range(0, 3)];
+        a_s.Play();
+    }
+
+    void Update()
+    {
+        if (!ServerManager.Instance.isStart&&ServerManager.Instance.isgameEnd_) return;
+        
+        if (gameTime_ > 0)
+            gameTime_ -= Time.deltaTime;
+        
+        if(gameTime_ <= 0)
+        {
+            ServerManager.Instance.SendMessege($"5,{ServerManager.Instance.LocalID_},{ServerManager.Instance.Dkey_}");
+            ServerManager.Instance.isStart = false;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+
+    }
+
+    public void InitGame(string datas)
+    {
+        var dataparse = datas.Split(',');
+        if (int.Parse(dataparse[1]) == ServerManager.Instance.LocalID_) //내 캐릭터 생성
+        {
+            
+                player = Instantiate(playerChars[int.Parse(dataparse[0])], 
+                    new Vector3((ServerManager.Instance.LocalID_ == 0)? -10: 10, 1), Quaternion.identity);
+                ServerManager.Instance.player = player.GetComponent<Player_controll>();
+        }
+    
+        else //상대 캐릭터 생성
+        {
+            opplayer = Instantiate(opplayerChars[int.Parse(dataparse[0])],
+                new Vector3((ServerManager.Instance.LocalID_ == 0)? 10: -10,1),Quaternion.identity);
+            ServerManager.Instance.OpPlayer = opplayer.GetComponent<OpPlayer>();
+        }
+        
+        ServerManager.Instance.GameStartReddy((player != null) && (opplayer != null)); // 둘 다 생성이 완료되었으면 서버에게 게임 준비가 되었다고 알림.
+    }
+
+    public void GetMyScore()
+    {
+        myScore_++;
+        IngameUIManager.Instance.GetScoreText(myScore_,true);
+        IngameUIManager.Instance.onEliminate();
+    }
+
+    public void GetOpScore()
+    {
+        opScore_++;
+        IngameUIManager.Instance.GetScoreText(opScore_,false);
+    }
+}

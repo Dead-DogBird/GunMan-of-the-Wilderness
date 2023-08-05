@@ -1,0 +1,71 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+using Random = UnityEngine.Random;
+
+public class ShotGunPlayer : Player_controll
+{
+
+    // Start is called before the first frame update
+    new void Start()
+    {
+        base.Start();
+        AllMag = 2;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        base.Update();
+    }
+
+    private bool isInfinity = false;
+    protected override async UniTaskVoid Fire()
+    {
+        firecool = false;
+        if(!isInfinity)
+            nowMag--;
+        IngameUIManager.Instance.playerMag = nowMag;
+        ServerManager.Instance.SendIngameData($"Fire:{Camera.main.ScreenToWorldPoint(Input.mousePosition).x}:{Camera.main.ScreenToWorldPoint(Input.mousePosition).y}:{Random.Range(-Spread, Spread)}");
+        await UniTask.Delay(TimeSpan.FromSeconds(fireDelay), ignoreTimeScale: false);
+        firecool = true;
+    }
+
+    protected override void FireBullet(float x, float y,float spread)
+    {
+        m_as.Play();
+        if (nowMag < 0)
+        {
+            Reload().Forget();
+            return;
+        }
+        Instantiate(GunFlame, gunHole.position, Quaternion.identity);
+        for (int i = 2; i > -3; i--)
+        {
+            Bullet temp = Instantiate(_bullet, gunHole.position, Quaternion.identity).GetComponent<Bullet>();
+           temp.toVector =
+            temp.VectorRotation((temp.PointDirection(gunHole.position,
+                new Vector3(x, y))+5*i)+spread);
+           temp.Damege = Demege;
+           temp.speed = BulletSpeed;
+           temp.GetComponent<SpriteRenderer>().color = BulletColor;
+           temp.priColor = OrbitColor;
+        }
+        
+    }
+    protected override async UniTaskVoid Ultact(string data)
+    {
+        m_as.PlayOneShot(UltClip);
+        isInfinity = true;
+        isChargeUlt = !isInfinity;
+        IngameUIManager.Instance.GetShotgunHud(true);
+        await UniTask.Delay(TimeSpan.FromSeconds(2.5f), ignoreTimeScale: false);
+        isInfinity = false;
+        isChargeUlt = !isInfinity;
+        IngameUIManager.Instance.GetShotgunHud(false);
+    }
+}
+
+

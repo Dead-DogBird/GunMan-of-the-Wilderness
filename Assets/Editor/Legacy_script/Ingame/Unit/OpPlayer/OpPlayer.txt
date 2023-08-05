@@ -1,0 +1,203 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+using Random = UnityEngine.Random;
+
+public class OpPlayer : MonoBehaviour
+{
+    public float jumpForce = 300f;
+    private Rigidbody2D _playerRigidbody;
+    [SerializeField] protected GameObject GunFlame;
+    
+    [SerializeField] protected AudioSource m_as;
+    [SerializeField] protected AudioClip dieClip;
+    [SerializeField] protected AudioClip UltClip;
+
+    [SerializeField] protected AudioClip HitClip;
+    // Start is called before the first frame update
+    protected void Start()
+    {
+        _playerRigidbody = GetComponent<Rigidbody2D>();
+        ServerManager.Instance.OpPlayer = this;
+        m_as = GetComponent<AudioSource>();
+    }
+    public float speed = 7f;
+    private float _move = 0;
+    
+    [SerializeField] protected Color BulletColor;
+    [SerializeField] protected Color OrbitColor;
+    // Update is called once per frame
+    protected void Update()
+    {
+        if (!ServerManager.Instance.isgameEnd_)
+        {
+            transform.Translate(new Vector3(_move, 0) * Time.deltaTime);
+
+            // if (transform.position.x < -15)
+            //     transform.position = new Vector3(-15, transform.position.y);
+            // if (transform.position.x > 16)
+            //     transform.position = new Vector3(16, transform.position.y);
+        }
+    }
+
+    public virtual void ReceveAct(string act)
+    {
+        string[] data = act.Split(':');
+        switch (data[0])
+        {
+            case "Jump":
+                Jump();
+                break;
+            case "Left":
+            case "Right":
+            case "Stop":
+                Move(data[0]);
+                break;
+            case "Die":
+                Die();
+                break;
+            case "Fire":
+                    FireBullet(float.Parse(data[1]), float.Parse(data[2]),float.Parse(data[3]));
+                break;
+            case "Hit":
+                IngameUIManager.Instance.HitMaker(float.Parse(data[1]) / 7.5f);
+                if (ServerManager.Instance.player.NowUlt < ServerManager.Instance.player.UltGauge)
+                {
+                    m_as.PlayOneShot(HitClip);
+                    if(int.Parse(data[2])==1&&ServerManager.Instance.player.isChargeUlt)
+                        ServerManager.Instance.player.NowUlt += float.Parse(data[1]);
+                }
+                break;
+            case "Respawn":
+                    respawn(int.Parse(data[1]));
+                break;
+            case "Pos":
+                if (data.Length >= 3)
+                    InterPos(new Vector3(float.Parse(data[1]), float.Parse(data[2])));
+                break;
+            case "Ult":
+                UltAct(act).Forget();
+                break;
+        }
+    }
+    
+    void Move(string to)
+    {
+        switch (to)
+        {
+            case "Left":
+                _move = speed*-1;
+                break;
+            case "Right":
+                _move = speed;
+                break;
+            case "Stop":
+                _move = 0;
+                break;
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("bullet"))
+        {
+           
+            for (int i = 0; i < Random.Range(2, 5); i++)
+            {
+                GameManager.Instance.orbitPoolManager.HitEffect(other.gameObject.transform.position+
+                                                                new Vector3(Random.Range(-0.3f,0.3f),Random.Range(-0.3f,0.3f)), Random.Range(0.7f,2f));
+            }
+            Destroy(other.gameObject);
+        }
+
+        if (other.CompareTag("RifleUlt"))
+        {
+            for (int i = 0; i < Random.Range(2, 5); i++)
+            {
+                GameManager.Instance.orbitPoolManager.HitEffect(transform.position+
+                                                                new Vector3(Random.Range(-0.3f,0.3f),Random.Range(-0.3f,0.3f)),
+                    new Color(0f/255f,152f/255f,136f/255f) ,Random.Range(3f,4f));
+            }
+        }
+    }
+
+    private Vector3 _mPosition;
+    private Vector3 _oPosition;
+    private Vector3 _target;
+    public float rotateDegree;
+    [SerializeField] private Transform _transform;
+    public void Gunpos(float x,float y)
+    {
+        _mPosition = new Vector3(x,y);
+        _oPosition = transform.localPosition;
+        _target = _mPosition - _oPosition;
+        rotateDegree = -1 * Mathf.Atan2(_target.x, _target.y) * Mathf.Rad2Deg + 90;
+        _transform.rotation = Quaternion.Euler(0f, 0f, rotateDegree);
+        
+        if (Mathf.Abs(rotateDegree) > 90)
+        {
+            _transform.localScale = new Vector3(1, -1);
+        }
+        else
+        {
+            _transform.localScale = new Vector3(1, 1);
+        }
+    }
+    [SerializeField] protected Bullet bullet;
+    [SerializeField] protected  Transform gunHole;
+    [SerializeField] protected float OrbitDelay = 0.004f;
+    protected virtual void FireBullet(float x,float y,float spread)
+    {
+        m_as.Play();
+        Gunpos(x, y);
+        Instantiate(GunFlame, gunHole.position, Quaternion.identity);
+        var temp = Instantiate(bullet, gunHole.position, Quaternion.identity).GetComponent<Bullet>();
+        temp.toVector =
+            temp.VectorRotation(temp.PointDirection(gunHole.position,new Vector3(x,y))+spread);
+        temp.Damege = Demege;
+        temp.speed = BulletSpeed;
+        temp.GetComponent<SpriteRenderer>().color = BulletColor;
+        temp.priColor = OrbitColor;
+        temp.OrbitDelay = OrbitDelay;
+        temp.transform.rotation = Quaternion.Euler(0, 0, temp.PointDirection(gunHole.position,new Vector2(x, y)));
+    }
+
+    [SerializeField] protected float Demege;
+    [SerializeField] protected  float BulletSpeed;
+    public bool isDie;
+    void Die()
+    {
+        m_as.PlayOneShot(dieClip);
+        isDie = true;
+        transform.localScale = new Vector3(0, 0);
+        GameManager.Instance.GetMyScore();
+    }
+    void respawn(int random)
+    {
+        isDie = false;
+        transform.position = GameManager.Instance.RandomPoints[random].position;
+        transform.localScale = new Vector3(1, 1);
+    }
+    void Jump()
+    {
+        _playerRigidbody.AddForce(new Vector2(0, jumpForce));
+        _playerRigidbody.velocity = Vector2.zero;
+    }
+
+    protected virtual async UniTaskVoid UltAct(string data)
+    {
+        
+    }
+    async UniTaskVoid InterPos(Vector3 toPos)
+    {
+        if (Mathf.Abs(Vector3.Distance(toPos, transform.position)) < 1)
+            throw new OperationCanceledException();
+            
+        for (int i = 0; i < 15; i++)
+        {
+            transform.position = Vector3.Lerp(transform.position, toPos, 0.5f);
+            await UniTask.NextFrame();
+        }
+    }
+}

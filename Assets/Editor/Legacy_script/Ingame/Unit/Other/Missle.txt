@@ -1,0 +1,139 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
+using UnityEngine;
+using Random = UnityEngine.Random;
+
+public class Missle : MonoBehaviour
+{
+    private Vector3[] m_points = new Vector3[4];
+    private float m_timerMax = 0;
+    private float m_timerCurrent = 0;
+    private float m_speed;
+    Vector3 _endP;
+    Transform _endT_;
+
+    public void Init(Transform _startTr, Transform _endTr, float _speed, float _newPointDistanceFromStartTr,
+        float _newPointDistanceFromEndTr,float _timer,int seed)
+    {
+        Random.InitState(seed);
+        m_speed = _speed;
+
+        // 끝에 도착할 시간을 랜덤으로 줌.
+        m_timerMax = _timer;
+
+        // 시작 지점.
+        m_points[0] = _startTr.position;
+
+        // 시작 지점을 기준으로 랜덤 포인트 지정.
+        m_points[1] = _startTr.position +
+                      (_newPointDistanceFromStartTr * Random.Range(-0.5f, 0.5f) * _startTr.right) + // X (좌, 우 전체)
+                      (_newPointDistanceFromStartTr * Random.Range(-2f, 2.0f) * _startTr.up); // Y (아래쪽 조금, 위쪽 전체)
+        // 도착 지점을 기준으로 랜덤 포인트 지정.
+        m_points[2] = _endTr.position +
+                      (_newPointDistanceFromEndTr * Random.Range(-0.5f, 0.5f) * _endTr.right) + // X (좌, 우 전체)
+                      (_newPointDistanceFromEndTr * Random.Range(-2.0f, 2.0f) * _endTr.up);
+        // 도착 지점.
+        m_points[3] = _endTr.position;
+
+        transform.position = _startTr.position;
+        _endP = -_endTr.position;
+        _endT_ = _endTr;
+        MakeOrbit().Forget();
+        Destroy(gameObject,1f);
+    }
+
+    void Update()
+    {
+        if (_endT_ == null)
+            Destroy(gameObject);
+        if (m_timerCurrent > m_timerMax)
+        {
+            return;
+        }
+
+        if (gameObject.CompareTag("bullet"))
+        {
+            if (ServerManager.Instance.OpPlayer.isDie)
+            {
+                Destroy(gameObject);
+            }
+        }
+        else if(gameObject.CompareTag("opbullet"))
+        {
+            if (ServerManager.Instance.player.IsDie)
+            {
+                Destroy(gameObject);
+            }
+        }
+        m_timerCurrent += Time.deltaTime * m_speed;
+        if (_endT_ != null)
+        {
+            Vector3 to_t = new Vector3(
+                CubicBezierCurve(m_points[0].x, m_points[1].x, m_points[2].x, _endT_.position.x),
+                CubicBezierCurve(m_points[0].y, m_points[1].y, m_points[2].y, _endT_.position.y),
+                CubicBezierCurve(m_points[0].z, m_points[1].z, m_points[2].z, _endT_.position.z)
+            );
+            transform.position = to_t;
+            transform.rotation = Quaternion.Euler(0,0,_2DAngle.PointDirection(transform.position,_endT_.position));
+        }
+    }
+
+    /// <summary>
+    /// 3차 베지어 곡선.
+    /// </summary>
+    /// <param name="a">시작 위치</param>
+    /// <param name="b">시작 위치에서 얼마나 꺾일 지 정하는 위치</param>
+    /// <param name="c">도착 위치에서 얼마나 꺾일 지 정하는 위치</param>
+    /// <param name="d">도착 위치</param>
+    /// <returns></returns>
+    private float CubicBezierCurve(float a, float b, float c, float d)
+    {
+        var t = m_timerCurrent / m_timerMax;
+
+        var ab = Mathf.Lerp(a, b, t);
+        var bc = Mathf.Lerp(b, c, t);
+        var cd = Mathf.Lerp(c, d, t);
+
+        var abbc = Mathf.Lerp(ab, bc, t);
+        var bccd = Mathf.Lerp(bc, cd, t);
+
+        return Mathf.Lerp(abbc, bccd, t);
+    }
+
+    private void OnDestroy()
+    {
+        for (int i = 0; i < Random.Range(2, 5); i++)
+        {
+            GameManager.Instance.orbitPoolManager.HitEffect(transform.position,
+                new Color(25f/255f,75f/255f,255f/255f), Random.Range(3f,4f));
+        }
+    }
+    public float outline=0.35f,outline_targetFigure=0.3f;
+    public float OrbitSize=0.65f;
+    public float sizereduce = 0.025f;
+    public Color priColor;
+    public float OrbitDelay = 0.004f;
+    async UniTaskVoid MakeOrbit()
+    {
+        while (true)
+        {
+            if(this.IsUnityNull())
+                throw new OperationCanceledException();
+            
+            var tempob = GameManager.Instance.GetComponent<OrbitPoolManager>().ObjectResume();
+            tempob.Init(true,transform.position+ new Vector3(Random.Range(-0.15f, 0.15f), Random.Range(-0.15f, 0.15f),0.1f),
+                new Vector3(OrbitSize,OrbitSize),priColor);
+            tempob.sizeReduction = sizereduce;
+            tempob.targetFigure = 0;
+            var tempobSh = GameManager.Instance.GetComponent<OrbitPoolManager>().ObjectResume();
+            tempobSh.Init(false,tempob.transform.position + new Vector3(0,0,0.1f),tempob.transform.localScale+new Vector3(outline,outline));
+            tempobSh.mySprite.color = Color.black;
+            tempobSh.targetFigure = outline_targetFigure;
+            tempobSh.sizeReduction = sizereduce;
+            await UniTask.Delay(TimeSpan.FromSeconds(OrbitDelay), ignoreTimeScale: false);
+        }
+    }
+}

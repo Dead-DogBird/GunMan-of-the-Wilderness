@@ -1,0 +1,306 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
+using Unity.Mathematics;
+using Unity.VisualScripting;
+using UnityEngine;
+using Random = UnityEngine.Random;
+
+public class Player_controll : MonoBehaviour
+{
+    public float jumpForce = 300f;
+    protected Rigidbody2D playerRigidbody;
+    [SerializeField] protected Bullet _bullet;
+    public float playerHp = 100;
+    [CanBeNull] private Player_Gun _mGun;
+    protected bool isDie = false;
+    [SerializeField] protected int AllMag = 6;
+    protected int nowMag;
+    [SerializeField] protected float fireDelay = 0.4f;
+    [SerializeField] private float ReloadDelay = 0.6f;
+
+    [SerializeField] protected GameObject GunFlame;
+    [SerializeField] protected float Demege;
+    [SerializeField] protected float Spread;
+    [SerializeField] protected float BulletSpeed = 0.1f;
+
+    [SerializeField] protected Color BulletColor;
+    [SerializeField] protected Color OrbitColor;
+    public float UltGauge = 100;
+    public float NowUlt = 0;
+    [SerializeField] protected AudioSource m_as;
+    [SerializeField] protected AudioClip dieClip;
+    [SerializeField] protected AudioClip UltClip;
+    [SerializeField] protected AudioClip ReloadClip;
+    [SerializeField] protected AudioClip HitClip;
+    public bool IsDie => isDie;
+
+    protected void Start()
+    {
+        playerRigidbody = GetComponent<Rigidbody2D>();
+        m_as = GetComponent<AudioSource>();
+        ServerManager.Instance.player = this;
+        _mGun = GetComponent<Player_Gun>();
+        asyncPosition().Forget();
+        nowMag = AllMag;
+        IngameUIManager.Instance.SetMagText(AllMag);
+    }
+
+    private string Actstring;
+    protected string sendact
+    {
+        get
+        {
+            return Actstring;
+        }
+        set
+        {
+            if (!string.Equals(value, Actstring))
+            {
+                Actstring = value;
+                ServerManager.Instance.SendIngameData(Actstring);
+            }
+        }
+    }
+    
+    protected void Update()
+    {
+        if (NowUlt >= UltGauge)
+            NowUlt = UltGauge;
+        if (!ServerManager.Instance.isgameEnd_&&!isDie)
+        {
+            if (Input.GetButtonDown("Jump") && playerRigidbody.velocity.y == 0)
+            {
+                sendact = "Jump";
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                sendact = "Left";
+            }
+
+            if (Input.GetKey(KeyCode.D))
+            {
+                sendact = "Right";
+            }
+
+            if (Input.GetKey(KeyCode.R))
+            {
+                sendact = "Reload";
+            }
+            if ((Input.GetKeyUp(KeyCode.A) && Mathf.Abs(move)>1) ||
+                Input.GetKeyUp(KeyCode.D) && Mathf.Abs(move)>1)
+            {
+                sendact = "Stop";
+            }
+            if (Input.GetMouseButtonDown(0) && firecool && !reloadcool)
+            {
+                if(nowMag>0)
+                    Fire().Forget();
+                else
+                    Reload().Forget();
+            }
+
+            if ((Input.GetKey(KeyCode.Q) && NowUlt >= UltGauge))
+            {
+                NowUlt = 0;
+                Ult();
+            }
+            transform.Translate(new Vector3(move, 0) * Time.deltaTime);
+            if (transform.position.y < -10)
+                sendact = "Die";
+            // if (transform.position.x > 16)
+            //     transform.position = new Vector3(16,transform.position.y);
+        }
+    }
+
+    public float speed = 7f;
+    protected float move = 0;
+    public virtual void ReceveAct(string act)
+    {
+        var data = act.Split(':');
+        switch (data[0])
+        {
+            case "Jump":
+                Jump();
+                break;
+            case "Left":
+            case "Right":
+            case "Stop":
+                Move(act);
+                break;
+            case "Die":
+                Die().Forget();
+                break;
+            case "Fire":
+                FireBullet(float.Parse(data[1]),float.Parse(data[2]),float.Parse(data[3]));
+                break;
+            case "Hit":
+                Hit(float.Parse(data[1]));
+                break;
+            case "Respawn":
+                respawn(int.Parse(data[1]));
+                break;
+            case "Reload":
+                Reload().Forget();
+                break;
+            case "Ult":
+                Ultact(act).Forget();
+                break;
+        }
+    }
+    void Move(string to)
+    {
+        switch (to)
+        {
+            case "Left":
+                move = speed * -1;
+                break;
+            case "Right":
+                move = speed;
+                break;
+            case "Stop":
+                move = 0;
+                break;
+            
+        }
+    }
+
+    public bool isChargeUlt = true;
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(!isDie)
+        {
+            if (other.CompareTag("opbullet"))
+            {
+                if (other.GetComponent<Bullet>() is not null) 
+                    ServerManager.Instance.SendIngameData($"Hit:{other.GetComponent<Bullet>().Damege}:{1}");
+                else if (other.GetComponent<Missle>() is not null)
+                {
+                    ServerManager.Instance.SendIngameData($"Hit:{15}:{0}");
+                }
+                for (int i = 0; i < Random.Range(2, 5); i++)
+                {
+                    GameManager.Instance.orbitPoolManager.HitEffect(other.gameObject.transform.position+
+                    new Vector3(Random.Range(-0.3f,0.3f),Random.Range(-0.3f,0.3f)), Random.Range(0.7f,2f));
+                }
+                Destroy(other.gameObject);
+            }
+            if (other.CompareTag("OPRifleUlt"))
+            {
+                ServerManager.Instance.SendIngameData($"Hit:{20}:{0}");
+                for (int i = 0; i < Random.Range(2, 5); i++)
+                {
+                    GameManager.Instance.orbitPoolManager.HitEffect(transform.position+
+                                                                    new Vector3(Random.Range(-0.3f,0.3f),Random.Range(-0.3f,0.3f)),
+                        new Color(0f/255f,152f/255f,136f/255f) ,Random.Range(3f,4f));
+                }
+            }
+        }
+        
+    }
+
+    void Hit(float damege)
+    {
+        m_as.PlayOneShot(HitClip);
+        playerHp -= damege;
+        IngameUIManager.Instance.Hit();
+        if (playerHp <= 0)
+        {
+            playerHp = 0;
+            ServerManager.Instance.SendIngameData("Die");
+        }
+    }
+
+    [SerializeField] protected Transform gunHole;
+    [SerializeField] protected float OrbitDelay = 0.004f;
+
+    protected virtual void FireBullet(float x, float y,float spread) // 총알 발사 메서드, 이후 상속 시 수정해서 사용
+    {
+        m_as.Play();
+        if (nowMag < 0)
+        {
+            Reload().Forget();
+            return;
+        }
+        Instantiate(GunFlame, gunHole.position, Quaternion.identity);
+        Bullet temp = Instantiate(_bullet, gunHole.position, Quaternion.identity).GetComponent<Bullet>();
+        temp.toVector =
+            temp.VectorRotation(
+                temp.PointDirection(gunHole.position, new Vector3(x, y)));
+        temp.Damege = Demege;
+        temp.speed = BulletSpeed;
+        temp.GetComponent<SpriteRenderer>().color = BulletColor;
+        temp.priColor = OrbitColor;
+        temp.OrbitDelay = OrbitDelay;
+        temp.transform.rotation = Quaternion.Euler(0, 0, temp.PointDirection(gunHole.position,new Vector2(x, y)));
+        
+    }
+
+    protected async virtual UniTaskVoid Reload()
+    {
+        m_as.PlayOneShot(ReloadClip);
+        reloadcool = true;
+        IngameUIManager.Instance.playerMag = -1;
+        await UniTask.Delay(TimeSpan.FromSeconds(ReloadDelay), ignoreTimeScale: false);
+        nowMag = AllMag;
+        IngameUIManager.Instance.playerMag = nowMag;
+        reloadcool = false;
+    }
+    protected bool firecool = true;
+    protected bool reloadcool = false;
+    void Jump()
+    {
+        playerRigidbody.AddForce(new Vector2(0, jumpForce));
+        playerRigidbody.velocity = Vector2.zero;
+    }
+
+    protected virtual async UniTaskVoid Fire()
+    {
+        firecool = false;
+        nowMag--;
+        IngameUIManager.Instance.playerMag = nowMag;
+        ServerManager.Instance.SendIngameData($"Fire:{Camera.main.ScreenToWorldPoint(Input.mousePosition).x}:{Camera.main.ScreenToWorldPoint(Input.mousePosition).y}:{Random.Range(-Spread,Spread)}");
+        await UniTask.Delay(TimeSpan.FromSeconds(fireDelay), ignoreTimeScale: false);
+        firecool = true;
+    }
+
+    async UniTaskVoid Die()
+    {
+        m_as.PlayOneShot(dieClip);
+        isDie = true;
+        GameManager.Instance.GetOpScore();
+        transform.localScale = new Vector3(0, 0);
+        await UniTask.Delay(TimeSpan.FromSeconds(1), ignoreTimeScale: false);
+        ServerManager.Instance.SendIngameData($"Respawn:{Random.Range(0,9)}");
+        
+    }
+
+    void respawn(int random)
+    {
+        playerHp = 100;
+        transform.localScale = new Vector3(1, 1);
+        transform.position = GameManager.Instance.RandomPoints[random].position;
+        isDie = false;
+    }
+
+    protected virtual void Ult()
+    {
+        sendact = "Ult";
+    }
+    protected virtual async UniTaskVoid Ultact(string data)
+    {
+        
+    }
+    async UniTaskVoid asyncPosition()
+    {
+        while (true)
+        {
+            if (ServerManager.Instance.isgameEnd_)
+                return;
+            ServerManager.Instance.SendIngameData($"Pos:{transform.position.x}:{transform.position.y}");
+            await UniTask.Delay(TimeSpan.FromSeconds(2.5f), ignoreTimeScale: false);
+        }
+    }
+}

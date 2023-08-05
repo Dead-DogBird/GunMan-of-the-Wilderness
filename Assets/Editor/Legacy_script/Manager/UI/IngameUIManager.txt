@@ -1,0 +1,147 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Net.Mime;
+using UnityEngine;
+using UnityEngine.UI;
+public class IngameUIManager : MonoSingleton<IngameUIManager>
+{
+    [SerializeField] private Image HitImage;
+    [SerializeField] private Text Hptext;
+    [SerializeField] private Image Hpbar;
+
+    [SerializeField] private Image resultImage;
+    [SerializeField] private Text resultText;
+    [SerializeField] private Outline textOutline;
+    [SerializeField] private Vector2 outlineDistance;
+
+    public HitMaker cursor;
+
+    [SerializeField] private Text TimeText;
+    [SerializeField] private Text MyScoreText;
+    [SerializeField] private Text OpScoreText;
+
+    [SerializeField] private Image eliminateImage;
+
+    [SerializeField] private Text PlayerMagText;
+
+    [SerializeField] private Text UltText;
+    [SerializeField] private Image Ultbar;
+    [SerializeField] private Image SniperHud;
+    [SerializeField] private Image ShotGunUlt;
+    private int playerAllMag;
+    private int playerNowMag;
+
+    public int playerMag
+    {
+        set
+        {
+            if (value == -1)
+            {
+                PlayerMagText.text = $"Reload..";
+                return;
+            }
+
+            if (value != playerNowMag)
+            {
+                playerNowMag = value;
+                PlayerMagText.text = $"{playerNowMag}/{playerAllMag}";
+            }
+        }
+    }
+    
+    // Start is called before the first frame update
+    void Start()
+    {
+        HitImage.color = new Color(0, 0, 0, 0);
+        resultImage.transform.localScale = new Vector3(0, 0);
+        outlineDistance = textOutline.effectDistance; 
+        textOutline.effectDistance = new Vector2(0,0);
+        resultImage.gameObject.SetActive(false);
+        ShotGunUlt.gameObject.SetActive(false);
+        SniperHud.gameObject.SetActive(false);
+    }
+
+    public void GetShotgunHud(bool active)
+    {
+        ShotGunUlt.gameObject.SetActive(active);
+    }
+    public void GetSniperHud(bool active)
+    {
+        SniperHud.gameObject.SetActive(active);
+        Camera.main.gameObject.GetComponent<IngameCamera>().isSnipe = active;
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        if (!ServerManager.Instance.isgameEnd_ && ServerManager.Instance.isStart)
+        {
+            HitImage.color = new Color(1, 1, 1, Mathf.Lerp(HitImage.color.a, 0, 0.05f));
+            Hpbar.fillAmount = Mathf.Lerp(Hpbar.fillAmount, (ServerManager.Instance.player.playerHp) / 100, 0.05f);
+            Hptext.text = $"HP :{Math.Round(ServerManager.Instance.player.playerHp,2)}";
+            Ultbar.fillAmount = Mathf.Lerp(Ultbar.fillAmount,
+                (ServerManager.Instance.player.NowUlt) / (ServerManager.Instance.player.UltGauge), 0.05f);
+            UltText.text = $"Ult :{Math.Round(ServerManager.Instance.player.NowUlt,2)}";
+            
+            TimeText.text =
+                $"{Mathf.FloorToInt(GameManager.Instance.GameTime) / 60}:{Mathf.FloorToInt(GameManager.Instance.GameTime) % 60}";
+            eliminateImage.color += (new Color(1,1,1,0)-eliminateImage.color)/20;
+            eliminateImage.transform.localScale += (new Vector3(1,1)-eliminateImage.transform.localScale)/20;
+        }
+        if (ServerManager.Instance.isgameEnd_)
+        {
+            resultImage.transform.localScale += (new Vector3(1, 1) - resultImage.transform.localScale) / 15;
+            textOutline.effectDistance += (outlineDistance - textOutline.effectDistance) / 15;
+            TimeText.text = "Time Over!";
+        }
+    }
+    public void GetScoreText(int score, bool isMine)
+    {
+        var text = isMine ? MyScoreText : OpScoreText;
+        text.text = score.ToString();
+    }
+    public void HitMaker(float damege = 1,Color? setColor = null)
+    {
+        cursor.GetOpperHit(damege,setColor);
+    }
+    public void Hit()
+    {
+        HitImage.color = Color.white;
+    }
+    public void onEliminate()
+    {
+        eliminateImage.color = new Color(1,1,1,1);
+        eliminateImage.transform.localScale = new Vector3(2,2);
+    }
+    public void gameEnd()
+    {
+        resultImage.gameObject.SetActive(true);
+        if (GameManager.Instance.myScore>GameManager.Instance.opScore)
+        {
+            resultText.text = "승리!";
+            textOutline.effectColor = new Color(21/255f, 0f, 255/255f, 0.5f);
+        }
+        else if(GameManager.Instance.myScore<GameManager.Instance.opScore)
+        {
+            resultText.text = "패배!";
+            textOutline.effectColor = new Color(255/255f, 0f, 45/255f, 0.5f);
+        }
+        else if (GameManager.Instance.myScore == GameManager.Instance.opScore)
+        {
+            resultText.text = "무승부!";
+            textOutline.effectColor = new Color(45/255f, 175/255f, 85/255f, 0.5f);
+        }
+        
+    }
+
+    public void SetMagText(int mag)
+    {
+        playerAllMag = mag;
+        playerNowMag = mag;
+    }
+    public void BackTomainmenu()
+    {
+        ServerManager.Instance.resetIngameData();
+        LoadingSceneManager.LoadScene("2.MainMenu");
+    }
+}

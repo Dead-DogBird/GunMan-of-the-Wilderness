@@ -1,0 +1,40 @@
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
+using UnityEngine;
+
+public class DMROpplayer : OpPlayer
+{
+    // Start is called before the first frame update
+    new void Start()
+    {
+        base.Start();
+    }
+
+    // Update is called once per frame
+    new void Update()
+    {
+        base.Update();
+    }
+    [SerializeField] private GameObject Turret;
+    private OpTurret myTurret;
+    public override void ReceveAct(string act)
+    {
+        base.ReceveAct(act);
+        var data = act.Split(':');
+        if (data[0]== "TFire"&&!isTurretDestroy)
+        {
+            myTurret.Fireturret();
+        }
+    }
+
+    public bool isTurretDestroy = true;
+    protected override async UniTaskVoid UltAct(string data)
+    {
+        m_as.PlayOneShot(UltClip);
+        myTurret = Instantiate(Turret, transform.position,
+            Quaternion.identity).GetComponent<OpTurret>();
+        myTurret.Owner = this;
+    }
+}

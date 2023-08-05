@@ -1,0 +1,29 @@
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+
+public class RIFleOPplayer : OpPlayer
+{
+    new void Start()
+    {
+        base.Start();
+    }
+
+    // Update is called once per frame
+    new void Update()
+    {
+        base.Update();
+    }
+    
+    [SerializeField] private GameObject Razer;
+    protected override UniTaskVoid UltAct(string data)
+    {
+        m_as.PlayOneShot(UltClip);
+        var datas = data.Split(':');
+        Vector3 pos = new Vector3(float.Parse(datas[1]), 0);
+        var temp = Instantiate(Razer, pos, Quaternion.identity);
+        Destroy(temp.gameObject, 1f);
+        return default; 
+    }
+}

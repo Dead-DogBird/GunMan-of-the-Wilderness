@@ -1,0 +1,61 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using DG.Tweening;
+public class GunOrbit : MonoBehaviour
+{
+    public float destroy_time=2f;
+    public float sizeReduction =0.01f,targetFigure=0f;
+    public bool colored=true;
+    public float orix = 0.45f;
+    public SpriteRenderer mySprite;
+    [SerializeField]public Color myColor,oriColor;
+    Color ToColor;
+    //float _speed =20f;
+    // Start is called before the first frame update
+    void Start()
+    {
+        orix=transform.localScale.x;
+        mySprite=GetComponent<SpriteRenderer>();
+        //_speed = Application.targetFrameRate/8.22f;
+    }
+
+    private void OnEnable()
+    {
+        mySprite=GetComponent<SpriteRenderer>();
+    }
+
+    private Tween _mTween;
+    public void Init(bool isColoerd,Vector3 position,Vector3 Scale, Color? initColor = null,Color? toColor = null)
+    {
+        //transform.localScale=new Vector3(orix,orix,1);
+        colored = isColoerd;
+        mySprite.color=initColor??oriColor;
+        transform.position=position;
+        transform.localScale=Scale;
+        
+        if(colored)
+            _mTween = mySprite.DOColor(toColor??myColor, 0.1f);
+        
+    }
+    void Update()
+    {
+        
+            //mySprite.color = Color.Lerp(mySprite.color,myColor,0.05f);
+        transform.localScale -= new Vector3(sizeReduction,sizeReduction, 0);
+        
+        if(transform.localScale.x<=targetFigure)
+        {
+            _mTween.Complete();
+            GameManager.Instance.GetComponent<OrbitPoolManager>().
+                ObjectRelease(this);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        
+    }
+}
+

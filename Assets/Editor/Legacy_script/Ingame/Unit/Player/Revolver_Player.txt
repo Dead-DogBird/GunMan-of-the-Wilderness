@@ -1,0 +1,42 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+using Random = UnityEngine.Random;
+
+public class Revolver_Player : Player_controll
+{
+    // Start is called before the first frame update
+    new void Start()
+    {
+        base.Start();
+    }
+
+    // Update is called once per frame
+    new void Update()
+    {
+        base.Update();
+    }
+    
+    [SerializeField] private GameObject _missle;
+    protected override void Ult()
+    {
+        sendact = $"Ult:{Camera.main.ScreenToWorldPoint(Input.mousePosition).x}:{Camera.main.ScreenToWorldPoint(Input.mousePosition).y}:{Random.Range(0,1000)}";
+    }
+
+    protected override async UniTaskVoid Ultact(string data)
+    {
+        var datas = data.Split(':');
+        Vector3 rect = new Vector3(float.Parse(datas[1]),float.Parse(datas[2]));
+        for (int i = 0; i < 5; i++)
+        {
+            m_as.PlayOneShot(UltClip);
+            GameManager.Instance.orbitPoolManager.HitEffect(transform.position+new Vector3(Random.Range(-0.3f,0.3f),Random.Range(-0.3f,0.3f)),
+                new Color(85f/255f,95f/255f,255f/255f), Random.Range(2f,3f));
+            Instantiate(_missle).GetComponent<Missle>().Init(transform, ServerManager.Instance.OpPlayer.transform,
+                2.5f, 3, 3, 1.5f,int.Parse(datas[3]));
+            await UniTask.Delay(TimeSpan.FromSeconds(0.2f), ignoreTimeScale: false);
+        }
+    }
+}

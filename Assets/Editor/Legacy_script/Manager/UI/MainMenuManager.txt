@@ -1,0 +1,128 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
+
+public class MainMenuManager : MonoBehaviour
+{
+    [SerializeField] private Text ID;
+    [SerializeField] private GameObject MatchingUI;
+
+    [SerializeField] private AudioClip[] musics;
+
+    private AudioSource _audioSource;
+
+    [SerializeField] private Canvas[] canvass;
+    [SerializeField] private int focusCanvas = 0;
+
+    [SerializeField] private int focusImage = 0;
+    [SerializeField] private Image[] _images;
+
+    [SerializeField] private Text CharNameText;
+    [SerializeField] private Text CharInfoText;
+    [SerializeField] private Text CharUltText;
+    [SerializeField] private Text CharUltInfoText;
+
+    string[]charname = { "카우:봇 보이","에스빠시오","골드테이커","별바람","Sn1-p3r"};
+    string[]charinfo = { "밸런스 잡힌 리볼버 입니다.","근거리에서 파괴적인 샷건입니다.",
+        "빠른 연사를 자랑하는 돌격소총입니다.","높은 정확도와 준수한 공격력을 가진 반자동 소총입니다.","강력한 저격총입니다. 신중한 발사를 요합니다" };
+
+    private string[] ultname = { "추적 미사일","단자 데 라 무에르테","궤도요격","천둥새토템","모드:강습저격" };
+    string[]ultinfo = { "적을 추적하는 미사일을 발사합니다.","일정시간동안 탄창이 무한이 됩니다","강력한 피해를 입히는 레이저를 발사합니다.",
+        "적을 자동으로 공격하는 토템을 설치합니다.","일정시간동안 탄창이 무한이 됩니다." };
+    
+    
+    private void Awake()
+    {
+        MatchingUI.SetActive(false);
+    }
+
+    void Start()
+    {
+        ID.text = $"ID :{ServerManager.Instance.MyID}";
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.clip = musics[Random.Range(0, 2)];
+        _audioSource.Play();
+        focusImage = ServerManager.Instance.CharID;
+        CharNameText.text = charname[focusImage];
+        CharInfoText.text = charinfo[focusImage];
+        CharUltText.text = ultname[focusImage];
+        CharUltInfoText.text = ultinfo[focusImage];
+    }
+
+    [SerializeField] private float toYPos = 1855;
+    [SerializeField] private float toXPos = 3655;
+    [SerializeField] private float lerp = 30;
+
+    public void MoveCanvasButton(int i)
+    {
+        focusCanvas = i;
+    }
+
+    public void MoveImage(bool isUp)
+    {
+        if (isUp)
+        {
+            if (focusImage < 4)
+                focusImage++;
+        }
+        else
+        {
+            if (focusImage > 0)
+                focusImage--;
+        }
+
+        if (focusImage > 4)
+            focusImage = 4;
+        if (focusImage < 0)
+            focusImage = 0;
+        
+        CharNameText.text = charname[focusImage];
+        CharInfoText.text = charinfo[focusImage];
+        CharUltText.text = ultname[focusImage];
+        CharUltInfoText.text = ultinfo[focusImage];
+    }
+
+    public void Select()
+    {
+        ServerManager.Instance.CharID = focusImage;
+    }
+
+    void Update()
+    {
+        foreach (var canvas in canvass)
+        {
+            if (canvas == canvass[focusCanvas])
+            {
+                canvas.transform.localPosition += ((new Vector3(0, toYPos) - canvas.transform.localPosition) / lerp);
+            }
+
+            canvas.transform.localPosition += ((new Vector3(0, -1800) - canvas.transform.localPosition) / lerp);
+        }
+
+        foreach (var image in _images)
+        {
+            if (image == _images[focusImage])
+            {
+                image.transform.localPosition += ((new Vector3(toXPos, 0) - image.transform.localPosition) / lerp);
+            }
+
+            image.transform.localPosition += ((new Vector3(-4000, 0) - image.transform.localPosition) / lerp);
+        }
+    }
+
+    public void Matching()
+    {
+        MatchingUI.SetActive(true);
+        ServerManager.Instance.SendMessege("3,");
+    }
+
+    public void Mute()
+    {
+        AudioListener.volume = 0;
+    }
+
+    
+}

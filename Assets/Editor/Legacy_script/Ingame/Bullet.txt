@@ -1,0 +1,78 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
+using UnityEngine;
+using Random = UnityEngine.Random;
+
+public class Bullet : MonoBehaviour
+{
+    public Vector3 toVector;
+    public float speed = 0.1f;
+    public float Damege = 7.5f;
+
+    public Color priColor;
+    public Color sceColor;
+
+    public float OrbitDelay = 0.004f;
+    // Start is called before the first frame update
+    void Start()
+    {
+        Destroy(gameObject,2f);
+        MakeOrbit().Forget();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+    private void FixedUpdate()
+    {
+        if(Damege-0.5f > 5)
+            Damege -= 0.5f;
+        transform.Translate(toVector * speed,Space.World);
+    }
+    public float PointDirection(Vector2 pos1, Vector2 pos2)
+    {
+        Vector2 pos = pos2 - pos1;
+        float angle = (float)Mathf.Atan2(pos.y, pos.x) * Mathf.Rad2Deg;
+        if (angle < 0f)
+            angle += 360f;
+        return angle;
+    }
+
+    public Vector3 VectorRotation(float _angle) {
+        
+        _angle-=90;
+        _angle*=-1;
+        if (_angle<0f)
+            _angle+=360f;
+        return new Vector3(Mathf.Sin(_angle * Mathf.Deg2Rad), Mathf.Cos(_angle * Mathf.Deg2Rad),0);
+    }
+    public float outline=0.35f,outline_targetFigure=0.15f;
+    public float OrbitSize=0.45f;
+    public float sizereduce = 0.05f;
+    
+    async UniTaskVoid MakeOrbit()
+    {
+        while (true)
+        {
+            if(this.IsUnityNull())
+                throw new OperationCanceledException();
+            
+            var tempob = GameManager.Instance.GetComponent<OrbitPoolManager>().ObjectResume();
+            tempob.Init(true,transform.position+ new Vector3(Random.Range(-0.15f, 0.15f), Random.Range(-0.15f, 0.15f),0.1f),
+                new Vector3(OrbitSize,OrbitSize),priColor);
+            tempob.sizeReduction = sizereduce;
+            tempob.targetFigure = 0;
+            var tempobSh = GameManager.Instance.GetComponent<OrbitPoolManager>().ObjectResume();
+            tempobSh.Init(false,tempob.transform.position + new Vector3(0,0,0.1f),tempob.transform.localScale+new Vector3(outline,outline));
+            tempobSh.mySprite.color = Color.black;
+            tempobSh.targetFigure = outline_targetFigure;
+            tempobSh.sizeReduction = sizereduce;
+            await UniTask.Delay(TimeSpan.FromSeconds(OrbitDelay), ignoreTimeScale: false);
+        }
+    }
+}

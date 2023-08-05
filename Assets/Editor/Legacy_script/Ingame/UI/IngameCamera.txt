@@ -1,0 +1,47 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+
+public class IngameCamera : MonoBehaviour
+{
+    private Player_controll player;
+    // Start is called before the first frame update
+    void Start()
+    {
+        getPlayer().Forget();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    private void LateUpdate()
+    {
+        if (ServerManager.Instance.isStart && !ServerManager.Instance.isgameEnd_)
+        {
+            if(!isSnipe)
+                transform.position = player.transform.position - new Vector3(0,0,10);
+            else
+            {
+                //transform.position = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x,Camera.main.ScreenToWorldPoint(Input.mousePosition).y , 10);
+                var pos=Vector3.Lerp(player.transform.position,Camera.main.ScreenToWorldPoint(Input.mousePosition),0.5f)-new Vector3(0,0,10);
+                //var pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f));
+                Debug.Log(pos);
+                transform.position = pos;
+            }
+        }
+    }
+    
+    async UniTaskVoid getPlayer()
+    {
+        await UniTask.WaitUntil(() => ServerManager.Instance.player != null);
+        player = ServerManager.Instance.player;
+    }
+
+    public bool isSnipe = true;
+
+}

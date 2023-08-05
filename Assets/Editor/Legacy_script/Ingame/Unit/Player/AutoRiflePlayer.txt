@@ -1,0 +1,78 @@
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+
+public class AutoRiflePlayer :  Player_controll
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        base.Start();
+        AllMag = 30;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (NowUlt >= UltGauge)
+            NowUlt = UltGauge;
+        if (!ServerManager.Instance.isgameEnd_&&!isDie)
+        {
+            if (Input.GetButtonDown("Jump") && playerRigidbody.velocity.y == 0)
+            {
+                sendact = "Jump";
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                sendact = "Left";
+            }
+
+            if (Input.GetKey(KeyCode.D))
+            {
+                sendact = "Right";
+            }
+
+            if (Input.GetKey(KeyCode.R))
+            {
+                sendact = "Reload";
+            }
+            if ((Input.GetKeyUp(KeyCode.A) && Mathf.Abs(move)>1) ||
+                Input.GetKeyUp(KeyCode.D) && Mathf.Abs(move)>1)
+            {
+                sendact = "Stop";
+            }
+            if (Input.GetMouseButton(0) && firecool && !reloadcool)
+            {
+                if(nowMag>0)
+                    Fire().Forget();
+                else
+                    Reload().Forget();
+            }
+            if ((Input.GetKey(KeyCode.Q) && NowUlt >= UltGauge))
+            {
+                NowUlt = 0;
+                Ult();
+            }
+            transform.Translate(new Vector3(move, 0) * Time.deltaTime);
+            if (transform.position.y < -10)
+                sendact = "Die";
+
+        }
+    }
+
+    protected override void Ult()
+    {
+        sendact = $"Ult:{Camera.main.ScreenToWorldPoint(Input.mousePosition).x}";
+    }
+
+    [SerializeField] private GameObject Razer;
+    protected override async UniTaskVoid Ultact(string data)
+    {
+        m_as.PlayOneShot(UltClip);
+        var datas = data.Split(':');
+        Vector3 pos = new Vector3(float.Parse(datas[1]), 0);
+        var temp = Instantiate(Razer, pos, Quaternion.identity);
+        Destroy(temp.gameObject, 1f);
+    }
+}

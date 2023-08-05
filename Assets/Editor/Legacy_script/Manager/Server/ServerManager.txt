@@ -1,0 +1,313 @@
+#nullable enable
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System.Net;
+using System.Net.Sockets;
+using System.IO;
+using System;
+using System.Linq;
+using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
+using Unity.VisualScripting;
+using UnityEngine.Serialization;
+
+public class ServerManager : MonoSingleton<ServerManager>
+{
+    // ReSharper disable Unity.PerformanceAnalysis
+    private Socket _clntSocket;
+    private IPEndPoint _localEndPoint;
+    private EndPoint _serverEp;
+    private bool _isConnected = true;
+
+    private int _myPort;
+    private string _myIpAddress;
+
+    public string MyIp
+    {
+        get
+        {
+            return _myIpAddress;
+        }
+    }
+    [NotNull] public Player_controll player;
+    [NotNull] public OpPlayer OpPlayer;
+    public string MyID { get; set; }
+
+    public TitleCanvasController CanvasController;
+
+    private string DKey = "-1";
+    private int LocalID = -1;
+    public int LocalID_
+    {
+        get { return LocalID; }
+    }
+    public string Dkey_
+    {
+        get
+        {
+            return DKey;
+        }
+    }
+    private bool isgameEnd = false;
+    public bool isgameEnd_
+    {
+        get { return isgameEnd; }
+    }
+    private bool _isReady;
+    private bool opReady;
+    public int CharID = 1; // 선택한 캐릭터 아이디
+
+    new void Awake()
+    {
+        base.Awake();
+        DontDestroyOnLoad(gameObject);
+        
+    }
+    void Start()
+    {
+        _clntSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        _localEndPoint = new IPEndPoint(IPAddress.Any, 0);
+        _serverEp = new IPEndPoint(IPAddress.Loopback, 10200);
+        
+        _clntSocket.Bind(_localEndPoint);
+        ReceveTask().Forget();
+        SendTask(new DPaket(0, "")).Forget();
+    }
+
+    void Update()
+    {
+
+    }
+
+    async UniTaskVoid ReceveTask()
+    {
+        var buffer = new byte[1024];
+        while (_isConnected)
+        {
+            try
+            {
+                await _clntSocket.ReceiveFromAsync(buffer, SocketFlags.None, _serverEp);
+                StateController(PacketSerializer.Deserialize(buffer));
+            }
+            catch (SocketException e)
+            {
+                Debug.Log(e.Message);
+            }
+        }
+    }
+    
+
+    async UniTaskVoid SendTask(DPaket pDPaket)
+    {
+        try
+        {
+            var buffer = PacketSerializer.Serialize(pDPaket);
+            await _clntSocket.SendToAsync(buffer, SocketFlags.None, _serverEp);
+        }
+        catch (SocketException e)
+        {
+            Debug.Log(e.Message);
+            StateController(new DPaket(-3,""));
+        }
+    }
+
+    public void SendMessege(string _data)
+    {
+        var datas= _data.Split(',');
+        int id = int.Parse(datas[0]);
+        string data = string.Join(",", datas.Skip(1));
+        SendTask(new DPaket(id,data)).Forget();
+    }
+    
+    public void SendIngameData(string data)
+    {
+        if(!isgameEnd)
+        SendMessege(41.ToString()+","+data+","+LocalID+","+DKey);
+    }
+    // ReSharper disable Unity.PerformanceAnalysis
+    void StateController(DPaket pDPaket)
+    {
+        switch (pDPaket.ID)
+        {
+            case 0: // 접속됨
+                InitNetworkInfo(pDPaket);
+                break;
+            //-------------------------------------
+            case 1: // 로그인 성공
+            case 11: // 로그인 실패 - 없는 아이디
+            case 12: // 로그인 실패 - 틀린 비밀번호
+                if (CanvasController != null)
+                    CanvasController.LoginResult(pDPaket.ID);
+                break;
+            //-------------------------------------
+            case 2: // 계정생성 성공
+            case 21: // 존재하는 아이디
+                if (CanvasController != null)
+                    CanvasController.SigninResult(pDPaket.ID);
+                break;
+            //-------------------------------------
+            case 3: // 매칭 중 
+                break;
+            case 31: // 매칭 됨
+                MatchingResult(pDPaket.Data);
+                isgameEnd = false;
+                break;
+            //-------------------------------------
+            case 4: // 인게임 진입
+                asyncInitGame(pDPaket.Data).Forget();
+                //GameManager.Instance.InitGame(pDPaket.Data);
+                break;
+            case 42: //시작 준비 완료
+                IsAllready(pDPaket.Data);
+                break;
+            case 41: // 인게임 진행
+                if(!isgameEnd&&isStart)
+                SetIngame(pDPaket.Data);
+                break;
+            case 5:
+                isgameEnd = true;
+                IngameUIManager.Instance.gameEnd();
+                Debug.Log(pDPaket.Data);
+                break;
+            //-------------------------------------
+            case -1: // 상대방의 접속이 종료됨.
+                isgameEnd = true;
+                //상대방 접속 종료시 안내 UI 띄우기
+                break;
+            case -3: //서버와의 연결이 실패함.
+                break;
+        }
+    }
+    // ReSharper disable Unity.PerformanceAnalysis
+    async UniTaskVoid asyncInitGame(string data)
+    {
+        if(GameManager.Instance == null)
+            await UniTask.WaitUntil( () => GameManager.Instance != null);
+        //if (GameManager.Instance is not null )
+        GameManager.Instance.InitGame(data);
+    }
+    void SetIngame(string data)
+    {
+        var datas = data.Split(',');
+        string ingameAct = datas[0];
+        string localId = datas[1];
+        if (int.Parse(localId) == LocalID)
+        {
+            player.ReceveAct(ingameAct);
+        }
+        else
+        {
+            OpPlayer.ReceveAct(ingameAct);
+        }
+    }
+    void InitNetworkInfo(DPaket pDPaket)
+    {
+        var datas = pDPaket.Data.Split(',');
+        _myIpAddress = datas[0];
+        _myPort = int.Parse(datas[1]);
+        
+        Debug.Log($"접속 됨. IP : {_myIpAddress}, Port : {_myPort}");
+
+    }
+    
+    void MatchingResult(string data)
+    {
+        var datas = data.Split(",");
+        DKey = datas[0];
+        LocalID = int.Parse(datas[1]);
+        LoadingSceneManager.LoadScene("3.Ingame");
+    }
+    
+    public void EnterGameSecene()
+    {
+        SendMessege($"4,{CharID},{LocalID_},{Dkey_}");
+    }
+
+    public bool isStart; // 게임이 진행되고 있는지.
+    void IsAllready(string data)//모든 준비가 끝났다면 
+    {
+        var dataparts = data.Split(",");
+        if (int.Parse(dataparts[1]) != LocalID)
+            opReady = true;
+
+        isStart = opReady && _isReady;
+    }
+    public void GameStartReddy(bool val)
+    {
+        if (val)
+        {
+            Debug.Log("Called GameStartReddy");
+            _isReady = true;
+            SendMessege($"42,0,{LocalID_},{Dkey_}");
+        }
+    }
+
+    public void resetIngameData()
+    {
+        LocalID = -1;
+        DKey = "-1";
+    }
+    void OnApplicationQuit()
+    {
+        if (LoadingSceneManager.NowSceneName() == "3.Ingame"&&!isgameEnd)
+        { 
+            SendMessege($"-2,{LocalID_},{DKey}");
+        }
+        else
+        {
+            SendMessege("-1,\0");
+        }
+    }
+}
+public class DPaket
+{
+    public int ID;
+    public string? Data;
+    public DPaket()
+    {
+
+    }
+    public DPaket(int iD, string? data)
+    {
+        ID = iD;
+        Data = data;
+    }
+}
+
+class PacketSerializer
+{
+    public static byte[] Serialize(DPaket packet)
+    {
+        using (MemoryStream stream = new MemoryStream())
+        {
+            using (BinaryWriter writer = new BinaryWriter(stream))
+            {
+                writer.Write(packet.ID);
+                if (packet.Data != null)
+                {
+                    writer.Write(packet.Data);
+                }
+            }
+
+            return stream.ToArray();
+        }
+    }
+
+    public static DPaket Deserialize(byte[] data)
+    {
+        DPaket packet = new DPaket();
+        using (MemoryStream stream = new MemoryStream(data))
+        {
+            using (BinaryReader reader = new BinaryReader(stream))
+            {
+                packet.ID = reader.ReadInt32();
+                packet.Data = reader.ReadString();
+            }
+        }
+
+        return packet;
+    }
+}
+
+

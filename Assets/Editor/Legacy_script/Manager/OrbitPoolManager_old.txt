@@ -1,0 +1,81 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class OrbitPoolManager : MonoBehaviour
+{
+    public List<GunOrbit> Bulletpull = new List<GunOrbit>();
+
+    LinkedList<GunOrbit> PoolList = new LinkedList<GunOrbit>();
+    LinkedList<GunOrbit> ActiveList = new LinkedList<GunOrbit>();
+    public int Startamount = 100;
+    public GameObject BulletOrbit;
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+    void MakeObject(int amount)
+    {
+        GunOrbit inst = null;
+        for (int i = 0; i < amount; i++)
+        {
+            inst = Instantiate(BulletOrbit).GetComponent<GunOrbit>();
+            inst.transform.parent = this.transform;
+            inst.gameObject.SetActive(false);
+            PoolList.AddLast(inst);
+        }
+    }
+    public void ObjectRelease(GunOrbit target)
+    {
+        target.transform.localScale = new Vector3(target.orix, target.orix);
+        //target.GetComponent<GunOrbit>().oriColor = _color;
+        target.targetFigure = 0;
+        ActiveList.Remove(target);
+        target.gameObject.SetActive(false);
+        PoolList.AddLast(target);
+    }
+    public GunOrbit ObjectResume()
+    {
+        if (PoolList.Count == 0)
+        {
+            MakeObject(100);
+        }
+        var inst = PoolList.First.Value;
+        ActiveList.AddLast(inst);
+        PoolList.RemoveFirst();
+        inst.gameObject.SetActive(true);
+        return inst;
+    }
+
+    public void HitEffect(Vector3 pos,float size =1,float outline = 0.45f)
+    {
+        var tempob = GameManager.Instance.GetComponent<OrbitPoolManager>().ObjectResume();
+        tempob.Init(false,pos,new Vector3(size,size),new Color(255f/255,0f/255f,85f/255f));
+        tempob.sizeReduction = 0.07f;
+        tempob.targetFigure = 0;
+        var tempobSh = GameManager.Instance.GetComponent<OrbitPoolManager>().ObjectResume();
+        tempobSh.Init(false,tempob.transform.position + new Vector3(0,0,0.1f),tempob.transform.localScale+new Vector3(outline,outline));
+        tempobSh.mySprite.color = Color.black;
+        tempobSh.targetFigure = 0.15f;
+        tempobSh.sizeReduction = 0.07f;
+    }
+    public void HitEffect(Vector3 pos, Color pricolor, float size =1,float outline = 0.45f)
+    {
+        var tempob = GameManager.Instance.GetComponent<OrbitPoolManager>().ObjectResume();
+        tempob.Init(false,pos,new Vector3(size,size),pricolor);
+        tempob.sizeReduction = 0.07f;
+        tempob.targetFigure = 0;
+        var tempobSh = GameManager.Instance.GetComponent<OrbitPoolManager>().ObjectResume();
+        tempobSh.Init(false,tempob.transform.position + new Vector3(0,0,0.1f),tempob.transform.localScale+new Vector3(outline,outline));
+        tempobSh.mySprite.color = Color.black;
+        tempobSh.targetFigure = 0.15f;
+        tempobSh.sizeReduction = 0.07f;
+    }
+}

@@ -1,0 +1,44 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class LoopTrain : MonoBehaviour
+{
+    private float width; // 배경의 가로 길이
+    public float plusY=0;
+    private float oriY;
+    public Sprite[] colorsp;
+    private SpriteRenderer _spriteRenderer;
+    private float oriX;
+    void Start()
+    {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        BoxCollider2D box = GetComponent<BoxCollider2D>();
+        width = box.size.x;
+        oriY = transform.position.y;
+        oriX = transform.position.x;
+    }
+
+    void Update()
+    {
+        transform.Translate(Vector3.left * (plusY * Time.deltaTime));
+        if (transform.position.x <= (width+oriX)*-1)
+        { 
+            Reposition();    
+        }
+    }
+
+    private void Reposition()
+    {
+        
+            Vector2 offset = new Vector2(width * 2f, 0);
+            transform.position = (Vector2)transform.position + offset;
+            transform.position = new Vector3(transform.position.x, oriY+Random.Range(-0.25f,0.25f));
+
+            if (colorsp.Length > 0)
+        {
+            _spriteRenderer.sprite = colorsp[Random.Range(0, colorsp.Length)];
+        }
+    
+}
+}

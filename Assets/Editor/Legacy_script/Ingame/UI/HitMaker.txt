@@ -1,0 +1,49 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
+public class HitMaker : MonoBehaviour
+{
+    [SerializeField] private RectTransform[] Hitmarkers;
+    private Image[] markersImages;
+    [SerializeField] private float lerpSize = 0.082f;
+    [SerializeField] private float lerpColor = 0.12f;
+    void Start()
+    {
+        IngameUIManager.Instance.cursor = this;
+        markersImages = new Image[Hitmarkers.Length];
+        foreach (var hitmarker in Hitmarkers.Select((value,index)=>new {value,index}))
+        {
+            markersImages[hitmarker.index] = hitmarker.value.GetComponent<Image>();
+            hitmarker.value.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0);
+            hitmarker.value.localScale = new Vector3(1, 0);
+            markersImages[hitmarker.index].color = new Color(1, 1, 1, 0);
+        }        
+    }
+
+    void Update()
+    {
+        foreach (var hitmarker in Hitmarkers.Select((value,index)=>new {value,index}))
+        {
+            //hitmarker.value.localScale = Vector3.Lerp(hitmarker.value.localScale,new Vector3(1.5f, 0.3f),lerpSize);
+            markersImages[hitmarker.index].color = new Color(1, 1, 1, Mathf.Lerp(markersImages[hitmarker.index].color.a, 0, lerpColor));
+        }
+
+    }
+    private void FixedUpdate()
+    {
+
+        
+    }
+
+    public void GetOpperHit(float damege,Color? setColor = null)
+    {
+        foreach (var hitmarker in Hitmarkers.Select((value,index)=>new {value,index}))
+        {
+            hitmarker.value.localScale = new Vector3(1.5f, damege/3);
+            markersImages[hitmarker.index].color = setColor ?? new Color(1, 1, 1, 1);
+        }
+    }
+}
