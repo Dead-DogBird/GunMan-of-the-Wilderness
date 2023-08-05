@@ -821,6 +821,10 @@ PrefabInstance:
       propertyPath: Textures
       value: 
       objectReference: {fileID: 1462044633}
+    - target: {fileID: 8864454078897594378, guid: e54ed3a54aae1b641a1c4f735a8b2919, type: 3}
+      propertyPath: _fireDelay
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8199450797058648472, guid: e54ed3a54aae1b641a1c4f735a8b2919, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e54ed3a54aae1b641a1c4f735a8b2919, type: 3}
