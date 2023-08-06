@@ -29,13 +29,13 @@ public class Bullet : PoolableObj
     void Update()
     {
         
+                transform.Translate(toVector * (speed * Time.deltaTime),Space.World);
     }
 
     private void FixedUpdate()
     {
         if (damage - 0.5f > 5)
             damage -= 0.5f;
-        transform.Translate(toVector*speed,Space.World);
     }
 
     public GameObject Init(GetFireInstance getinfo)
