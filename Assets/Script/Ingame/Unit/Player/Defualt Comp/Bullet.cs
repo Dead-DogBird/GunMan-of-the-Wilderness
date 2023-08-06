@@ -38,16 +38,17 @@ public class Bullet : PoolableObj
         transform.Translate(toVector*speed,Space.World);
     }
 
-    public GameObject Init(Vector3 pos, Vector3 pTovector,float pDamege,float pSpeed, Color pColor, OrbitColors pOrbitColors)
+    public GameObject Init(GetFireInstance getinfo)
     {
-        transform.position = pos;
-        toVector = CustomAngle.VectorRotation(CustomAngle.PointDirection(pos, pTovector));
-        damage = pDamege;
-        speed = pSpeed;
-        color = pColor;
-        orbitColor = pOrbitColors;
+        transform.position = getinfo.firepos;
+        toVector = CustomAngle.VectorRotation(CustomAngle.PointDirection(getinfo.firepos,
+            getinfo.mousepos));
+        damage = getinfo.damage;
+        speed = getinfo.speed;
+        color = getinfo.bulletColor;
+        orbitColor = getinfo.orbitcolors;
         transform.rotation = Quaternion.Euler(0,0,
-            CustomAngle.PointDirection(pos,pTovector));
+            CustomAngle.PointDirection(getinfo.firepos,getinfo.mousepos));
         
         return gameObject;
     }

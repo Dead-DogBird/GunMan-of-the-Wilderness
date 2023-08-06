@@ -26,7 +26,7 @@ public class PoolingManager : MonoBehaviour
         }
         // 새로운 타입의 리스트 생성
         PoolingList poolingList = new();
-        poolingList.Initialize(initialSize,obj);
+        poolingList.Initialize($"{type}",initialSize,obj);
         poolingLists.Add(type, poolingList);
         Debug.Log($"{type} : 생성됨!");
         return poolingList;
@@ -80,8 +80,10 @@ public class PoolingList : MonoBehaviour
     private LinkedList<GameObject> ActiveList;
 
     private GameObject originalObject;
-    public void Initialize(int initialSize,GameObject pObj)
+    private GameObject ojectPar;
+    public void Initialize(string type,int initialSize,GameObject pObj)
     {
+        ojectPar = new GameObject(type+"s");
         Allpool = new();
         PoolList = new();
         ActiveList = new();
@@ -96,7 +98,7 @@ public class PoolingList : MonoBehaviour
 
     private GameObject CreateObject(GameObject pObj)
     {
-        var temp =  Instantiate(pObj);
+        var temp =  Instantiate(pObj, ojectPar.transform, true);
         temp.SetActive(false);
         return temp;
     }

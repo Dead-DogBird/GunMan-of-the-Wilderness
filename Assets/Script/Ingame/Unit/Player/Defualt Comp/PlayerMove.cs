@@ -30,7 +30,21 @@ public class PlayerMove : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        Debug.DrawRay(_playerRigidbody.position, Vector3.down, new Color(0,1,0)); 
         transform.Translate(new Vector3(speed*_playerControll.Userinput.AxisState, 0) * Time.deltaTime);
+       
+        RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, Vector3.down
+            , 0.5f, LayerMask.GetMask("Platform"));
+        if (_playerRigidbody.velocity.y <= 0)
+        {
+            if (raycastHit2D.collider != null)
+            {
+                if (raycastHit2D.distance < 0.2f)
+                {
+                    _isjumping = false;
+                }
+            }
+        }
     }
 
     private void Jump()
@@ -45,9 +59,9 @@ public class PlayerMove : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("Ground"))
+        /*if (other.gameObject.CompareTag("Ground")&&other.transform.position.y<transform.position.y)
         {
             _isjumping = false;
-        }
+        }*/
     }
 }

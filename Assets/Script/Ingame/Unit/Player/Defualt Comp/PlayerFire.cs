@@ -10,7 +10,7 @@ public class PlayerFire : MonoBehaviour
     private PlayerState _playerState;
     protected float _myDamage { get; private set; }
     [SerializeField] private GameObject _bullet;
-    [SerializeField] private Transform _gunholePos;
+    
     void Start()
     {
         _playerState = GetComponent<PlayerState>();
@@ -27,9 +27,7 @@ public class PlayerFire : MonoBehaviour
     protected virtual void Fire()
     {
         Debug.Log("발사!");
-        GameManager.Instance._poolingManager.Spawn<Bullet>().Init(_gunholePos.position,
-            _playerState.GetMousePos(), 10, _playerState.getBulletSpeed,
-            Color.black, new OrbitColors(Color.black, Color.black));
+        GameManager.Instance._poolingManager.Spawn<Bullet>().Init( _playerState.GetFireInstance());
     }
     protected virtual void Skill()
     {

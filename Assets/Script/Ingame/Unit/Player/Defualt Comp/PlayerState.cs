@@ -17,22 +17,35 @@ public class PlayerState : MonoBehaviour
     //탄창
     [SerializeField] private int _allMag;
     [SerializeField] private int _nowMag;
-  
-    [SerializeField] private float _skillgauge = 100;
-    [SerializeField] private float _nowskillgauge;
 
-    [SerializeField] private int _money;
+    //스킬
+    private float _skillgauge = 100;
+    private float _nowskillgauge;
+
+    //돈
+    private int _money;
+
+    //대미지
     [SerializeField] private float _damage;
 
+    //발사 딜레이
     [SerializeField] private float _fireDelay;
     private float _nowFireDelay;
 
+    //재장선 시간
     [SerializeField] private float _reloadDelay;
+
+    //총알 시간
     [SerializeField] private float _bulletSpeed = 1;
     
-    
-    private FireState_ _fireState;
+    //총구 위치
+    [SerializeField] private Transform _gunholePos;
+    [SerializeField] private Color _bulletColor;
+    [SerializeField] private Color _orbitColor;
 
+    [SerializeField] private Color _sceorbitColor = new(66 / 255f, 66 / 255f, 95 / 255f, 255 / 255f);
+
+    private FireState_ _fireState;
     public float getPlayerHp => _playerHp;
     public int getAllMag => _allMag;
     public float getSkillgauge => _skillgauge;
@@ -41,7 +54,7 @@ public class PlayerState : MonoBehaviour
     public int getNowMag => _nowMag;
     public float getDamage => _damage;
     public float getBulletSpeed => _bulletSpeed;
-    
+
     private Rigidbody2D _playerRigidbody;
     private PlayerContrl _playerContrl;
 
@@ -73,8 +86,9 @@ public class PlayerState : MonoBehaviour
             var child = obj.transform.GetChild(i);
             _charSprites.Add(child.GetComponent<SpriteRenderer>().sprite);
         }
-        
+
     }
+
     private void Update()
     {
 
@@ -82,9 +96,9 @@ public class PlayerState : MonoBehaviour
 
     public bool GetSkill()
     {
-        if (!_playerContrl.Userinput.SkillKey||
+        if (!_playerContrl.Userinput.SkillKey ||
             !(_nowskillgauge >= _skillgauge)) return false;
-        
+
         _nowskillgauge = 0;
         return true;
     }
@@ -107,9 +121,10 @@ public class PlayerState : MonoBehaviour
                 return _fireState;
         }
     }
+
     public bool GetFire()
     {
-        return _playerContrl.Userinput.LeftMouseState&&
+        return _playerContrl.Userinput.LeftMouseState &&
                (GetFireCommand() == FireState_.Default);
     }
 
@@ -117,6 +132,7 @@ public class PlayerState : MonoBehaviour
     {
         return _playerContrl.Userinput.MousePos;
     }
+
     private async UniTaskVoid Fired()
     {
         _fireState = FireState_.Delayed;
@@ -134,16 +150,45 @@ public class PlayerState : MonoBehaviour
 
     public void GetDamage(float getDamage)
     {
-        
+
     }
 
     async UniTaskVoid GetDamegeTask()
     {
-        
-        
+
+
     }
+
+    public GetFireInstance GetFireInstance()
+    {
+        return new GetFireInstance(_gunholePos.position,GetMousePos()
+        ,_damage,_bulletSpeed,_bulletColor,new OrbitColors(_orbitColor,_sceorbitColor));
+    }
+
     private void OnCollisionEnter2D(Collision2D other)
     {
-        
+
     }
+}
+
+public struct GetFireInstance
+{
+    public Vector3 firepos;
+    public Vector3 mousepos;
+    public float damage;
+    public float speed;
+    public Color bulletColor;
+    public OrbitColors orbitcolors;
+    public GetFireInstance(Vector3 firepos, Vector3 mousepos, float damage, 
+        float speed, Color bulletColor, OrbitColors orbitcolors)
+    {
+        this.firepos = firepos;
+        this.mousepos = mousepos;
+        this.damage = damage;
+        this.speed = speed;
+        this.bulletColor = bulletColor;
+        this.orbitcolors = orbitcolors;
+    }
+    
+    
 }
