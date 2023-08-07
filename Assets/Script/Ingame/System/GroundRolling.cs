@@ -22,7 +22,6 @@ public class GroundRolling : MonoBehaviour
         width = GetComponent<BoxCollider2D>().size.x;
         oriX = transform.localPosition.x;
         oriY = transform.localPosition.y;
-        Debug.Log((width + oriX)*-1);
         backpostion = (width + firstOffset.localPosition.x) * -1;
     }
 

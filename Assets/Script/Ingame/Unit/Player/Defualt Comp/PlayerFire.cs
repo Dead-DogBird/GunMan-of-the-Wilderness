@@ -26,11 +26,9 @@ public class PlayerFire : MonoBehaviour
     }
     protected virtual void Fire()
     {
-        Debug.Log("발사!");
         GameManager.Instance._poolingManager.Spawn<Bullet>().Init( _playerState.GetFireInstance());
     }
     protected virtual void Skill()
     {
-        //Debug.Log("기술발동");
     }
 }

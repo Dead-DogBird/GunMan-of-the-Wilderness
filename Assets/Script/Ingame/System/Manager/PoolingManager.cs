@@ -28,7 +28,6 @@ public class PoolingManager : MonoBehaviour
         PoolingList poolingList = new();
         poolingList.Initialize($"{type}",initialSize,obj);
         poolingLists.Add(type, poolingList);
-        Debug.Log($"{type} : 생성됨!");
         return poolingList;
     }
 

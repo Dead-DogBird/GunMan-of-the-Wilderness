@@ -76,11 +76,11 @@ public class PlayerState : MonoBehaviour
         _playerContrl = GetComponent<PlayerContrl>();
         _fireState = FireState_.Default;
         Getsprite(Textures);
+        GameManager.Instance.SetPlayer(this);
     }
 
     private void Getsprite(GameObject obj)
     {
-        Debug.Log(obj.transform.childCount);
         for (var i = 0; i < obj.transform.childCount; i++)
         {
             var child = obj.transform.GetChild(i);
