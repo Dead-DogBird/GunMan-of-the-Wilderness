@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Bullet : PoolableObj
 {
@@ -18,18 +19,23 @@ public class Bullet : PoolableObj
 
     private float orbitDeleay =0.004f;
 
+    private SpriteRenderer _sprite;
     private OrbitColors orbitColor;
     // Start is called before the first frame update
     private new void Start()
     {
-        base.Start();
+        //base.Start();
+        _sprite = GetComponent<SpriteRenderer>();
     }
 
+    new void OnEnable()
+    {
+        _sprite = GetComponent<SpriteRenderer>();
+    }
     // Update is called once per frame
     void Update()
     {
-        
-                transform.Translate(toVector * (speed * Time.deltaTime),Space.World);
+        transform.Translate(toVector * (speed * Time.deltaTime),Space.World);
     }
 
     private void FixedUpdate()
@@ -45,11 +51,13 @@ public class Bullet : PoolableObj
             getinfo.mousepos));
         damage = getinfo.damage;
         speed = getinfo.speed;
-        color = getinfo.bulletColor;
+        _sprite.color = getinfo.bulletColor;
         orbitColor = getinfo.orbitcolors;
         transform.rotation = Quaternion.Euler(0,0,
             CustomAngle.PointDirection(getinfo.firepos,getinfo.mousepos));
         
+        MakeOrbit().Forget();
+        ReleseReserv().Forget();
         return gameObject;
     }
 
@@ -58,16 +66,16 @@ public class Bullet : PoolableObj
         await UniTask.Delay(TimeSpan.FromSeconds(delay), ignoreTimeScale: false);
         GameManager.Instance._poolingManager.Despawn(this); 
     }
-}
 
-public struct OrbitColors
-{
-    public Color priColor;
-    public Color sceColor;
-
-    public OrbitColors(Color ppriColor,Color psceColor)
+    async UniTaskVoid MakeOrbit()
     {
-        priColor = ppriColor;
-        sceColor = psceColor;
+        while (gameObject.activeSelf)
+        {
+            GameManager.Instance._poolingManager.Spawn<Orbit>().Init(new OrbitInfo(true,transform.position
+            +new Vector3(Random.Range(0.15f,-0.15f),Random.Range(0.15f,-0.15f),0.1f),transform.localScale.x,0.1f,orbitColor),0.45f);
+            await UniTask.Delay(TimeSpan.FromSeconds(orbitDeleay), ignoreTimeScale: false);
+        }
     }
 }
+
+

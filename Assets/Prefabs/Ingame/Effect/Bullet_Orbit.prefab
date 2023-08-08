@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8843035231785575816}
   - component: {fileID: 1504733281513804112}
-  - component: {fileID: 5368096621892798477}
+  - component: {fileID: 4009733296191393293}
   m_Layer: 0
   m_Name: Bullet_Orbit
   m_TagString: Untagged
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5368096621892798477
+--- !u!114 &4009733296191393293
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,14 +94,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1835886177089315850}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 237f20af87cea3747a7bbf89c2c88e9a, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a449c47cd8541945ac67bdda653529e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroy_time: 2
-  sizeReduction: 0.005
-  targetFigure: 0
-  colored: 1
-  orix: 0.45
-  mySprite: {fileID: 0}
-  myColor: {r: 0.21176472, g: 0.20392159, b: 0.2627451, a: 1}
-  oriColor: {r: 1, g: 0, b: 0.19215688, a: 1}

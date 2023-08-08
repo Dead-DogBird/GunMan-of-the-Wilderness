@@ -55,12 +55,11 @@ public class PlayerState : MonoBehaviour
     public float getDamage => _damage;
     public float getBulletSpeed => _bulletSpeed;
 
-    private Rigidbody2D _playerRigidbody;
     private PlayerContrl _playerContrl;
-
+    private Player_Gun _playerGun;
     [SerializeField] private GameObject Textures;
     private List<Sprite> _charSprites = new();
-
+    
 
     private enum FireState_
     {
@@ -72,8 +71,8 @@ public class PlayerState : MonoBehaviour
 
     private void Start()
     {
-        _playerRigidbody = GetComponent<Rigidbody2D>();
         _playerContrl = GetComponent<PlayerContrl>();
+        _playerGun = GetComponent<Player_Gun>();
         _fireState = FireState_.Default;
         Getsprite(Textures);
         GameManager.Instance.SetPlayer(this);
@@ -161,10 +160,15 @@ public class PlayerState : MonoBehaviour
 
     public GetFireInstance GetFireInstance()
     {
+        
         return new GetFireInstance(_gunholePos.position,GetMousePos()
         ,_damage,_bulletSpeed,_bulletColor,new OrbitColors(_orbitColor,_sceorbitColor));
     }
 
+    public void GetFireEffect()
+    {
+        _playerGun.FireEffect();
+    }
     private void OnCollisionEnter2D(Collision2D other)
     {
 

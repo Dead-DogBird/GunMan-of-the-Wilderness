@@ -10,6 +10,7 @@ public class PlayerFire : MonoBehaviour
     private PlayerState _playerState;
     protected float _myDamage { get; private set; }
     [SerializeField] private GameObject _bullet;
+    [SerializeField] protected GameObject _fireFlame;
     
     void Start()
     {
@@ -27,6 +28,8 @@ public class PlayerFire : MonoBehaviour
     protected virtual void Fire()
     {
         GameManager.Instance._poolingManager.Spawn<Bullet>().Init( _playerState.GetFireInstance());
+        Instantiate(_fireFlame, _playerState.GetFireInstance().firepos,Quaternion.identity);
+        _playerState.GetFireEffect();
     }
     protected virtual void Skill()
     {

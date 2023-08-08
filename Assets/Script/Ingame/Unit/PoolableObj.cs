@@ -13,7 +13,7 @@ public class PoolableObj : MonoBehaviour
         ReleseReserv().Forget();
     }
 
-    private void OnEnable()
+    protected void OnEnable()
     {
         ReleseReserv().Forget();
     }

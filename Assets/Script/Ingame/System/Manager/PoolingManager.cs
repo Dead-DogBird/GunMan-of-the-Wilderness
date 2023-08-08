@@ -10,11 +10,14 @@ public class PoolingManager : MonoBehaviour
     private GameManager _gameManager;
     private Dictionary<Type, object> poolingLists = new();
 
-    private void Start()
+    private void OnEnable()
     {
         GameManager.Instance._poolingManager = this;
     }
-
+    private void Start()
+    {
+    }
+    
     // 새로운 제네릭 타입의 풀을 추가 (기존에 있으면 기존 리스트를 반환)
     public PoolingList AddPoolingList<T>(int initialSize,GameObject obj) where T : PoolableObj
     {

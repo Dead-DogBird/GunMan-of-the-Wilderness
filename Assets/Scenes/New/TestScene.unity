@@ -342,6 +342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Stage: {fileID: 0}
+  Orbit: {fileID: 1835886177089315850, guid: faf3a2802abd9ff41a38a0b1f2412a76, type: 3}
 --- !u!4 &859668732
 Transform:
   m_ObjectHideFlags: 0
@@ -477,6 +478,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 863177375647188315, guid: e54ed3a54aae1b641a1c4f735a8b2919, type: 3}
+      propertyPath: _fireFlame
+      value: 
+      objectReference: {fileID: 6140996296906423665, guid: 7adb60e6019507f4bb61bdc76a7effe2, type: 3}
+    - target: {fileID: 863177375647188315, guid: e54ed3a54aae1b641a1c4f735a8b2919, type: 3}
       propertyPath: _transform
       value: 
       objectReference: {fileID: 1859805937}
@@ -487,7 +492,11 @@ PrefabInstance:
     - target: {fileID: 7295443963558571584, guid: e54ed3a54aae1b641a1c4f735a8b2919, type: 3}
       propertyPath: _bullet
       value: 
-      objectReference: {fileID: 8698982614002751336, guid: f65b3d45efbddf548854c53cc75b2198, type: 3}
+      objectReference: {fileID: 3468561696563007470, guid: 77b9ce54c3f1702489d74eaee1bef8f1, type: 3}
+    - target: {fileID: 7295443963558571584, guid: e54ed3a54aae1b641a1c4f735a8b2919, type: 3}
+      propertyPath: _fireFlame
+      value: 
+      objectReference: {fileID: 6140996296906423665, guid: 7adb60e6019507f4bb61bdc76a7effe2, type: 3}
     - target: {fileID: 7295443963558571584, guid: e54ed3a54aae1b641a1c4f735a8b2919, type: 3}
       propertyPath: _gunholePos
       value: 
@@ -570,11 +579,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8864454078897594378, guid: e54ed3a54aae1b641a1c4f735a8b2919, type: 3}
       propertyPath: _orbitColor.b
-      value: 0
+      value: 0.23266792
       objectReference: {fileID: 0}
     - target: {fileID: 8864454078897594378, guid: e54ed3a54aae1b641a1c4f735a8b2919, type: 3}
       propertyPath: _orbitColor.g
-      value: 0.1194223
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8864454078897594378, guid: e54ed3a54aae1b641a1c4f735a8b2919, type: 3}
       propertyPath: _orbitColor.r
