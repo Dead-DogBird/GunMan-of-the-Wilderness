@@ -59,7 +59,41 @@ public class PlayerState : MonoBehaviour
     private Player_Gun _playerGun;
     [SerializeField] private GameObject Textures;
     private List<Sprite> _charSprites = new();
-    
+
+    private Animator _animator;
+    private bool _isMove;
+    private bool _isGround;
+    private static readonly int Move = Animator.StringToHash("Move");
+    private static readonly int Ground = Animator.StringToHash("Ground");
+    public bool isMove
+    {
+        get => _isMove;
+
+        set
+        {
+            if (_isMove != value)
+            {
+                _isMove = value;
+                _animator.SetBool(Move,_isMove);
+            }
+        }
+        
+    }
+    public bool isGround
+    {
+        get => _isGround;
+
+        set
+        {
+            if (_isGround != value)
+            {
+                _isGround = value;
+                _animator.SetBool(Ground,_isGround);
+            }
+        }
+        
+    }
+
 
     private enum FireState_
     {
@@ -76,6 +110,7 @@ public class PlayerState : MonoBehaviour
         _fireState = FireState_.Default;
         Getsprite(Textures);
         GameManager.Instance.SetPlayer(this);
+        _animator = GetComponent<Animator>();
     }
 
     private void Getsprite(GameObject obj)
@@ -90,6 +125,7 @@ public class PlayerState : MonoBehaviour
 
     private void Update()
     {
+        
 
     }
 
@@ -168,6 +204,12 @@ public class PlayerState : MonoBehaviour
     public void GetFireEffect()
     {
         _playerGun.FireEffect();
+    }
+
+    public void PlayAnimation(string name, int layer, float normalizedtime)
+    {
+        _animator.Play(name,layer,normalizedtime);
+        
     }
     private void OnCollisionEnter2D(Collision2D other)
     {
