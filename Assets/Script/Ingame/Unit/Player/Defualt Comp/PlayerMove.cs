@@ -43,7 +43,6 @@ public class PlayerMove : MonoBehaviour
         if (!_playerControll.Userinput.SpaceState) return;
         _isjumping = true;
         jumpCount++;
-        Debug.Log(jumpCount);
         if (jumpCount == 2)
         {
             _playerState.PlayAnimation("Player@jump",-1,0);

@@ -9,6 +9,7 @@ TagManager:
   - RifleUlt
   - OPRifleUlt
   - Ground
+  - Monster
   layers:
   - Default
   - TransparentFX

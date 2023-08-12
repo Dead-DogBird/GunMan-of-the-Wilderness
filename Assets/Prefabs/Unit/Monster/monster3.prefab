@@ -202,8 +202,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 2078697978544142630}
   m_Bounds:
-    m_Center: {x: 0.0000009685755, y: -0.00031944364, z: 0}
-    m_Extent: {x: 0.075001046, y: 0.12293956, z: 0}
+    m_Center: {x: 0, y: -0.000319995, z: 0}
+    m_Extent: {x: 0.074999996, y: 0.12294, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -392,8 +392,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 57298043674192750}
   m_Bounds:
-    m_Center: {x: 0.0000011399388, y: 0.0010449886, z: 0}
-    m_Extent: {x: 0.07499939, y: 0.14395517, z: 0}
+    m_Center: {x: 0.000000007450581, y: 0.0010450035, z: 0}
+    m_Extent: {x: 0.07499996, y: 0.143955, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -604,8 +604,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 3730399998699341864}
   m_Bounds:
-    m_Center: {x: -0.15971622, y: -0.07793839, z: 0}
-    m_Extent: {x: 0.48569337, y: 0.2335624, z: 0}
+    m_Center: {x: -0.117289245, y: -0.017690122, z: 0}
+    m_Extent: {x: 0.48644757, y: 0.24055341, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -650,6 +650,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6201932329590181852}
   - component: {fileID: 2712409680366679822}
+  - component: {fileID: 965232933695633478}
+  - component: {fileID: -3669796596259854191}
   m_Layer: 0
   m_Name: monster3
   m_TagString: Untagged
@@ -699,6 +701,53 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!50 &965232933695633478
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5105297800354109375}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0
+--- !u!61 &-3669796596259854191
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5105297800354109375}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.2974758, y: 0.4667709}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.7049427, y: 0.7049427}
+  m_EdgeRadius: 0
 --- !u!1 &7186340116017423520
 GameObject:
   m_ObjectHideFlags: 0
@@ -800,8 +849,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 3588125286917589503}
   m_Bounds:
-    m_Center: {x: 0.000000461936, y: -0.0009049922, z: 0}
-    m_Extent: {x: 0.07499984, y: 0.1290951, z: 0}
+    m_Center: {x: 0.00000047683716, y: -0.0009050071, z: 0}
+    m_Extent: {x: 0.07500002, y: 0.12909502, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -1083,8 +1132,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 7379885709251900119}
   m_Bounds:
-    m_Center: {x: 0.0021455288, y: 0.000000037252903, z: 0}
-    m_Extent: {x: 0.097855285, y: 0.119999856, z: 0}
+    m_Center: {x: 0.0021449998, y: 0, z: 0}
+    m_Extent: {x: 0.097855, y: 0.12, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
