@@ -43,12 +43,18 @@ public class Orbit : PoolableObj
         await UniTask.Delay(TimeSpan.FromSeconds(delay), ignoreTimeScale: false);
         GameManager.Instance._poolingManager.Despawn(this); 
     }
-    public Orbit Init(OrbitInfo info)
+    public Orbit Init(OrbitInfo info, bool isSize =false, float reduction =2)
     {
         colored = info.isColored;
         targetFigure = info.targetFugure;
         transform.position = info.position;
         transform.localScale = new Vector3(info.scale,info.scale);
+
+        if (isSize)
+            sizeReduction = reduction;
+        else
+            sizeReduction = 2;
+        
         if (colored)
         {
             priColor = info.colors?.priColor ?? myColor;
@@ -66,15 +72,16 @@ public class Orbit : PoolableObj
         }
         return this;
     }
-    public Orbit Init(OrbitInfo info,float outline)
+    public Orbit Init(OrbitInfo info,float outline,bool isSize =false, float reduction =2)
     {
-        Init(info);
+        Init(info,isSize,reduction);
         GameManager.Instance._poolingManager.
             Spawn<Orbit>().Init(new OrbitInfo(false,transform.position+new Vector3(0,0,0.1f),
-                transform.localScale.x+outline,targetFigure+outline));
+                transform.localScale.x+outline,targetFigure+outline),isSize,reduction);
         
         return this;
     }
+    
 }
 
 public struct OrbitInfo

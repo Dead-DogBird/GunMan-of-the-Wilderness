@@ -16,6 +16,7 @@ public class PoolingManager : MonoBehaviour
     }
     private void Start()
     {
+        
     }
     
     // 새로운 제네릭 타입의 풀을 추가 (기존에 있으면 기존 리스트를 반환)
@@ -42,8 +43,6 @@ public class PoolingManager : MonoBehaviour
         {
              return ((PoolingList)poolingList).Spawn<T>();
         }
-        
-        Debug.LogWarning($"PoolingList<{typeof(T).Name}> not found.");
         return null;
     }
     // 사용한 오브젝트를 비활성화하여 풀에 반환
@@ -53,10 +52,6 @@ public class PoolingManager : MonoBehaviour
         {
             (poolingList as PoolingList).Despawn(obj.gameObject);
         }
-        else
-        {
-            Debug.LogWarning($"PoolingList<{typeof(T).Name}> not found.");
-        }
     }
 
     // 모든 오브젝트를 비활성화하여 풀을 비움
@@ -65,10 +60,6 @@ public class PoolingManager : MonoBehaviour
         if (poolingLists.TryGetValue(typeof(T), out object poolingList) && poolingList is PoolingList)
         {
             (poolingList as PoolingList).Clear();
-        }
-        else
-        {
-            Debug.LogWarning($"PoolingList<{typeof(T).Name}> not found.");
         }
     }
 }

@@ -16,11 +16,20 @@ public class MonsterDefault : MonoBehaviour
     public int nextMove;
 
     private bool isDie = false;
+    
+    [SerializeField] ColliderCallbackController colliderCallbackController;
+    
+    
     // Start is called before the first frame update
     void Start()
     {
         _rigid = GetComponent<Rigidbody2D>();
         MoveSelect().Forget();
+    }
+
+    private void OnEnable()
+    {
+        colliderCallbackController.onColiderEnter += Findedplayer;
     }
 
     // Update is called once per frame
@@ -30,6 +39,11 @@ public class MonsterDefault : MonoBehaviour
         {
             NontargetPlayerMove();
         }
+    }
+
+    private void OnDisable()
+    {
+        colliderCallbackController.onColiderEnter -= Findedplayer;
     }
 
     private void OnDestroy()
@@ -61,6 +75,28 @@ public class MonsterDefault : MonoBehaviour
             
             transform.localScale = nextMove > 0 ? new Vector3(-1,1) : new Vector3(1,1);
             await UniTask.Delay(TimeSpan.FromSeconds(5), ignoreTimeScale: false);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("bullet"))
+        {
+            GameManager.Instance.Effect(other.transform.position, 4);
+            _hp -= other.gameObject.GetComponent<Bullet>().damage;
+            GameManager.Instance._poolingManager.Despawn(other.gameObject.GetComponent<Bullet>());
+            if (_hp <= 0)
+                Destroy(gameObject);
+        }
+
+    }
+
+    void Findedplayer(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("플레이를 봤다 안카요");
+            _targetedPlayer = true;
         }
     }
 }

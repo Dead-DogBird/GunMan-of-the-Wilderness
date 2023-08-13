@@ -379,7 +379,7 @@ GameObject:
   - component: {fileID: 8199450797058648472}
   m_Layer: 0
   m_Name: RevolverPlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -609,6 +609,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f405f4f2428728c46aa9fd166b025042, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _bullet: {fileID: 0}
+  _fireFlame: {fileID: 0}
 --- !u!114 &5187123015528646504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -639,12 +641,15 @@ MonoBehaviour:
   _playerHp: 100
   _allMag: 0
   _nowMag: 0
-  _skillgauge: 100
-  _nowskillgauge: 0
-  _money: 0
-  _demege: 0
+  _damage: 0
   _fireDelay: 0
   _reloadDelay: 0
+  _bulletSpeed: 1
+  _gunholePos: {fileID: 0}
+  _bulletColor: {r: 0, g: 0, b: 0, a: 0}
+  _orbitColor: {r: 0, g: 0, b: 0, a: 0}
+  _sceorbitColor: {r: 0.25882354, g: 0.25882354, b: 0.37254903, a: 1}
+  Textures: {fileID: 0}
 --- !u!114 &8199450797058648472
 MonoBehaviour:
   m_ObjectHideFlags: 0

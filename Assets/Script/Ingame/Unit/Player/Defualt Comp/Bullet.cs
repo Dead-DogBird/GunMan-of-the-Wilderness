@@ -10,7 +10,7 @@ public class Bullet : PoolableObj
     private Vector3 toVector;
 
     private float speed;
-    private float damage;
+    public float damage { get; private set; }
 
     private Color color;
 
@@ -40,8 +40,7 @@ public class Bullet : PoolableObj
 
     private void FixedUpdate()
     {
-        if (damage - 0.5f > 5)
-            damage -= 0.5f;
+        
     }
 
     public GameObject Init(GetFireInstance getinfo)
@@ -64,7 +63,8 @@ public class Bullet : PoolableObj
     protected override async UniTaskVoid ReleseReserv(float delay = 2)
     {
         await UniTask.Delay(TimeSpan.FromSeconds(delay), ignoreTimeScale: false);
-        GameManager.Instance._poolingManager.Despawn(this); 
+        if(gameObject.activeSelf)
+            GameManager.Instance._poolingManager.Despawn(this); 
     }
 
     async UniTaskVoid MakeOrbit()

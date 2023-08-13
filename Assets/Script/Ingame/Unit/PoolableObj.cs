@@ -24,6 +24,11 @@ public class PoolableObj : MonoBehaviour
         
     }
 
+    private void OnDisable()
+    {
+        
+    }
+
     public virtual GameObject Init()
     {
         return gameObject;
@@ -32,6 +37,7 @@ public class PoolableObj : MonoBehaviour
     protected virtual async UniTaskVoid ReleseReserv(float delay = 2)
     {
         await UniTask.Delay(TimeSpan.FromSeconds(delay), ignoreTimeScale: false);
-        GameManager.Instance._poolingManager.Despawn(this);
+        if(gameObject.activeSelf)
+            GameManager.Instance._poolingManager.Despawn(this);
     }
 }

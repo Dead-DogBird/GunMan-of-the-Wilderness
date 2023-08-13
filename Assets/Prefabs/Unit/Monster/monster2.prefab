@@ -68,7 +68,7 @@ Transform:
   - {fileID: 3939643299229050231}
   - {fileID: 2692489994563170452}
   m_Father: {fileID: 6201932329590181852}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &206590553239192327
 GameObject:
@@ -202,8 +202,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 2078697978544142630}
   m_Bounds:
-    m_Center: {x: 0.00066734105, y: 0.0000052303076, z: 0}
-    m_Extent: {x: 0.07579869, y: 0.12266256, z: 0}
+    m_Center: {x: 0, y: -0.000319995, z: 0}
+    m_Extent: {x: 0.074999996, y: 0.12294, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -291,6 +291,64 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &2142238394398091839
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7883724510493727003}
+  - component: {fileID: 6946370324450092512}
+  m_Layer: 0
+  m_Name: FindPlayerColider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7883724510493727003
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2142238394398091839}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.27799988, y: 0.482, z: -0.006027498}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6201932329590181852}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &6946370324450092512
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2142238394398091839}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.015038133, y: 0.67153156}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 5.681838, y: 2.203063}
+  m_EdgeRadius: 0
 --- !u!1 &2291546195302245545
 GameObject:
   m_ObjectHideFlags: 0
@@ -392,8 +450,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 57298043674192750}
   m_Bounds:
-    m_Center: {x: -0.0006392896, y: 0.0011685789, z: 0}
-    m_Extent: {x: 0.07556255, y: 0.14397728, z: 0}
+    m_Center: {x: 0.000000007450581, y: 0.0010450035, z: 0}
+    m_Extent: {x: 0.07499996, y: 0.143955, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -604,8 +662,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 3730399998699341864}
   m_Bounds:
-    m_Center: {x: 0.42758822, y: 0.2472988, z: 0}
-    m_Extent: {x: 0.54490715, y: 0.2939589, z: 0}
+    m_Center: {x: 0.038589478, y: 0.033919364, z: 0}
+    m_Extent: {x: 0.5425143, y: 0.3190033, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -677,6 +735,7 @@ Transform:
   - {fileID: 3588125286917589503}
   - {fileID: 2078697978544142630}
   - {fileID: 7379885709251900119}
+  - {fileID: 7883724510493727003}
   - {fileID: 3164196552277804225}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -849,8 +908,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 3588125286917589503}
   m_Bounds:
-    m_Center: {x: -0.000869371, y: -0.0012732297, z: 0}
-    m_Extent: {x: 0.07585083, y: 0.12894186, z: 0}
+    m_Center: {x: 0.00000047683716, y: -0.0009050071, z: 0}
+    m_Extent: {x: 0.07500002, y: 0.12909502, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -1132,8 +1191,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 7379885709251900119}
   m_Bounds:
-    m_Center: {x: 0.002609104, y: 0.00016843528, z: 0}
-    m_Extent: {x: 0.09830561, y: 0.119773455, z: 0}
+    m_Center: {x: 0.0021449998, y: 0, z: 0}
+    m_Extent: {x: 0.097855, y: 0.12, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
