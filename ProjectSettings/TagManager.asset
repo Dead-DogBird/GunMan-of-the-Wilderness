@@ -10,6 +10,7 @@ TagManager:
   - OPRifleUlt
   - Ground
   - Monster
+  - FindPlayer
   layers:
   - Default
   - TransparentFX

@@ -13,7 +13,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     void Start()
     {
-        _poolingManager.AddPoolingList<Orbit>(50, Orbit);
+        _poolingManager.AddPoolingList<Orbit>(450, Orbit);
     }
 
     private void OnEnable()
@@ -41,13 +41,25 @@ public class GameManager : MonoSingleton<GameManager>
                 new OrbitColors(new Color(255/255f,255/255f,255/255f,1),new Color(255/255f,0/255f,50/255f,1))),0.45f,true,4);
         }
     }
-    public void Effect(Vector3 pos, int count,float scale,OrbitColors colors)
+    public void Effect(Vector3 pos, int count,float scale,OrbitColors colors,bool outlined = true,float outline = 0.2f,float reduce = 4)
     {
-        for (int i = 0; i < count; i++)
+        if(outlined)
         {
-            _poolingManager.Spawn<Orbit>().Init(new OrbitInfo(true,pos +new Vector3(Random.Range(0.15f,-0.15f),
+            for (int i = 0; i < count; i++)
+            {
+                _poolingManager.Spawn<Orbit>().Init(new OrbitInfo(true,pos +new Vector3(Random.Range(0.15f,-0.15f),
                     Random.Range(0.15f,-0.15f),0.1f),scale+Random.Range(-0.10f,0.10f),0.05f,
-                colors),0.2f,true,4);
+                colors),outline,true,reduce);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < count; i++)
+            {
+                _poolingManager.Spawn<Orbit>().Init(new OrbitInfo(true,pos +new Vector3(Random.Range(0.15f,-0.15f),
+                        Random.Range(0.15f,-0.15f),0.1f),scale+Random.Range(-0.10f,0.10f),0.05f,
+                    colors),true,reduce);
+            }
         }
     }
 }

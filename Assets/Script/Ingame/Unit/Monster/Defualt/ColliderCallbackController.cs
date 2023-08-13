@@ -7,6 +7,8 @@ using UnityEngine;
 public class ColliderCallbackController : MonoBehaviour
 {
     public event Action<Collider2D> onColiderEnter;
+
+    public event Action<Collider2D> onColiderExit;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,5 +24,10 @@ public class ColliderCallbackController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         onColiderEnter?.Invoke(other);
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        onColiderExit?.Invoke(other);
     }
 }

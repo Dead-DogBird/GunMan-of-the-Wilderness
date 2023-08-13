@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 //플레이어의 활동(ex: 점프 좌우 움직임 등등)
 //이후 충돌 처리 등등을 처리
@@ -25,6 +27,7 @@ public class PlayerMove : MonoBehaviour
         _playerRigidbody = GetComponent<Rigidbody2D>();
         _playerControll = GetComponent<PlayerContrl>();
         _playerState = GetComponent<PlayerState>();
+        WalkParticle().Forget();
     }
 
     private void Update()
@@ -71,6 +74,10 @@ public class PlayerMove : MonoBehaviour
         {
             _isjumping = false;
             jumpCount = 0;
+            if (_playerControll.Userinput.AxisState != 0)
+            {
+                
+            }
         }
     }
 
@@ -80,6 +87,18 @@ public class PlayerMove : MonoBehaviour
         {
             _isjumping = true;
             jumpCount = 1;
+        }
+    }
+
+    async UniTaskVoid WalkParticle()
+    {
+        while (gameObject.activeSelf)
+        {
+            float radom = Random.Range(200f/255f, 255f/255f);
+            GameManager.Instance.Effect(transform.position+new Vector3(-0.3f*_playerControll.Userinput.AxisState,0.2f),Random.Range(1,4),0.7f,
+                new OrbitColors(new Color(radom,radom,radom,1),new Color(radom,radom,radom,1)),false,0,2);
+            await UniTask.WaitUntil(() => _isjumping == false&&_playerState.isMove);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f),ignoreTimeScale:false);
         }
     }
 }

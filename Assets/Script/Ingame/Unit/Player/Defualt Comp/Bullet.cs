@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 public class Bullet : PoolableObj
 {
-    private Vector3 toVector;
+    public Vector3 toVector { get; private set;}
 
     private float speed;
     public float damage { get; private set; }
@@ -69,10 +69,11 @@ public class Bullet : PoolableObj
 
     async UniTaskVoid MakeOrbit()
     {
+        float z = 0;
         while (gameObject.activeSelf)
         {
             GameManager.Instance._poolingManager.Spawn<Orbit>().Init(new OrbitInfo(true,transform.position
-            +new Vector3(Random.Range(0.15f,-0.15f),Random.Range(0.15f,-0.15f),0.1f),transform.localScale.x,0.1f,orbitColor),0.45f);
+            +new Vector3(Random.Range(0.15f,-0.15f),Random.Range(0.15f,-0.15f),z+=0.01f),transform.localScale.x,0.1f,orbitColor),0.45f);
             await UniTask.Delay(TimeSpan.FromSeconds(orbitDeleay), ignoreTimeScale: false);
         }
     }

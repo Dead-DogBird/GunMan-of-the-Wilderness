@@ -14,7 +14,6 @@ public class Orbit : PoolableObj
     private float destroyTime = 2;
     private SpriteRenderer _sprite;
     private Color myColor = Color.black;
-    Color priColor, secColor;
     private Tween _tween;
     
     new void Start()
@@ -26,6 +25,7 @@ public class Orbit : PoolableObj
     {
         ReleseReserv(destroyTime).Forget();
         _sprite = GetComponent<SpriteRenderer>();
+        _sprite.color = myColor;
     }
     void Update()
     {
@@ -33,10 +33,18 @@ public class Orbit : PoolableObj
         //transform.localScale *= Time.deltaTime*sizeReduction;
         if (transform.localScale.x <= targetFigure)
         {
-            _tween.Complete();
+            if(colored)
+                _tween.Complete();
             GameManager.Instance._poolingManager.Despawn(this);
         }
         
+    }
+
+    new void OnDisable()
+    {
+        _sprite.color = myColor;
+        if(colored)
+            _tween.Complete();
     }
     protected override async UniTaskVoid ReleseReserv(float delay = 2)
     {
@@ -57,27 +65,23 @@ public class Orbit : PoolableObj
         
         if (colored)
         {
-            priColor = info.colors?.priColor ?? myColor;
-            secColor = info.colors?.secColor ?? myColor;
-            _sprite.color = priColor;
-            _tween = _sprite.DOColor(secColor, 0.2f);
-            _sprite.sortingOrder = 7;
+            _sprite.color = info.colors.priColor;
+            _tween = _sprite.DOColor(info.colors.secColor, 0.2f);
+            _sprite.sortingOrder = 13;
         }
         else
         {
-            priColor = myColor;
-            secColor = myColor;
             _sprite.color = myColor;
-            _sprite.sortingOrder = 6;
+            _sprite.sortingOrder = 12;
         }
         return this;
     }
-    public Orbit Init(OrbitInfo info,float outline,bool isSize =false, float reduction =2)
+    public Orbit Init(OrbitInfo info,float outline,bool isSize = false, float reduction = 2)
     {
-        Init(info,isSize,reduction);
+        var orbit = Init(info,isSize,reduction);
         GameManager.Instance._poolingManager.
-            Spawn<Orbit>().Init(new OrbitInfo(false,transform.position+new Vector3(0,0,0.1f),
-                transform.localScale.x+outline,targetFigure+outline),isSize,reduction);
+            Spawn<Orbit>().Init(new OrbitInfo(false,orbit.transform.position+new Vector3(0,0,0.1f),
+                orbit.transform.localScale.x+outline,orbit.targetFigure+outline),isSize,reduction);
         
         return this;
     }
@@ -90,7 +94,7 @@ public struct OrbitInfo
     public Vector3 position;
     public float scale;
     public float targetFugure;
-    public OrbitColors? colors;
+    public OrbitColors colors;
     
     public OrbitInfo(bool _isColored, Vector3 _position, float _scale, float _targetFugure, OrbitColors _colors)
     {
