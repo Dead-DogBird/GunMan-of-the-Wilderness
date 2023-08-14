@@ -16,7 +16,7 @@ public class MonsterDefault : MonoBehaviour
     public int nextMove;
 
     private bool isDie = false;
-    [SerializeField] private float distanceFromPlayer = 0.5f;
+    [SerializeField] private float distanceFromPlayer = 0.1f;
     [SerializeField] ColliderCallbackController colliderCallbackController;
 
     protected PlayerState player;
