@@ -12,14 +12,14 @@ public class MonsterDefault : MonoBehaviour
     [SerializeField] protected float _speed = 3.5f;
 
     protected Rigidbody2D _rigid;
-    protected bool _targetedPlayer = false;
-    public int nextMove;
+    public bool _targetedPlayer { get; protected set; }
+    protected int nextMove;
 
-    private bool isDie = false;
+    public bool isDie { get; protected set; }
     [SerializeField] private float distanceFromPlayer = 0.1f;
     [SerializeField] ColliderCallbackController colliderCallbackController;
 
-    protected PlayerState player;
+    public PlayerState player{ get; protected set; }
 
     protected Animator _animator;
     protected static readonly int _TargetedPlayer = Animator.StringToHash("TargetedPlayer");
@@ -39,7 +39,7 @@ public class MonsterDefault : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected void Update()
     {
         if (!_targetedPlayer)
         {
@@ -83,7 +83,7 @@ public class MonsterDefault : MonoBehaviour
             _rigid.AddForce(new Vector2(0,1),ForceMode2D.Impulse);
         }
     }
-    void NontargetPlayerMove()
+    protected void NontargetPlayerMove()
     {
         _rigid.velocity = new Vector2(nextMove, _rigid.velocity.y);
         Vector2 frontVec = new Vector2(_rigid.position.x + nextMove*0.2f,_rigid.position.y);
@@ -101,7 +101,7 @@ public class MonsterDefault : MonoBehaviour
         
     }
     
-    async UniTaskVoid MoveSelect()
+    protected async UniTaskVoid MoveSelect()
     {
         while (!isDie)
         {
@@ -112,28 +112,28 @@ public class MonsterDefault : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    protected void onDamaged(Bullet _bullet)
+    {
+        GameManager.Instance.Effect(_bullet.transform.position, 4);
+        _hp -= _bullet.damage;
+        KnockBack(_bullet.toVector.x,_bullet.damage);
+        GameManager.Instance._poolingManager.Despawn(_bullet);
+        if (!_targetedPlayer)
+        {
+            SetTargetPlayer(GameManager.Instance.player);
+        }
+        if (_hp <= 0)
+            Destroy(gameObject);
+    }
+    protected void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("bullet"))
         {
-            Bullet _bullet = other.GetComponent<Bullet>();
-            GameManager.Instance.Effect(other.transform.position, 4);
-            _hp -= _bullet.damage;
-            KnockBack(_bullet.toVector.x,_bullet.damage);
-            GameManager.Instance._poolingManager.Despawn(_bullet);
-            if (!_targetedPlayer)
-            {
-                _targetedPlayer = true;
-                player = GameManager.Instance.player;
-                _animator.SetBool(_TargetedPlayer,true);
-            }
-            
-            if (_hp <= 0)
-                Destroy(gameObject);
+            onDamaged(other.GetComponent<Bullet>());
         }
 
     }
-    async UniTaskVoid WalkParticle()
+    protected async UniTaskVoid WalkParticle()
     {
         while (!isDie&&_targetedPlayer)
         {
@@ -144,29 +144,31 @@ public class MonsterDefault : MonoBehaviour
             await UniTask.Delay(TimeSpan.FromSeconds(0.1f),ignoreTimeScale:false);
         }
     }
-    void Findedplayer(Collider2D other)
+    protected void Findedplayer(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("플레이를 봤다 안카요");
-            player = other.GetComponent<PlayerState>();
-            _animator.SetBool(_TargetedPlayer,true);
-            _targetedPlayer = true;
-            WalkParticle().Forget();
+            SetTargetPlayer(other.GetComponent<PlayerState>());
         }
     }
-    void KnockBack(float tovector,float damege)
+    protected void KnockBack(float tovector,float damege)
     {
         _rigid.velocity = new Vector2(0,_rigid.velocity.y);
         _rigid.AddForce(new Vector2(tovector*damege*0.5f,0),ForceMode2D.Impulse);
     }
-    void LosePlayer(Collider2D other)
+    protected void LosePlayer(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-          /*  Debug.Log("플레이를 못봤다 안카요");
-            player = null;
-            _targetedPlayer = false;*/
+      
         }
+    }
+
+    protected virtual void SetTargetPlayer(PlayerState _player)
+    {
+        player = _player;
+        _animator.SetBool(_TargetedPlayer,true);
+        _targetedPlayer = true;
+        WalkParticle().Forget();
     }
 }

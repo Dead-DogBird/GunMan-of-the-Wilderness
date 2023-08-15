@@ -35,9 +35,7 @@ public class Player_Gun : MonoBehaviour
         mPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         rotateDegree = CustomAngle.PointDirection(transform.position, mPosition);
         
-        todegree = _transform.localEulerAngles.z;
-        if (Mathf.Abs(todegree-rotateDegree)>180f) todegree = rotateDegree;
-        todegree += (rotateDegree - todegree) / 7.5f;
+       
 
         var eulerAngles = new Vector3(0f, 0f, todegree);
         _transform.localEulerAngles = eulerAngles;
