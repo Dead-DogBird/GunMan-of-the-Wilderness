@@ -10,8 +10,8 @@ public class Player_Gun : MonoBehaviour
     private Vector3 oriscale;
     [SerializeField] private Transform _transform;
     public float rotateDegree;
-    
-    private float t = 0.0f;
+    public float _spread = 0;
+   
     
     // Start is called before the first frame update
     void Start()
@@ -31,12 +31,15 @@ public class Player_Gun : MonoBehaviour
 
     void mouseTarget()
     {
-        t += Time.deltaTime;
+        
         mPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         rotateDegree = CustomAngle.PointDirection(transform.position, mPosition);
         
-       
-
+        
+        todegree = _transform.localEulerAngles.z;
+        if (Mathf.Abs(todegree-rotateDegree)>180f) todegree = rotateDegree;
+        todegree += (rotateDegree - todegree) / 7.5f;
+        
         var eulerAngles = new Vector3(0f, 0f, todegree);
         _transform.localEulerAngles = eulerAngles;
 
@@ -47,14 +50,14 @@ public class Player_Gun : MonoBehaviour
             localScale = new Vector3(_transform.localScale.x, oriscale.y, 0);
         
         localScale += (new Vector3(oriscale.x,  (localScale.y>0) ? oriscale.y: -oriscale.y)
-                       -localScale)/5f;
+                       -localScale)/7f;
         _transform.localScale = localScale;
         
         _transform.localPosition += (oPosition - _transform.localPosition) / 7.5f;
 
     }
 
-    public void FireEffect(float move = 0.5f, float degree = 25,float size = 0.2f)
+    public void FireEffect(float move = 0.5f, float degree = 25,float size = 0.5f)
     {
         _transform.localScale *= 1+size;
         _transform.localPosition -= CustomAngle.VectorRotation(rotateDegree) * move;

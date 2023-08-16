@@ -26,6 +26,7 @@ public class Orbit : PoolableObj
         ReleseReserv(destroyTime).Forget();
         _sprite = GetComponent<SpriteRenderer>();
         _sprite.color = myColor;
+        _tween.Complete();
     }
     void Update()
     {
@@ -46,6 +47,12 @@ public class Orbit : PoolableObj
         if(colored)
             _tween.Complete();
     }
+#if UNITY_EDITOR
+    void OnApplicationQuit()
+    {
+        _tween.Complete();
+    }
+#endif
     protected override async UniTaskVoid ReleseReserv(float delay = 2)
     {
         await UniTask.Delay(TimeSpan.FromSeconds(delay), ignoreTimeScale: false);

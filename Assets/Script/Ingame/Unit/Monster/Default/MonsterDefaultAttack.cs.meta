@@ -3,7 +3,11 @@ guid: 87cf016c802a85c4f9f90f973c426c27
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - _bullet: {fileID: 5249611732131691235, guid: 3222ec8b07c95734a914d8acc9265caf, type: 3}
+  - _monsterGun: {instanceID: 0}
+  - _fireflame: {fileID: 6140996296906423665, guid: 7adb60e6019507f4bb61bdc76a7effe2, type: 3}
+  - firepos: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

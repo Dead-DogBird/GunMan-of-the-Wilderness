@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 public class PlayerMove : MonoBehaviour
 {
     //컴포넌트들
-    private Rigidbody2D _playerRigidbody;
+    public Rigidbody2D _playerRigidbody { get; private set; }
     private PlayerContrl _playerControll;
     private PlayerState _playerState;
     //세팅값들
@@ -24,6 +24,7 @@ public class PlayerMove : MonoBehaviour
     
     private void Start()
     {
+        
         _playerRigidbody = GetComponent<Rigidbody2D>();
         _playerControll = GetComponent<PlayerContrl>();
         _playerState = GetComponent<PlayerState>();
@@ -34,10 +35,11 @@ public class PlayerMove : MonoBehaviour
     {
         Jump();
         UpdateAnimation();
+        transform.Translate(new Vector3(speed*_playerControll.Userinput.AxisState, 0) * Time.deltaTime);
     }
     private void FixedUpdate()
     {
-       transform.Translate(new Vector3(speed*_playerControll.Userinput.AxisState, 0) * Time.deltaTime);
+      
     }
 
     private void Jump()
@@ -46,6 +48,9 @@ public class PlayerMove : MonoBehaviour
         if (!_playerControll.Userinput.SpaceState) return;
         _isjumping = true;
         jumpCount++;
+        float radom = Random.Range(200f/255f, 255f/255f);
+        GameManager.Instance.Effect(transform.position+new Vector3(-0.3f*_playerControll.Userinput.AxisState,0.2f),Random.Range(4,7),0.7f,
+            new OrbitColors(new Color(radom,radom,radom,1),new Color(radom,radom,radom,1)),false,0,2);
         if (jumpCount == 2)
         {
             _playerState.PlayAnimation("Player@jump",-1,0);
@@ -56,6 +61,8 @@ public class PlayerMove : MonoBehaviour
         _playerRigidbody.AddForce(new Vector2(0, jumpForce));
         _playerRigidbody.velocity = Vector2.zero;
         _playerState.isGround = !_isjumping;
+        
+       
     }
 
     void UpdateAnimation()

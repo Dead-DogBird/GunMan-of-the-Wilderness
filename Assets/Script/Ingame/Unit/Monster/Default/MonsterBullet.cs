@@ -32,11 +32,11 @@ public class MonsterBullet : PoolableObj
     {
         transform.Translate(toVector * (speed * Time.deltaTime),Space.World);
     }
-    public GameObject Init(GetFireInstance getinfo)
+    public GameObject Init(GetFireInstance getinfo,Vector3 pos)
     {
         transform.position = getinfo.firepos;
-        toVector = CustomAngle.VectorRotation(CustomAngle.PointDirection(getinfo.firepos,
-            getinfo.mousepos));
+        toVector = CustomAngle.VectorRotation(CustomAngle.PointDirection(pos,
+            getinfo.mousepos)+getinfo.spread);
         damage = getinfo.damage;
         speed = getinfo.speed;
         _sprite.color = getinfo.bulletColor;

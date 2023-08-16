@@ -28,6 +28,7 @@ public class PlayerState : MonoBehaviour
     //대미지
     [SerializeField] private float _damage;
 
+    [SerializeField] private float _spread;
     //발사 딜레이
     [SerializeField] private float _fireDelay;
     private float _nowFireDelay;
@@ -58,13 +59,16 @@ public class PlayerState : MonoBehaviour
     private PlayerContrl _playerContrl;
     private Player_Gun _playerGun;
     [SerializeField] private GameObject Textures;
-    private List<Sprite> _charSprites = new();
+    private List<SpriteRenderer> _charSprites = new();
 
     private Animator _animator;
     private bool _isMove;
     private bool _isGround;
     private static readonly int Move = Animator.StringToHash("Move");
     private static readonly int Ground = Animator.StringToHash("Ground");
+    private bool _isimmune = false;
+
+    private Rigidbody2D _rigidbody;
     public bool isMove
     {
         get => _isMove;
@@ -111,6 +115,7 @@ public class PlayerState : MonoBehaviour
         Getsprite(Textures);
         GameManager.Instance.SetPlayer(this);
         _animator = GetComponent<Animator>();
+        _rigidbody = GetComponent<Rigidbody2D>();
     }
 
     private void Getsprite(GameObject obj)
@@ -118,7 +123,7 @@ public class PlayerState : MonoBehaviour
         for (var i = 0; i < obj.transform.childCount; i++)
         {
             var child = obj.transform.GetChild(i);
-            _charSprites.Add(child.GetComponent<SpriteRenderer>().sprite);
+            _charSprites.Add(child.GetComponent<SpriteRenderer>());
         }
 
     }
@@ -183,22 +188,47 @@ public class PlayerState : MonoBehaviour
         _fireState = FireState_.Default;
     }
 
-    public void GetDamage(float getDamage)
+    public void GetDamage(MonsterBullet _monsterBullet)
     {
+        if (_isimmune) return;
 
+        _isimmune = true;
+        GameManager.Instance.Effect(_monsterBullet.transform.position, 4,0.4f);
+        _playerHp -= _monsterBullet.damage;
+        //KnockBack(_monsterBullet.toVector.x,_monsterBullet.damage);
+        GameManager.Instance._poolingManager.Despawn(_monsterBullet);
+        GetDamegeTask().Forget();
     }
 
     async UniTaskVoid GetDamegeTask()
     {
-
-
+        IngameCamera.Instance.Shake(0.1f,0.1f,3,1.1f,10);
+        
+        Time.timeScale = 0;
+        await UniTask.Delay(TimeSpan.FromSeconds(0.2f), ignoreTimeScale: true);
+        Time.timeScale = 1;
+        
+        
+        for (int i = 0; i < 7; i++)
+        {
+            foreach (var sprite in _charSprites)
+            {
+                sprite.color = new Color(1,1,1,(i % 2 == 0) ? 0.5f : 1);
+            }
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f), ignoreTimeScale: false);
+        }
+        foreach (var sprite in _charSprites)
+        {
+            sprite.color = new Color(1,1,1,1);
+        }
+        _isimmune = false;
     }
 
     public GetFireInstance GetFireInstance()
     {
         
         return new GetFireInstance(_gunholePos.position,GetMousePos()
-        ,_damage,_bulletSpeed,_bulletColor,new OrbitColors(_orbitColor,_sceorbitColor));
+        ,_damage,_bulletSpeed,_bulletColor,new OrbitColors(_orbitColor,_sceorbitColor),_spread);
     }
 
     public void GetFireEffect()
@@ -213,7 +243,15 @@ public class PlayerState : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D other)
     {
-        
+      
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("MonsterBullet"))
+        {
+            GetDamage(other.transform.GetComponent<MonsterBullet>());
+        }
     }
 }
 
@@ -225,8 +263,9 @@ public struct GetFireInstance
     public float speed;
     public Color bulletColor;
     public OrbitColors orbitcolors;
+    public float spread;
     public GetFireInstance(Vector3 firepos, Vector3 mousepos, float damage, 
-        float speed, Color bulletColor, OrbitColors orbitcolors)
+        float speed, Color bulletColor, OrbitColors orbitcolors,float spread = 0)
     {
         this.firepos = firepos;
         this.mousepos = mousepos;
@@ -234,6 +273,7 @@ public struct GetFireInstance
         this.speed = speed;
         this.bulletColor = bulletColor;
         this.orbitcolors = orbitcolors;
+        this.spread = spread;
     }
     
     

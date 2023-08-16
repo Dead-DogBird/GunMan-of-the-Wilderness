@@ -6,11 +6,10 @@ TagManager:
   tags:
   - bullet
   - opbullet
-  - RifleUlt
-  - OPRifleUlt
   - Ground
   - Monster
   - FindPlayer
+  - MonsterBullet
   layers:
   - Default
   - TransparentFX

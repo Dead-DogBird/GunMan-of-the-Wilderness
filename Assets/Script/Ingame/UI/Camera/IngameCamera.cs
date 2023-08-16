@@ -6,11 +6,11 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 // ReSharper disable once CheckNamespace
-public class IngameCamera : MonoBehaviour
+public class IngameCamera : MonoSingleton<IngameCamera>
 {
     private PlayerState _player;
-    private Camera _mainCamera;
-    
+    private Camera _camera;
+    [SerializeField] private float smooth = 5;
     
     public float shake_x = 0;
     public float shake_y = 0;
@@ -21,58 +21,76 @@ public class IngameCamera : MonoBehaviour
     float camera_size;
     float shakeVol;
     private bool _isPlayerNotNull;
-
+    private float power = 5;
+    public Vector2 position;
+    
+    private float lastTime;
+    private const float OneFrameDeltaTime = 1 / 120f;
     void Start()
     {
         
         getPlayer().Forget();
-        _mainCamera = Camera.main;
-        camera_size = _mainCamera.orthographicSize;
+        _camera = GetComponent<Camera>();
+        camera_size = _camera.orthographicSize;
+        lastTime = Time.unscaledTime;
     }
 
     void Update()
     {
-        
+       
+
     }
 
     private void LateUpdate()
     {
+        if (!_isPlayerNotNull) return;
+
+        var player_position = _player.transform.position + new Vector3(5, 1, 0);
+        position += (Vector2)((player_position - transform.position) / smooth);
         ShakeUpdate();
-        if (_isPlayerNotNull)
-        {
-            transform.position = _player.transform.position - new Vector3(-5.25f,-2.3f,10);
-        }
+        //SetPinnedPlayer(_player.transform);
     }
 
     void ShakeUpdate()
     {
-        _mainCamera.transform.position += new Vector3(Random.Range(-shake_x, shake_x),
-            Random.Range(-shake_y, shake_y), -10);
-        _mainCamera.transform.localRotation = Quaternion.Euler(0,0,Random.Range(-shake_dire,shake_dire));
-        _mainCamera.orthographicSize = camera_size * size;
-        
+        transform.position = new Vector3(position.x + Random.Range(-shake_x, shake_x), position.y + Random.Range(-shake_y, shake_y), transform.position.z);
+        transform.localRotation = Quaternion.Euler(0, 0, Random.Range(-shake_dire, shake_dire));
+        _camera.orthographicSize = camera_size * size;
+
         shake_x -= shake_x / length;
         shake_y -= shake_y / length;
         shake_dire -= shake_dire / length;
-        size += (1 - size) / length;
+        if (size != 1)
+        {
+            size += (1 - size) / length;
+            if ((1 - size).Abs() <= 0.0001f)
+                size = 1;
+        }
     }
 
     public void Shake(float x = 0, float y = 0, float dire = 0, float size = 1.5f, float length = 10)
     {
-        if (x != 0)
-            shake_x = x;
-        if (y != 0)
-            shake_y = y;
-        if (dire != 0)
-            shake_dire = dire + ((-dire) * (1 - shakeVol));
-        this.size = size + ((1 - size) * (1 - shakeVol));
-
-        this.length = length*0.416f;
+        if (shake_x < x * power)
+            shake_x = x * power;
+        if (shake_y < y * power)
+            shake_y = y * power;
+        if (shake_dire < dire)
+            shake_dire = dire;
+        if (this.size > 1 - (1 - size) * power)
+            this.size = 1 - (1 - size) * power;
+        this.length = length;
+        ShakeUpdate();
     }
     async UniTaskVoid getPlayer()
     {
         await UniTask.WaitUntil(() => GameManager.Instance.player != null);
         _player = GameManager.Instance.player;
         _isPlayerNotNull = _player != null;
+    }
+
+    void SetPinnedPlayer(Transform player)
+    {
+        var toVector = Camera.main.ScreenToViewportPoint(Camera.main.WorldToScreenPoint(player.position));
+        player.position = new Vector3(toVector.x, toVector.y, player.position.z);
     }
 }

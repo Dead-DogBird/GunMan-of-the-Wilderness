@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -16,23 +17,26 @@ public class MonsterDefault : MonoBehaviour
     protected int nextMove;
 
     public bool isDie { get; protected set; }
-    [SerializeField] private float distanceFromPlayer = 0.1f;
+    [SerializeField] protected float distanceFromPlayer = 0.1f;
     [SerializeField] ColliderCallbackController colliderCallbackController;
 
     public PlayerState player{ get; protected set; }
-
+    public float damage;
+    public float bulletSpeed;
     protected Animator _animator;
     protected static readonly int _TargetedPlayer = Animator.StringToHash("TargetedPlayer");
 
+    [CanBeNull] protected MonsterDefaultAttack _attack;
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         _rigid = GetComponent<Rigidbody2D>();
         MoveSelect().Forget();
         _animator = GetComponent<Animator>();
+        _attack = GetComponent<MonsterDefaultAttack>();
     }
 
-    private void OnEnable()
+    protected void OnEnable()
     {
         colliderCallbackController.onColiderEnter += Findedplayer;
         colliderCallbackController.onColiderExit += LosePlayer;
@@ -51,13 +55,13 @@ public class MonsterDefault : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    protected void OnDisable()
     {
         colliderCallbackController.onColiderEnter -= Findedplayer;
         colliderCallbackController.onColiderExit -= LosePlayer;
     }
 
-    private void OnDestroy()
+    protected void OnDestroy()
     {
         isDie = true;
     }
@@ -114,7 +118,8 @@ public class MonsterDefault : MonoBehaviour
 
     protected void onDamaged(Bullet _bullet)
     {
-        GameManager.Instance.Effect(_bullet.transform.position, 4);
+        GameManager.Instance.Effect(_bullet.transform.position, 4,0.4f);
+        GameManager.Instance.EffectText(_bullet.transform.position,$"{_bullet.damage}",_bullet.orbitColor.priColor);
         _hp -= _bullet.damage;
         KnockBack(_bullet.toVector.x,_bullet.damage);
         GameManager.Instance._poolingManager.Despawn(_bullet);
@@ -166,9 +171,12 @@ public class MonsterDefault : MonoBehaviour
 
     protected virtual void SetTargetPlayer(PlayerState _player)
     {
+        if (_targetedPlayer) return;
+        
         player = _player;
         _animator.SetBool(_TargetedPlayer,true);
         _targetedPlayer = true;
         WalkParticle().Forget();
+        _attack?.startAttack();
     }
 }

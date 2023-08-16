@@ -20,7 +20,9 @@ public class Bullet : PoolableObj
     private float orbitDeleay =0.004f;
 
     private SpriteRenderer _sprite;
-    private OrbitColors orbitColor;
+
+    public OrbitColors orbitColor { get; private set; }
+
     // Start is called before the first frame update
     private new void Start()
     {
@@ -47,7 +49,7 @@ public class Bullet : PoolableObj
     {
         transform.position = getinfo.firepos;
         toVector = CustomAngle.VectorRotation(CustomAngle.PointDirection(getinfo.firepos,
-            getinfo.mousepos));
+            getinfo.mousepos)+getinfo.spread);
         damage = getinfo.damage;
         speed = getinfo.speed;
         _sprite.color = getinfo.bulletColor;
