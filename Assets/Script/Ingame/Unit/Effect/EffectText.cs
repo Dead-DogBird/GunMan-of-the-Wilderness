@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -59,21 +60,16 @@ public class EffectText : PoolableObj
     void Update()
     {
         if (Time.timeScale == 0) return;
-        
-        alpha += -alpha*Time.deltaTime*2;
-        
+
         transform.position += new Vector3(0, ypos, 0);
-        _textMesh.color = new Color(_textMesh.color.r, _textMesh.color.g, _textMesh.color.b, alpha);
-        foreach (var outlines in _outlines)
-        {
-            outlines.color =new Color(0,0,0,alpha);
-        }
-        if(alpha <= 0.001f) GameManager.Instance._poolingManager.Despawn(this);
+        transform.localScale = new Vector3(alpha, alpha);
+        if(alpha <= 0.4f) GameManager.Instance._poolingManager.Despawn(this);
         
     }
     private void FixedUpdate()
     {
-        ypos += -ypos/7;
+        ypos += (-0.05f-ypos)/15;
+        alpha += -alpha/30;
     }
 
     public GameObject Init(Vector3 pos, Color color,string text)
@@ -86,9 +82,9 @@ public class EffectText : PoolableObj
             _outline.text = text;
             _outline.color = Color.black;
         }
-        ypos = 0.1f;
+        ypos = 0.08f;
         tempColor = _textMesh.color;
-        alpha = _textMesh.color.a;
+        alpha = 1.2f;
         return transform.gameObject;
     }
     protected override async UniTaskVoid ReleseReserv(float delay = 2)

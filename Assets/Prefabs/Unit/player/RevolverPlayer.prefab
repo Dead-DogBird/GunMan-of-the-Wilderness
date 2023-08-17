@@ -376,7 +376,7 @@ GameObject:
   - component: {fileID: 7295443963558571584}
   - component: {fileID: 5187123015528646504}
   - component: {fileID: 8864454078897594378}
-  - component: {fileID: 8199450797058648472}
+  - component: {fileID: 842273468}
   m_Layer: 0
   m_Name: RevolverPlayer
   m_TagString: Player
@@ -583,8 +583,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3447ea13121c9a3409cf69dfc78c36b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _transform: {fileID: 0}
+  _transform: {fileID: 7915174198536888032}
   rotateDegree: 0
+  _spread: 0
 --- !u!114 &3911080272508157093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -609,8 +610,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f405f4f2428728c46aa9fd166b025042, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bullet: {fileID: 0}
-  _fireFlame: {fileID: 0}
+  _bullet: {fileID: 3468561696563007470, guid: 77b9ce54c3f1702489d74eaee1bef8f1, type: 3}
+  _fireFlame: {fileID: 6140996296906423665, guid: 7adb60e6019507f4bb61bdc76a7effe2, type: 3}
 --- !u!114 &5187123015528646504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -623,7 +624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa6dee781b8a56748a1c5dcd2a0c8ed7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  speed: 8
   jumpForce: 1000
   _isjumping: 0
 --- !u!114 &8864454078897594378
@@ -639,18 +640,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerHp: 100
-  _allMag: 0
-  _nowMag: 0
-  _damage: 0
-  _fireDelay: 0
-  _reloadDelay: 0
-  _bulletSpeed: 1
-  _gunholePos: {fileID: 0}
-  _bulletColor: {r: 0, g: 0, b: 0, a: 0}
-  _orbitColor: {r: 0, g: 0, b: 0, a: 0}
+  _allMag: 6
+  _nowMag: 6
+  _damage: 30
+  _spread: 0
+  _fireDelay: 0.5
+  _reloadDelay: 0.8
+  _bulletSpeed: 12
+  _gunholePos: {fileID: 7915174197691678234}
+  _bulletColor: {r: 1, g: 0.30254513, b: 0, a: 1}
+  _orbitColor: {r: 1, g: 0, b: 0.23266792, a: 1}
   _sceorbitColor: {r: 0.25882354, g: 0.25882354, b: 0.37254903, a: 1}
-  Textures: {fileID: 0}
---- !u!114 &8199450797058648472
+  Textures: {fileID: 7915174199472143304}
+--- !u!114 &842273468
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -794,7 +796,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 7915174198300096456}
   m_Bounds:
-    m_Center: {x: 0.001685001, y: 0.03568083, z: 0}
+    m_Center: {x: 0.001685001, y: 0.03568077, z: 0}
     m_Extent: {x: 0.09331501, y: 0.15995502, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -907,7 +909,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7915174198300096457}
   m_LocalRotation: {x: 0, y: 0, z: -0.52573127, w: 0.8506508}
-  m_LocalPosition: {x: 0.1437908, y: 0.54304934, z: 0}
+  m_LocalPosition: {x: 0.1437908, y: 0.5430493, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1015,7 +1017,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 7915174198834017742}
   m_Bounds:
-    m_Center: {x: 0, y: 0.03633064, z: 0}
+    m_Center: {x: 0, y: 0.03633058, z: 0}
     m_Extent: {x: 0.08, y: 0.16291499, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -1044,7 +1046,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7915174198834017743}
   m_LocalRotation: {x: 0, y: 0, z: -0.8062795, w: 0.5915348}
-  m_LocalPosition: {x: -0.229692, y: 0.50196624, z: 0}
+  m_LocalPosition: {x: -0.229692, y: 0.5019662, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

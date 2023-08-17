@@ -7,12 +7,12 @@ using UnityEngine;
 //이후의 프리팹은 이 스크립트를 상속해서 사용.
 public class PlayerFire : MonoBehaviour
 {
-    private PlayerState _playerState;
+    protected PlayerState _playerState;
     protected float _myDamage { get; private set; }
-    [SerializeField] private GameObject _bullet;
+    [SerializeField] protected GameObject _bullet;
     [SerializeField] protected GameObject _fireFlame;
     
-    void Start()
+    protected void Start()
     {
         _playerState = GetComponent<PlayerState>();
         _myDamage = _playerState.getDamage;
@@ -20,7 +20,7 @@ public class PlayerFire : MonoBehaviour
             AddPoolingList<Bullet>(10,_bullet);
     }
 
-    void Update()
+    protected void Update()
     {
         if (_playerState.GetFire())Fire();
         if(_playerState.GetSkill())Skill();

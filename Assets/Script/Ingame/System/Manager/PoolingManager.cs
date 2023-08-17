@@ -77,9 +77,9 @@ public class PoolingList : MonoBehaviour
     public void Initialize(string type,int initialSize,GameObject pObj)
     {
         ojectPar = new GameObject(type+"s");
-        Allpool = new();
-        PoolList = new();
-        ActiveList = new();
+        Allpool = new List<GameObject>();
+        PoolList = new LinkedList<GameObject>();
+        ActiveList = new LinkedList<GameObject>();
         originalObject = pObj;
         for (int i = 0; i < initialSize; i++)
         {
@@ -103,13 +103,12 @@ public class PoolingList : MonoBehaviour
         {
             obj = PoolList.First.Value;
             PoolList.RemoveFirst();
-            if(obj.activeSelf) Debug.Log("이미 활성화 돼있는데 뺏어씀 ㄷㄷ");
         }
         else
         {
             obj = CreateObject(originalObject); // 풀에 남은 오브젝트가 없을 때 새로운 오브젝트 생성
             Allpool.Add(obj);
-            Debug.Log("새로 생성함!");
+            
         }
         obj.SetActive(true);
         

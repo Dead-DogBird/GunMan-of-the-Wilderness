@@ -33,7 +33,7 @@ public class RemoteMonster : MonsterDefault
         }
         else
         {
-            transform.Translate(new Vector3(_speed*(player.transform.position.x > transform.position.x? -2 : 2), 0) * Time.deltaTime);
+            transform.Translate(new Vector3(_speed*(player.transform.position.x > transform.position.x? -1.5f : 1.5f), 0) * Time.deltaTime);
         }
         if (player.transform.position.x < transform.position.x&&transform.localScale.x<0)
         {

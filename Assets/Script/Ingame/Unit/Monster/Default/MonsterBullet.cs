@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -15,7 +16,7 @@ public class MonsterBullet : PoolableObj
     private Color sceColor;
     private float orbitDeleay =0.004f;
     private SpriteRenderer _sprite;
-    private OrbitColors orbitColor;
+    public OrbitColors orbitColor{ get; private set; }
     // Start is called before the first frame update
     private new void Start()
     {
@@ -25,17 +26,20 @@ public class MonsterBullet : PoolableObj
 
     new void OnEnable()
     {
+
         _sprite = GetComponent<SpriteRenderer>();
     }
+
+    
     // Update is called once per frame
     void Update()
     {
         transform.Translate(toVector * (speed * Time.deltaTime),Space.World);
     }
-    public GameObject Init(GetFireInstance getinfo,Vector3 pos)
+    public GameObject Init(GetFireInstance getinfo)
     {
         transform.position = getinfo.firepos;
-        toVector = CustomAngle.VectorRotation(CustomAngle.PointDirection(pos,
+        toVector = CustomAngle.VectorRotation(CustomAngle.PointDirection(getinfo.playerpos,
             getinfo.mousepos)+getinfo.spread);
         damage = getinfo.damage;
         speed = getinfo.speed;

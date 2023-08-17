@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using DG.Tweening;
@@ -23,7 +24,6 @@ public class Orbit : PoolableObj
 
     new void OnEnable()
     {
-        ReleseReserv(destroyTime).Forget();
         _sprite = GetComponent<SpriteRenderer>();
         _sprite.color = myColor;
         _tween.Complete();
@@ -61,7 +61,7 @@ public class Orbit : PoolableObj
     public Orbit Init(OrbitInfo info, bool isSize =false, float reduction =2)
     {
         colored = info.isColored;
-        targetFigure = info.targetFugure;
+        targetFigure = info.targetFigure;
         transform.position = info.position;
         transform.localScale = new Vector3(info.scale,info.scale);
 
@@ -100,23 +100,23 @@ public struct OrbitInfo
     public bool isColored;
     public Vector3 position;
     public float scale;
-    public float targetFugure;
+    public float targetFigure;
     public OrbitColors colors;
     
-    public OrbitInfo(bool _isColored, Vector3 _position, float _scale, float _targetFugure, OrbitColors _colors)
+    public OrbitInfo(bool _isColored, Vector3 _position, float _scale, float targetFigure, OrbitColors _colors)
     {
         isColored = _isColored;
         position = _position;
-        targetFugure = _targetFugure;
+        this.targetFigure = targetFigure;
         scale = _scale;
         colors = _colors;
     }
-    public OrbitInfo(bool _isColored, Vector3 _position, float _scale,float _targetFugure)
+    public OrbitInfo(bool _isColored, Vector3 _position, float _scale,float targetFigure)
     {
         isColored = _isColored;
         position = _position;
         scale = _scale;
-        targetFugure = _targetFugure;
+        this.targetFigure = targetFigure;
         colors = new OrbitColors();
     }
 

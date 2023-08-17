@@ -150,6 +150,12 @@ GameObject:
   - component: {fileID: 1670789329525554893}
   - component: {fileID: 1670789329525554895}
   - component: {fileID: -7461008164512385378}
+  - component: {fileID: 9015836543792220036}
+  - component: {fileID: 4046388742233899398}
+  - component: {fileID: 5741720220120472091}
+  - component: {fileID: -8975775715683262810}
+  - component: {fileID: -7174903224283860110}
+  - component: {fileID: -4540738209833055244}
   m_Layer: 0
   m_Name: RiflePlayer
   m_TagString: Player
@@ -344,6 +350,99 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &9015836543792220036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369290805643978099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3447ea13121c9a3409cf69dfc78c36b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _transform: {fileID: 768925332642593867}
+  rotateDegree: 0
+  _spread: 0
+--- !u!114 &4046388742233899398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369290805643978099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c61971ee74195ec42af5e35f69ce52d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5741720220120472091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369290805643978099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f405f4f2428728c46aa9fd166b025042, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bullet: {fileID: 3468561696563007470, guid: 77b9ce54c3f1702489d74eaee1bef8f1, type: 3}
+  _fireFlame: {fileID: 6140996296906423665, guid: 7adb60e6019507f4bb61bdc76a7effe2, type: 3}
+--- !u!114 &-8975775715683262810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369290805643978099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa6dee781b8a56748a1c5dcd2a0c8ed7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 8
+  jumpForce: 1000
+  _isjumping: 0
+--- !u!114 &-7174903224283860110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369290805643978099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 604c3e601fe62664eb9437b97395b814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerHp: 100
+  _allMag: 30
+  _nowMag: 30
+  _damage: 8
+  _spread: 7
+  _fireDelay: 0.09
+  _reloadDelay: 1.2
+  _bulletSpeed: 11
+  _gunholePos: {fileID: 231056868}
+  _bulletColor: {r: 0.73146665, g: 1, b: 0, a: 1}
+  _orbitColor: {r: 0.20906018, g: 0.6117647, b: 0.25446385, a: 1}
+  _sceorbitColor: {r: 0.25697097, g: 0.3679245, b: 0, a: 1}
+  Textures: {fileID: 8775371011893221207}
+--- !u!114 &-4540738209833055244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369290805643978099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cfbb190c1901dc4e9875fdc63c166c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2292042568355709004
 GameObject:
   m_ObjectHideFlags: 0

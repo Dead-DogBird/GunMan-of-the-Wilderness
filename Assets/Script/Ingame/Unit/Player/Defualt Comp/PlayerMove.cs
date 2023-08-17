@@ -90,7 +90,7 @@ public class PlayerMove : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("Ground"))
+        if (other.gameObject.CompareTag("Ground") && !_isjumping)
         {
             _isjumping = true;
             jumpCount = 1;

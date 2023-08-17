@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 231056867}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.536, y: 0.108, z: 0}
+  m_LocalPosition: {x: 1.838, y: -0.03, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 8197392948503669088}
   m_Bounds:
-    m_Center: {x: 0.0013250113, y: 0.037320808, z: 0}
+    m_Center: {x: 0.0013245195, y: 0.037320837, z: 0}
     m_Extent: {x: 0.097155, y: 0.158315, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -150,6 +150,12 @@ GameObject:
   - component: {fileID: 1670789329525554893}
   - component: {fileID: 1670789329525554895}
   - component: {fileID: 5835439734319475799}
+  - component: {fileID: 4134350628370526706}
+  - component: {fileID: -8095653050227423302}
+  - component: {fileID: 8345307774341105932}
+  - component: {fileID: -5486183599060030111}
+  - component: {fileID: 7571891450145710658}
+  - component: {fileID: 3518452714758334290}
   m_Layer: 0
   m_Name: SniperPlayer
   m_TagString: Player
@@ -344,6 +350,99 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4134350628370526706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369290805643978099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3447ea13121c9a3409cf69dfc78c36b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _transform: {fileID: 768925332642593867}
+  rotateDegree: 0
+  _spread: 0
+--- !u!114 &-8095653050227423302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369290805643978099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c61971ee74195ec42af5e35f69ce52d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8345307774341105932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369290805643978099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8f2d43b350b0124f814263f51e03cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bullet: {fileID: 6104887262773130951, guid: 927b3e8dfdfc2ae4792606f9d684eee5, type: 3}
+  _fireFlame: {fileID: 6140996296906423665, guid: a2b74368fc9f64e4fba376c7a171dfb4, type: 3}
+--- !u!114 &-5486183599060030111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369290805643978099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa6dee781b8a56748a1c5dcd2a0c8ed7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 8
+  jumpForce: 1000
+  _isjumping: 0
+--- !u!114 &7571891450145710658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369290805643978099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 604c3e601fe62664eb9437b97395b814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerHp: 100
+  _allMag: 5
+  _nowMag: 5
+  _damage: 80
+  _spread: 0
+  _fireDelay: 0.8
+  _reloadDelay: 2
+  _bulletSpeed: 120
+  _gunholePos: {fileID: 231056868}
+  _bulletColor: {r: 1, g: 1, b: 1, a: 1}
+  _orbitColor: {r: 0.37254903, g: 0.15686275, b: 1, a: 1}
+  _sceorbitColor: {r: 0.22084165, g: 0.20309716, b: 0.26415092, a: 1}
+  Textures: {fileID: 8775371011893221207}
+--- !u!114 &3518452714758334290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369290805643978099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cfbb190c1901dc4e9875fdc63c166c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2292042568355709004
 GameObject:
   m_ObjectHideFlags: 0
@@ -529,7 +628,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 5614083081950621339}
   m_Bounds:
-    m_Center: {x: 0.004108131, y: -0.16858643, z: 0}
+    m_Center: {x: 0.0041080713, y: -0.16858643, z: 0}
     m_Extent: {x: 0.36079293, y: 0.4210015, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -719,8 +818,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 768925332642593867}
   m_Bounds:
-    m_Center: {x: -0.35356438, y: 0.27691674, z: 0}
-    m_Extent: {x: 1.0391458, y: 0.85529137, z: 0}
+    m_Center: {x: -0.35356426, y: 0.27691674, z: 0}
+    m_Extent: {x: 1.0391457, y: 0.85529137, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -971,7 +1070,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 255512820059099772}
   m_Bounds:
-    m_Center: {x: 0.001684986, y: 0.03568083, z: 0}
+    m_Center: {x: 0.001685001, y: 0.03568083, z: 0}
     m_Extent: {x: 0.09331501, y: 0.15995502, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -1140,7 +1239,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 9007350997220628035}
   m_Bounds:
-    m_Center: {x: -0.00000008940697, y: 0.03633064, z: 0}
+    m_Center: {x: 0, y: 0.03633064, z: 0}
     m_Extent: {x: 0.08, y: 0.16291499, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1

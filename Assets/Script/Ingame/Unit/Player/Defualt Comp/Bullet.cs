@@ -1,62 +1,87 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using Cysharp.Threading;
+using Unity.VisualScripting;
 
 public class Bullet : PoolableObj
 {
-    public Vector3 toVector { get; private set;}
+    public Vector3 toVector { get; protected set; }
 
-    private float speed;
-    public float damage { get; private set; }
+    protected float speed;
+    public float damage { get; protected set; }
 
-    private Color color;
+    protected float orbitDeleay = 0.004f;
+    protected float targetFigure;
+    protected SpriteRenderer _sprite;
 
-    private Color priColor;
-    private Color sceColor;
-
-    private float orbitDeleay =0.004f;
-
-    private SpriteRenderer _sprite;
-
-    public OrbitColors orbitColor { get; private set; }
+    public OrbitColors orbitColor { get; protected set; }
 
     // Start is called before the first frame update
-    private new void Start()
+    protected new void Start()
     {
         //base.Start();
         _sprite = GetComponent<SpriteRenderer>();
     }
 
-    new void OnEnable()
+    protected new void OnEnable()
     {
         _sprite = GetComponent<SpriteRenderer>();
     }
+
     // Update is called once per frame
-    void Update()
+    protected void Update()
     {
-        transform.Translate(toVector * (speed * Time.deltaTime),Space.World);
+        transform.Translate(toVector * (speed * Time.deltaTime), Space.World);
     }
 
     private void FixedUpdate()
     {
-        
     }
 
-    public GameObject Init(GetFireInstance getinfo)
+    private float time;
+
+    protected void OnDisable()
     {
+    }
+
+    public virtual GameObject Init(GetFireInstance getinfo)
+    {
+       
+        time = 0;
         transform.position = getinfo.firepos;
-        toVector = CustomAngle.VectorRotation(CustomAngle.PointDirection(getinfo.firepos,
-            getinfo.mousepos)+getinfo.spread);
+        toVector = CustomAngle.VectorRotation(CustomAngle.PointDirection(getinfo.playerpos,
+            getinfo.mousepos) + Random.Range(getinfo.spread, -getinfo.spread));
         damage = getinfo.damage;
         speed = getinfo.speed;
         _sprite.color = getinfo.bulletColor;
         orbitColor = getinfo.orbitcolors;
-        transform.rotation = Quaternion.Euler(0,0,
-            CustomAngle.PointDirection(getinfo.firepos,getinfo.mousepos));
-        
+        targetFigure = getinfo.targetFigure;
+        transform.rotation = Quaternion.Euler(0, 0,
+            CustomAngle.PointDirection(getinfo.firepos, getinfo.mousepos));
+
+        MakeOrbit().Forget();
+        ReleseReserv().Forget();
+        return gameObject;
+    }
+
+    public GameObject Init(GetFireInstance getinfo, float angle)
+    {
+        transform.position = getinfo.firepos;
+        toVector = CustomAngle.VectorRotation(CustomAngle.PointDirection(getinfo.playerpos,
+            getinfo.mousepos) + angle + Random.Range(getinfo.spread, -getinfo.spread));
+        damage = getinfo.damage;
+        speed = getinfo.speed;
+        _sprite.color = getinfo.bulletColor;
+        orbitColor = getinfo.orbitcolors;
+        targetFigure = getinfo.targetFigure;
+        transform.rotation = Quaternion.Euler(0, 0,
+            CustomAngle.PointDirection(getinfo.firepos, getinfo.mousepos));
+
         MakeOrbit().Forget();
         ReleseReserv().Forget();
         return gameObject;
@@ -64,18 +89,24 @@ public class Bullet : PoolableObj
 
     protected override async UniTaskVoid ReleseReserv(float delay = 2)
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(delay), ignoreTimeScale: false);
-        if(gameObject.activeSelf)
-            GameManager.Instance._poolingManager.Despawn(this); 
+        while(gameObject.activeSelf)
+        {
+            delay -= 0.1f;
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f), ignoreTimeScale: false);
+            if (delay <= 0)
+                break;
+        }
+        GameManager.Instance._poolingManager.Despawn(this);
     }
 
-    async UniTaskVoid MakeOrbit()
+
+async UniTaskVoid MakeOrbit()
     {
         float z = 0;
         while (gameObject.activeSelf)
         {
             GameManager.Instance._poolingManager.Spawn<Orbit>().Init(new OrbitInfo(true,transform.position
-            +new Vector3(Random.Range(0.15f,-0.15f),Random.Range(0.15f,-0.15f),z+=0.01f),transform.localScale.x,0.1f,orbitColor),0.45f);
+            +new Vector3(Random.Range(0.15f,-0.15f),Random.Range(0.15f,-0.15f),z+=0.01f),transform.localScale.x,targetFigure,orbitColor),0.45f);
             await UniTask.Delay(TimeSpan.FromSeconds(orbitDeleay), ignoreTimeScale: false);
         }
     }

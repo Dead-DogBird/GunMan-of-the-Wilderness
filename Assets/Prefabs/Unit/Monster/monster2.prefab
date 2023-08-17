@@ -950,6 +950,7 @@ MonoBehaviour:
   bulletColor: {r: 1, g: 0, b: 0.62804985, a: 1}
   pricolor: {r: 0.73146677, g: 0, b: 1, a: 1}
   seccolor: {r: 0.19922778, g: 0.16776432, b: 0.24528301, a: 1}
+  damage: 20
 --- !u!114 &1975927759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -966,7 +967,6 @@ MonoBehaviour:
   _speed: 0.32
   distanceFromPlayer: 0.1
   colliderCallbackController: {fileID: 205333722663112809}
-  damage: 10
   bulletSpeed: 8
 --- !u!1 &6846044398947763589
 GameObject:

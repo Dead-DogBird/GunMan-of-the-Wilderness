@@ -853,7 +853,6 @@ MonoBehaviour:
   _speed: 3.5
   distanceFromPlayer: 4
   colliderCallbackController: {fileID: 9066188040242370182}
-  damage: 40
   bulletSpeed: 10
 --- !u!114 &4035066439021933362
 MonoBehaviour:
@@ -875,6 +874,7 @@ MonoBehaviour:
   bulletColor: {r: 1, g: 0.46893442, b: 0, a: 1}
   pricolor: {r: 0.29803923, g: 1, b: 0, a: 1}
   seccolor: {r: 0.5283019, g: 0.17414029, b: 0.062299743, a: 1}
+  damage: 40
 --- !u!1 &5472099736627031599
 GameObject:
   m_ObjectHideFlags: 0

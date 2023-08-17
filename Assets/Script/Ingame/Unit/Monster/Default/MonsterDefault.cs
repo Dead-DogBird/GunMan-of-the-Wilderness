@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
+using Mono.Cecil.Cil;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -21,7 +22,7 @@ public class MonsterDefault : MonoBehaviour
     [SerializeField] ColliderCallbackController colliderCallbackController;
 
     public PlayerState player{ get; protected set; }
-    public float damage;
+    
     public float bulletSpeed;
     protected Animator _animator;
     protected static readonly int _TargetedPlayer = Animator.StringToHash("TargetedPlayer");
@@ -38,6 +39,7 @@ public class MonsterDefault : MonoBehaviour
 
     protected void OnEnable()
     {
+        
         colliderCallbackController.onColiderEnter += Findedplayer;
         colliderCallbackController.onColiderExit += LosePlayer;
     }
@@ -128,7 +130,7 @@ public class MonsterDefault : MonoBehaviour
             SetTargetPlayer(GameManager.Instance.player);
         }
         if (_hp <= 0)
-            Destroy(gameObject);
+            Die();
     }
     protected void OnTriggerEnter2D(Collider2D other)
     {
@@ -169,6 +171,12 @@ public class MonsterDefault : MonoBehaviour
         }
     }
 
+    protected void Die()
+    {
+        isDie = true;
+        GameManager.Instance.Effect(transform.position, 4,0.4f);    
+        Destroy(gameObject);
+    }
     protected virtual void SetTargetPlayer(PlayerState _player)
     {
         if (_targetedPlayer) return;

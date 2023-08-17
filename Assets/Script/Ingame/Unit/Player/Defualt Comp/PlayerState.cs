@@ -29,6 +29,7 @@ public class PlayerState : MonoBehaviour
     [SerializeField] private float _damage;
 
     [SerializeField] private float _spread;
+
     //발사 딜레이
     [SerializeField] private float _fireDelay;
     private float _nowFireDelay;
@@ -38,14 +39,13 @@ public class PlayerState : MonoBehaviour
 
     //총알 시간
     [SerializeField] private float _bulletSpeed = 1;
-    
-    //총구 위치
+
+    //총구 위치,색깔
     [SerializeField] private Transform _gunholePos;
     [SerializeField] private Color _bulletColor;
     [SerializeField] private Color _orbitColor;
-
     [SerializeField] private Color _sceorbitColor = new(66 / 255f, 66 / 255f, 95 / 255f, 255 / 255f);
-
+    [SerializeField] private float targetFigure = 0.1f;
     private FireState_ _fireState;
     public float getPlayerHp => _playerHp;
     public int getAllMag => _allMag;
@@ -69,6 +69,7 @@ public class PlayerState : MonoBehaviour
     private bool _isimmune = false;
 
     private Rigidbody2D _rigidbody;
+
     public bool isMove
     {
         get => _isMove;
@@ -78,11 +79,12 @@ public class PlayerState : MonoBehaviour
             if (_isMove != value)
             {
                 _isMove = value;
-                _animator.SetBool(Move,_isMove);
+                _animator.SetBool(Move, _isMove);
             }
         }
-        
+
     }
+
     public bool isGround
     {
         get => _isGround;
@@ -92,10 +94,10 @@ public class PlayerState : MonoBehaviour
             if (_isGround != value)
             {
                 _isGround = value;
-                _animator.SetBool(Ground,_isGround);
+                _animator.SetBool(Ground, _isGround);
             }
         }
-        
+
     }
 
 
@@ -130,7 +132,7 @@ public class PlayerState : MonoBehaviour
 
     private void Update()
     {
-        
+
 
     }
 
@@ -193,10 +195,29 @@ public class PlayerState : MonoBehaviour
         if (_isimmune) return;
 
         _isimmune = true;
-        GameManager.Instance.Effect(_monsterBullet.transform.position, 4,0.4f);
+        GameManager.Instance.Effect(_monsterBullet.transform.position, 4, 0.4f);
+        GameManager.Instance.EffectText(_monsterBullet.transform.position,$"-{_monsterBullet.damage}",_monsterBullet.orbitColor.priColor);
         _playerHp -= _monsterBullet.damage;
         //KnockBack(_monsterBullet.toVector.x,_monsterBullet.damage);
         GameManager.Instance._poolingManager.Despawn(_monsterBullet);
+        GetDamegeTask().Forget();
+    }
+
+    void GetDamage(MonsterDefaultAttack monster)
+    {
+        if (_isimmune) return;
+        _isimmune = true;
+        if (monster is not null)
+        {
+            GameManager.Instance.EffectText(transform.position,$"-{monster.damage/2}",monster.PriColor);
+            _playerHp -= monster.damage/2;
+        }
+        else
+        {
+            GameManager.Instance.EffectText(transform.position,$"-10",new Color(180/255f,0/255f,230/255f,1));
+            _playerHp -= 10;
+        }
+        GameManager.Instance.Effect(transform.position, 4, 0.4f);
         GetDamegeTask().Forget();
     }
 
@@ -227,8 +248,8 @@ public class PlayerState : MonoBehaviour
     public GetFireInstance GetFireInstance()
     {
         
-        return new GetFireInstance(_gunholePos.position,GetMousePos()
-        ,_damage,_bulletSpeed,_bulletColor,new OrbitColors(_orbitColor,_sceorbitColor),_spread);
+        return new GetFireInstance(transform.position,_gunholePos.position,GetMousePos()
+        ,_damage,_bulletSpeed,_bulletColor,new OrbitColors(_orbitColor,_sceorbitColor),targetFigure,_spread);
     }
 
     public void GetFireEffect()
@@ -243,7 +264,10 @@ public class PlayerState : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D other)
     {
-      
+        if (other.transform.CompareTag("Monster"))
+        {
+            GetDamage(other.transform.GetComponent<MonsterDefaultAttack>());
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -264,9 +288,12 @@ public struct GetFireInstance
     public Color bulletColor;
     public OrbitColors orbitcolors;
     public float spread;
-    public GetFireInstance(Vector3 firepos, Vector3 mousepos, float damage, 
-        float speed, Color bulletColor, OrbitColors orbitcolors,float spread = 0)
+    public Vector3 playerpos;
+    public float targetFigure;
+    public GetFireInstance(Vector3 playerpos, Vector3 firepos, Vector3 mousepos, float damage, 
+        float speed, Color bulletColor, OrbitColors orbitcolors,float targetFigure = 0.1f,float spread = 0)
     {
+        this.playerpos = playerpos;
         this.firepos = firepos;
         this.mousepos = mousepos;
         this.damage = damage;
@@ -274,6 +301,7 @@ public struct GetFireInstance
         this.bulletColor = bulletColor;
         this.orbitcolors = orbitcolors;
         this.spread = spread;
+        this.targetFigure = targetFigure;
     }
     
     

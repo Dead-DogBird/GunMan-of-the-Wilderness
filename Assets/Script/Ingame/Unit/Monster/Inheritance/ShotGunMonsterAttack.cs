@@ -25,10 +25,10 @@ public class ShotGunMonsterAttack : MonsterDefaultAttack
         {
             for (int i = 1; i > -2; i--)
             {
-                GameManager.Instance._poolingManager.Spawn<MonsterBullet>().Init(new GetFireInstance(firepos.position,
+                GameManager.Instance._poolingManager.Spawn<MonsterBullet>().Init(new GetFireInstance(transform.position,firepos.position,
                     _monsterDefault.player.transform.position,
-                    _monsterDefault.damage, _monsterDefault.bulletSpeed, bulletColor,
-                    new OrbitColors(pricolor, seccolor),10*i), transform.position);
+                    damage, _monsterDefault.bulletSpeed, bulletColor,
+                    new OrbitColors(pricolor, seccolor),0.1f,7*i));
             }
             Instantiate(_fireflame, firepos.position, Quaternion.identity);
             await UniTask.Delay(TimeSpan.FromSeconds(_attackDelay), ignoreTimeScale: false);

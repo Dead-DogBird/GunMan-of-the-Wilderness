@@ -13,9 +13,11 @@ public class MonsterDefaultAttack : MonoBehaviour
     [SerializeField] protected GameObject _fireflame;
     [SerializeField] protected Transform firepos;
     [SerializeField] protected Color bulletColor,pricolor,seccolor;
+    public Color PriColor => pricolor;
     protected float _rotateDegree;
     protected float toDegree;
     protected Vector3 oriscale;
+    public float damage;
     // Start is called before the first frame update
     protected void Start()
     {
@@ -47,8 +49,8 @@ public class MonsterDefaultAttack : MonoBehaviour
         await UniTask.Delay(TimeSpan.FromSeconds(_attackDelay), ignoreTimeScale: false);
         while (!_monsterDefault.isDie&&_monsterDefault._targetedPlayer)
         {
-            GameManager.Instance._poolingManager.Spawn<MonsterBullet>().Init( new GetFireInstance(firepos.position,_monsterDefault.player.transform.position,
-               _monsterDefault.damage,_monsterDefault.bulletSpeed,bulletColor,new OrbitColors(pricolor,seccolor)),transform.position);
+            GameManager.Instance._poolingManager.Spawn<MonsterBullet>().Init( new GetFireInstance(transform.position,firepos.position,_monsterDefault.player.transform.position,
+               damage,_monsterDefault.bulletSpeed,bulletColor,new OrbitColors(pricolor,seccolor)));
             Instantiate(_fireflame,firepos.position,Quaternion.identity);
             await UniTask.Delay(TimeSpan.FromSeconds(_attackDelay), ignoreTimeScale: false);
         }
