@@ -47,6 +47,8 @@ public class MonsterDefault : MonoBehaviour
     // Update is called once per frame
     protected void Update()
     {
+        if (_hp <= 0)
+            Die();
         if (!_targetedPlayer)
         {
             NontargetPlayerMove();
@@ -118,6 +120,17 @@ public class MonsterDefault : MonoBehaviour
         }
     }
 
+    public void OnDameged(DamageInfo dmgInfo)
+    {
+        GameManager.Instance.Effect(dmgInfo.pos, 4,0.4f);
+        GameManager.Instance.EffectText(dmgInfo.pos,$"{dmgInfo.Damage}",dmgInfo.color);
+        _hp -= dmgInfo.Damage;
+        KnockBack((dmgInfo.pos.x-transform.position.x)*-1,dmgInfo.Damage*0.5f);
+        if (!_targetedPlayer)
+        {
+            SetTargetPlayer(GameManager.Instance.player);
+        }
+    }
     protected void onDamaged(Bullet _bullet)
     {
         GameManager.Instance.Effect(_bullet.transform.position, 4,0.4f);
@@ -125,12 +138,11 @@ public class MonsterDefault : MonoBehaviour
         _hp -= _bullet.damage;
         KnockBack(_bullet.toVector.x,_bullet.damage);
         GameManager.Instance._poolingManager.Despawn(_bullet);
+        GameManager.Instance.player.skillGauge(100/_bullet.damage);
         if (!_targetedPlayer)
         {
             SetTargetPlayer(GameManager.Instance.player);
         }
-        if (_hp <= 0)
-            Die();
     }
     protected void OnTriggerEnter2D(Collider2D other)
     {
@@ -139,6 +151,20 @@ public class MonsterDefault : MonoBehaviour
             onDamaged(other.GetComponent<Bullet>());
         }
 
+        if (other.CompareTag("TurretBullet"))
+        {
+            OnDameged(new DamageInfo(GameManager.Instance.player.getDamage,GameManager.Instance.player.colors.priColor,transform.position));
+            Destroy(other.gameObject);
+        }
+        if (other.CompareTag("Missle"))
+        {
+            other.GetComponent<RevolverRoket>().Explosion();
+        }
+
+        if (other.CompareTag("RifleUlt"))
+        {
+            OnDameged(new DamageInfo(GameManager.Instance.player.getDamage*2.5f,GameManager.Instance.player.colors.priColor,transform.position));
+        }
     }
     protected async UniTaskVoid WalkParticle()
     {
@@ -174,7 +200,8 @@ public class MonsterDefault : MonoBehaviour
     protected void Die()
     {
         isDie = true;
-        GameManager.Instance.Effect(transform.position, 4,0.4f);    
+        GameManager.Instance.Effect(transform.position, 4,0.4f);  
+        GameManager.Instance.player.skillGauge(100/GameManager.Instance.player.getDamage);
         Destroy(gameObject);
     }
     protected virtual void SetTargetPlayer(PlayerState _player)
@@ -187,4 +214,18 @@ public class MonsterDefault : MonoBehaviour
         WalkParticle().Forget();
         _attack?.startAttack();
     }
+}
+
+public class DamageInfo
+{
+    public float Damage;
+    public Color color;
+    public Vector3 pos;
+    public DamageInfo(float _damage, Color _color,Vector3 _pos)
+    {
+        Damage = _damage;
+        color = _color;
+        pos = _pos;
+    }
+    
 }

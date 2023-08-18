@@ -20,7 +20,7 @@ public class PlayerState : MonoBehaviour
 
     //스킬
     private float _skillgauge = 100;
-    private float _nowskillgauge;
+    private float _nowskillgauge = 100;
 
     //돈
     private int _money;
@@ -46,6 +46,10 @@ public class PlayerState : MonoBehaviour
     [SerializeField] private Color _orbitColor;
     [SerializeField] private Color _sceorbitColor = new(66 / 255f, 66 / 255f, 95 / 255f, 255 / 255f);
     [SerializeField] private float targetFigure = 0.1f;
+    public OrbitColors colors
+    {
+        get { return new OrbitColors(_orbitColor, _sceorbitColor); }
+    }
     private FireState_ _fireState;
     public float getPlayerHp => _playerHp;
     public int getAllMag => _allMag;
@@ -175,17 +179,18 @@ public class PlayerState : MonoBehaviour
         return _playerContrl.Userinput.MousePos;
     }
 
+    public bool isSniperUlt = false;
     private async UniTaskVoid Fired()
     {
         _fireState = FireState_.Delayed;
-        await UniTask.Delay(TimeSpan.FromSeconds(_fireDelay), ignoreTimeScale: false);
+        await UniTask.Delay(TimeSpan.FromSeconds(_fireDelay), ignoreTimeScale: isSniperUlt);
         _fireState = FireState_.Default;
     }
 
     private async UniTaskVoid ReLoad()
     {
         _fireState = FireState_.Reload;
-        await UniTask.Delay(TimeSpan.FromSeconds(_reloadDelay), ignoreTimeScale: false);
+        await UniTask.Delay(TimeSpan.FromSeconds(_reloadDelay), ignoreTimeScale: isSniperUlt);
         _nowMag = _allMag;
         _fireState = FireState_.Default;
     }
@@ -270,12 +275,25 @@ public class PlayerState : MonoBehaviour
         }
     }
 
+    public void skillGauge(float num)
+    {
+        _nowskillgauge += num;
+        if (_nowskillgauge > _skillgauge)
+            _nowskillgauge = _skillgauge;
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("MonsterBullet"))
         {
             GetDamage(other.transform.GetComponent<MonsterBullet>());
         }
+    }
+
+    public void SniperUlt(bool active)
+    {
+        _damage *=((active) ? 2 : 0.5f);
+        isSniperUlt = active;
+
     }
 }
 

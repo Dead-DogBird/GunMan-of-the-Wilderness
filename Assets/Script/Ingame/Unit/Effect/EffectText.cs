@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class EffectText : PoolableObj
 { 
@@ -27,7 +28,7 @@ public class EffectText : PoolableObj
         base.Start();
         _textMesh = GetComponent<TextMesh>();
         _meshRenderer = GetComponent<MeshRenderer>();
-        _meshRenderer.sortingOrder = 2;
+        _meshRenderer.sortingOrder = 22;
         GetOutlines();
     }
 
@@ -35,7 +36,7 @@ public class EffectText : PoolableObj
     {
         _textMesh = GetComponent<TextMesh>();
         _meshRenderer = GetComponent<MeshRenderer>();
-        _meshRenderer.sortingOrder = 2;
+        _meshRenderer.sortingOrder = 22;
         GetOutlines();
         
     }
@@ -47,7 +48,7 @@ public class EffectText : PoolableObj
         {
             _outlines.Add(transform.GetChild(i).GetComponent<TextMesh>());
             _outlineRenderers.Add(transform.GetChild(i).GetComponent<MeshRenderer>());
-            transform.GetChild(i).GetComponent<MeshRenderer>().sortingOrder = 1;
+            transform.GetChild(i).GetComponent<MeshRenderer>().sortingOrder = 21;
         }
     }
     new void OnDisable()
@@ -70,17 +71,25 @@ public class EffectText : PoolableObj
     {
         ypos += (-0.05f-ypos)/15;
         alpha += -alpha/30;
+        _textMesh.color += (toColor-_textMesh.color)/10;
     }
 
-    public GameObject Init(Vector3 pos, Color color,string text)
+    private Color toColor;
+    public GameObject Init(Vector3 pos, Color color,string text,float randomRange = 1)
     {
-        transform.position = pos;
+        transform.position = pos+(Random.Range(randomRange,-randomRange)*Vector3.right)+(Random.Range(0,randomRange*0.5f)*Vector3.up);
         _textMesh.text = text;
-        _textMesh.color = color;
+        _textMesh.color = Color.white;
+        toColor = color;
         foreach (var _outline in _outlines)
         {
             _outline.text = text;
             _outline.color = Color.black;
+        }
+
+        foreach (var _renderer in _outlineRenderers)
+        {
+            _renderer.sortingOrder = 21;
         }
         ypos = 0.08f;
         tempColor = _textMesh.color;

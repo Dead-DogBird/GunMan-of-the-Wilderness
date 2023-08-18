@@ -54,7 +54,7 @@ public class Bullet : PoolableObj
        
         time = 0;
         transform.position = getinfo.firepos;
-        toVector = CustomAngle.VectorRotation(CustomAngle.PointDirection(getinfo.playerpos,
+        toVector = CustomAngle.VectorRotation(CustomAngle.PointDirection(getinfo.playerpos+new Vector3(0,0.5f,0),
             getinfo.mousepos) + Random.Range(getinfo.spread, -getinfo.spread));
         damage = getinfo.damage;
         speed = getinfo.speed;

@@ -373,7 +373,7 @@ GameObject:
   - component: {fileID: 8861915027014596234}
   - component: {fileID: 863177375647188315}
   - component: {fileID: 3911080272508157093}
-  - component: {fileID: 7295443963558571584}
+  - component: {fileID: 8584792845308729481}
   - component: {fileID: 5187123015528646504}
   - component: {fileID: 8864454078897594378}
   - component: {fileID: 842273468}
@@ -598,7 +598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c61971ee74195ec42af5e35f69ce52d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7295443963558571584
+--- !u!114 &8584792845308729481
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -607,11 +607,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7915174197810081471}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f405f4f2428728c46aa9fd166b025042, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f08ede7bb9d2544a9c954e56fdfc357, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _bullet: {fileID: 3468561696563007470, guid: 77b9ce54c3f1702489d74eaee1bef8f1, type: 3}
   _fireFlame: {fileID: 6140996296906423665, guid: 7adb60e6019507f4bb61bdc76a7effe2, type: 3}
+  missle: {fileID: 6745832088306231691, guid: 6f4b46b814e4a064699ff44c3dd1460e, type: 3}
 --- !u!114 &5187123015528646504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -646,11 +647,12 @@ MonoBehaviour:
   _spread: 0
   _fireDelay: 0.5
   _reloadDelay: 0.8
-  _bulletSpeed: 12
+  _bulletSpeed: 15
   _gunholePos: {fileID: 7915174197691678234}
   _bulletColor: {r: 1, g: 0.30254513, b: 0, a: 1}
   _orbitColor: {r: 1, g: 0, b: 0.23266792, a: 1}
   _sceorbitColor: {r: 0.25882354, g: 0.25882354, b: 0.37254903, a: 1}
+  targetFigure: 0.1
   Textures: {fileID: 7915174199472143304}
 --- !u!114 &842273468
 MonoBehaviour:

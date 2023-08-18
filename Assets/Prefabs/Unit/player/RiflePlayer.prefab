@@ -132,7 +132,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 8197392948503669088}
   m_Bounds:
-    m_Center: {x: 0.0013250113, y: 0.037320808, z: 0}
+    m_Center: {x: 0.0013245195, y: 0.037320808, z: 0}
     m_Extent: {x: 0.097155, y: 0.158315, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: -7461008164512385378}
   - component: {fileID: 9015836543792220036}
   - component: {fileID: 4046388742233899398}
-  - component: {fileID: 5741720220120472091}
+  - component: {fileID: 7626197878796995696}
   - component: {fileID: -8975775715683262810}
   - component: {fileID: -7174903224283860110}
   - component: {fileID: -4540738209833055244}
@@ -377,7 +377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c61971ee74195ec42af5e35f69ce52d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5741720220120472091
+--- !u!114 &7626197878796995696
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -386,11 +386,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1369290805643978099}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f405f4f2428728c46aa9fd166b025042, type: 3}
+  m_Script: {fileID: 11500000, guid: e789758717f118e4a9be52790cd694a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _bullet: {fileID: 3468561696563007470, guid: 77b9ce54c3f1702489d74eaee1bef8f1, type: 3}
   _fireFlame: {fileID: 6140996296906423665, guid: 7adb60e6019507f4bb61bdc76a7effe2, type: 3}
+  _raser: {fileID: 7176293229263669978, guid: 4453325baecede042907591f52adcbbf, type: 3}
 --- !u!114 &-8975775715683262810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -425,11 +426,12 @@ MonoBehaviour:
   _spread: 7
   _fireDelay: 0.09
   _reloadDelay: 1.2
-  _bulletSpeed: 11
+  _bulletSpeed: 20
   _gunholePos: {fileID: 231056868}
   _bulletColor: {r: 0.73146665, g: 1, b: 0, a: 1}
   _orbitColor: {r: 0.20906018, g: 0.6117647, b: 0.25446385, a: 1}
-  _sceorbitColor: {r: 0.25697097, g: 0.3679245, b: 0, a: 1}
+  _sceorbitColor: {r: 0.18647924, g: 0.213, b: 0.123966, a: 1}
+  targetFigure: 0.1
   Textures: {fileID: 8775371011893221207}
 --- !u!114 &-4540738209833055244
 MonoBehaviour:
@@ -712,7 +714,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 5614083081950621339}
   m_Bounds:
-    m_Center: {x: -0.22986287, y: 0.068072826, z: 0}
+    m_Center: {x: -0.22986275, y: 0.068072826, z: 0}
     m_Extent: {x: 0.5174092, y: 0.53671354, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -790,7 +792,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 7
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: 0a734139c1b2cab44a652277966f4fbe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -818,7 +820,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 768925332642593867}
   m_Bounds:
-    m_Center: {x: -0.74621725, y: -0.11632308, z: 0}
+    m_Center: {x: -0.3483472, y: 0.064526945, z: 0}
     m_Extent: {x: 0.8014033, y: 0.3888574, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -1070,7 +1072,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 255512820059099772}
   m_Bounds:
-    m_Center: {x: 0.001684986, y: 0.03568083, z: 0}
+    m_Center: {x: 0.001685001, y: 0.03568083, z: 0}
     m_Extent: {x: 0.09331501, y: 0.15995502, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -1130,7 +1132,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6916024906176807185}
   m_LocalRotation: {x: -0, y: -0, z: -0.106799625, w: -0.9942806}
-  m_LocalPosition: {x: -0.087768435, y: 0.63439775, z: 0}
+  m_LocalPosition: {x: 0.3101017, y: 0.8152478, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1239,7 +1241,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 9007350997220628035}
   m_Bounds:
-    m_Center: {x: -0.00000008940697, y: 0.03633064, z: 0}
+    m_Center: {x: 0, y: 0.03633064, z: 0}
     m_Extent: {x: 0.08, y: 0.16291499, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
