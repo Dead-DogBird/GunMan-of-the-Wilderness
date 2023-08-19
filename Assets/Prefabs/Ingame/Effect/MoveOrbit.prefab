@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8843035231785575816}
   - component: {fileID: 1504733281513804112}
-  - component: {fileID: 4009733296191393293}
+  - component: {fileID: 8157095412266384556}
   m_Layer: 0
-  m_Name: Bullet_Orbit
+  m_Name: MoveOrbit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 6
-  m_Sprite: {fileID: 21300000, guid: a921c6fb85bb8db469d2668313d91a38, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8f09d2108f71cdc4087657c1655f7efc, type: 3}
   m_Color: {r: 1, g: 0.14509805, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4009733296191393293
+--- !u!114 &8157095412266384556
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1835886177089315850}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a449c47cd8541945ac67bdda653529e, type: 3}
+  m_Script: {fileID: 11500000, guid: b1d70df772b2e2e4091533e8d7481d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   targetFigure: 0

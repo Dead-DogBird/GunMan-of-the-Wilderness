@@ -61,7 +61,7 @@ public class PlayerState : MonoBehaviour
     public float getBulletSpeed => _bulletSpeed;
 
     private PlayerContrl _playerContrl;
-    private Player_Gun _playerGun;
+    public Player_Gun _playerGun { get; private set; }
     [SerializeField] private GameObject Textures;
     private List<SpriteRenderer> _charSprites = new();
 
@@ -222,6 +222,7 @@ public class PlayerState : MonoBehaviour
             GameManager.Instance.EffectText(transform.position,$"-10",new Color(180/255f,0/255f,230/255f,1));
             _playerHp -= 10;
         }
+        UIManager.Instance.PlayerHit();
         GameManager.Instance.Effect(transform.position, 4, 0.4f);
         GetDamegeTask().Forget();
     }
@@ -288,12 +289,14 @@ public class PlayerState : MonoBehaviour
             GetDamage(other.transform.GetComponent<MonsterBullet>());
         }
     }
-
     public void SniperUlt(bool active)
     {
         _damage *=((active) ? 2 : 0.5f);
         isSniperUlt = active;
-
+        if (isSniperUlt)
+        {
+            _nowMag = _allMag;
+        }
     }
 }
 

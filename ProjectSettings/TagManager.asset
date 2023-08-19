@@ -13,6 +13,7 @@ TagManager:
   - RifleUlt
   - Missle
   - TurretBullet
+  - ShotGunUlt
   layers:
   - Default
   - TransparentFX

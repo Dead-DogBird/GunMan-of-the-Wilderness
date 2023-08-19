@@ -9,12 +9,14 @@ public class GameManager : MonoSingleton<GameManager>
     internal PoolingManager _poolingManager;
     [SerializeField] private GameObject Stage;
     [SerializeField] private GameObject Orbit;
+    [SerializeField] private GameObject MoveOrbit;
     [SerializeField] private GameObject effectText;
     public PlayerState player { get; private set; }
 
     void Start()
     {
         _poolingManager.AddPoolingList<Orbit>(450, Orbit);
+        _poolingManager.AddPoolingList<MoveOrbit>(450, MoveOrbit);
         _poolingManager.AddPoolingList<EffectText>(10, effectText);
     }
 
@@ -64,9 +66,37 @@ public class GameManager : MonoSingleton<GameManager>
             }
         }
     }
-
     public void EffectText(Vector3 pos, string text, Color color)
     {
         _poolingManager.Spawn<EffectText>().Init(pos, color, text);
+    }
+
+    public void MoveOrbitEffect(Vector3 pos, int count, float scale, OrbitColors colors, bool outlined = true,
+        float outline = 0.2f, float reduce = 2,float angle =0,float speed = 10,float randomAngle = 0 )
+    {
+        if(outlined)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                _poolingManager.Spawn<MoveOrbit>().Init(new OrbitInfo(true,pos +new Vector3(Random.Range(0.15f,-0.15f),
+                        Random.Range(0.15f,-0.15f),0.1f),scale+Random.Range(-0.10f,0.10f),0.05f,
+                    colors),outline,true,reduce,angle+Random.Range(-randomAngle,randomAngle),speed);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < count; i++)
+            {
+                _poolingManager.Spawn<MoveOrbit>().Init(new OrbitInfo(true,pos +new Vector3(Random.Range(0.15f,-0.15f),
+                        Random.Range(0.15f,-0.15f),0.1f),scale+Random.Range(-0.10f,0.10f),0.05f,
+                    colors),true,reduce,angle+Random.Range(-randomAngle,randomAngle),speed);
+            }
+        }
+        
+    }
+    public void SniperSkill(bool _issniperSkill)
+    {
+        UIManager.Instance.SniperSkill(_issniperSkill);
+        IngameCamera.Instance.SniperSkill(_issniperSkill);
     }
 }

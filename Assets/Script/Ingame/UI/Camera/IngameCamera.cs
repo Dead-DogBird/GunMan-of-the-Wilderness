@@ -46,6 +46,8 @@ public class IngameCamera : MonoSingleton<IngameCamera>
         if (!_isPlayerNotNull) return;
 
         var player_position = _player.transform.position + new Vector3(5, 1, 0);
+        if(isSniperSkill)
+            player_position = Vector3.Lerp(player_position,Camera.main.ScreenToWorldPoint(Input.mousePosition),0.5f)-new Vector3(0,0,10);
         position += (Vector2)((player_position - transform.position) / smooth);
         ShakeUpdate();
         //SetPinnedPlayer(_player.transform);
@@ -92,5 +94,11 @@ public class IngameCamera : MonoSingleton<IngameCamera>
     {
         var toVector = Camera.main.ScreenToViewportPoint(Camera.main.WorldToScreenPoint(player.position));
         player.position = new Vector3(toVector.x, toVector.y, player.position.z);
+    }
+
+    private bool isSniperSkill;
+    public void SniperSkill(bool _isSniperSkill)
+    {
+        isSniperSkill = _isSniperSkill;
     }
 }

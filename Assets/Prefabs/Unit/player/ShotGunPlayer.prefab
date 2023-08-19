@@ -391,6 +391,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bullet: {fileID: 3468561696563007470, guid: 77b9ce54c3f1702489d74eaee1bef8f1, type: 3}
   _fireFlame: {fileID: 6140996296906423665, guid: 7adb60e6019507f4bb61bdc76a7effe2, type: 3}
+  ShotGunSkill: {fileID: 534939536703914859, guid: b9eeb6a331d876e48b15226cd406c7e4, type: 3}
 --- !u!114 &5765004519938295206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -432,6 +433,7 @@ MonoBehaviour:
   _sceorbitColor: {r: 0.2596358, g: 0.24892999, b: 0.341, a: 1}
   targetFigure: 0.15
   Textures: {fileID: 8775371011893221207}
+  isSniperUlt: 0
 --- !u!114 &3305825061491143931
 MonoBehaviour:
   m_ObjectHideFlags: 0

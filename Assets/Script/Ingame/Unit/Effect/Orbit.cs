@@ -10,25 +10,26 @@ using UnityEngine.Serialization;
 
 public class Orbit : PoolableObj
 {
-    private float sizeReduction =2f, targetFigure;
-    private bool colored;
-    private float destroyTime = 2;
-    private SpriteRenderer _sprite;
-    private Color myColor = Color.black;
-    private Tween _tween;
+    protected float sizeReduction =2f;
+    public float targetFigure;
+    protected bool colored;
+    protected float destroyTime = 2;
+    protected SpriteRenderer _sprite;
+    protected Color myColor = Color.black;
+    protected Tween _tween;
     
-    new void Start()
+    protected new void Start()
     {
         base.Start();
     }
 
-    new void OnEnable()
+    protected new void OnEnable()
     {
         _sprite = GetComponent<SpriteRenderer>();
         _sprite.color = myColor;
         _tween.Complete();
     }
-    void Update()
+    protected void Update()
     {
         transform.localScale -= new Vector3(Time.deltaTime*sizeReduction, Time.deltaTime*sizeReduction);
         //transform.localScale *= Time.deltaTime*sizeReduction;
@@ -41,7 +42,7 @@ public class Orbit : PoolableObj
         
     }
 
-    new void OnDisable()
+    protected new void OnDisable()
     {
         _sprite.color = myColor;
         if(colored)
@@ -58,7 +59,7 @@ public class Orbit : PoolableObj
         await UniTask.Delay(TimeSpan.FromSeconds(delay), ignoreTimeScale: false);
         GameManager.Instance._poolingManager.Despawn(this); 
     }
-    public Orbit Init(OrbitInfo info, bool isSize =false, float reduction =2)
+    public virtual Orbit Init(OrbitInfo info, bool isSize =false, float reduction =2)
     {
         colored = info.isColored;
         targetFigure = info.targetFigure;
@@ -83,7 +84,7 @@ public class Orbit : PoolableObj
         }
         return this;
     }
-    public Orbit Init(OrbitInfo info,float outline,bool isSize = false, float reduction = 2)
+    public virtual Orbit Init(OrbitInfo info,float outline,bool isSize = false, float reduction = 2)
     {
         var orbit = Init(info,isSize,reduction);
         GameManager.Instance._poolingManager.

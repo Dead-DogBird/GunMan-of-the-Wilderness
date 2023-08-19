@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
+using Range = UnityEngine.SocialPlatforms.Range;
 
 
 public class SniperFire : PlayerFire
 {
-    private Player_Gun _playerGun;
 
     private bool isUlt = false;
     public float skilltime = 7;
@@ -17,9 +18,8 @@ public class SniperFire : PlayerFire
     void Start()
     {
         base.Start();
-        _playerGun = GetComponent<Player_Gun>();
     }
-    
+
     // Update is called once per frame
     void Update()
     {
@@ -29,10 +29,12 @@ public class SniperFire : PlayerFire
             if (Input.GetMouseButtonDown(1))
             {
                 Time.timeScale = 0.2f;
+                GameManager.Instance.SniperSkill(true);
             }
             if (Input.GetMouseButtonUp(1))
             {
                 Time.timeScale = 1;
+                GameManager.Instance.SniperSkill(false);
             }
         }
     }
@@ -41,37 +43,63 @@ public class SniperFire : PlayerFire
         if (isUlt)
         {
             ultBullet--;
-            if (ultBullet == 0) 
+            if (ultBullet == 0)
+            {
                 Time.timeScale = 1;
+                GameManager.Instance.SniperSkill(false);
+            }
         
         }
         IngameCamera.Instance.Shake(0.15f,0,0,1,6f);
         GameManager.Instance._poolingManager.Spawn<Bullet>().Init( _playerState.GetFireInstance());
         Instantiate(_fireFlame, _playerState.GetFireInstance().firepos, Quaternion.identity).
-            transform.localEulerAngles = new Vector3(0,0,_playerGun.rotateDegree);
+            transform.localEulerAngles = new Vector3(0,0,_playerState._playerGun.rotateDegree);
+        GameManager.Instance.MoveOrbitEffect(_playerState.GetFireInstance().firepos,Random.Range(6,7),0.9f,
+           new OrbitColors(_playerState.colors.priColor,_playerState.colors.secColor),
+            false,0,2, (_playerState._playerGun.rotateDegree+180),Random.Range(7,12),30);
+
         _playerState.GetFireEffect();
         
     }
 
     protected override void Skill()
     {
-        ultBullet = 5;
+        ultBullet = _playerState.getAllMag;
         SkillTask().Forget();
     }
-
+    float time;
     async UniTaskVoid SkillTask()
     {
-        float time = skilltime;
+        time = skilltime;
         isUlt = true;
         _playerState.SniperUlt(isUlt);
-        while (ultBullet > 0&&time>0)
+        OnskillEffect().Forget();
+        while ((ultBullet > 0&&time>0)&&!isDead)
         {
             time -= Time.unscaledDeltaTime;
             await UniTask.Yield(PlayerLoopTiming.Update);
         }
         isUlt = false;
+        GameManager.Instance.SniperSkill(isUlt);
         _playerState.SniperUlt(isUlt);
         Time.timeScale = 1;
+    }
+
+    async UniTaskVoid OnskillEffect()
+    {
+        while ((ultBullet > 0&&time>0)&&!isDead)
+        {
+            float randomAngle = Random.Range(0.0f, 360.0f);
+            float radianAngle = randomAngle * Mathf.Deg2Rad;
+            float x = 0.7f * Mathf.Cos(radianAngle);
+            float y = 0.7f * Mathf.Sin(radianAngle);
+            
+            float radom = Random.Range(90f/255f, 235f/255f);
+            GameManager.Instance.MoveOrbitEffect(transform.position+new Vector3(x, y+0.5f),1,0.7f,
+            new OrbitColors(new Color(radom-100/255f,radom-100/255f,255/255f,0.2f),new Color(radom,radom,255/255f,1f)),
+            false,0,2,90,Random.Range(7,12),15);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.01f),true);
+        }
     }
 
 }

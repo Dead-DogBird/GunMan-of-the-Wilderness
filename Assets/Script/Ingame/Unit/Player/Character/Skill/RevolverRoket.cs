@@ -134,6 +134,7 @@ public class RevolverRoket : MonoBehaviour
                 }
             }
         }
+
         try
         {
             m_points[0] = transform.position;
@@ -148,6 +149,10 @@ public class RevolverRoket : MonoBehaviour
             _endP = -_endT_.position;
             if (!CheckForChild(_endT_.gameObject, "LockOn(Clone)"))
                 targeted = Instantiate(LockOn, _endT_);
+        }
+        catch (MissingReferenceException e)
+        {
+            Explosion();
         }
         catch (NullReferenceException e)
         {

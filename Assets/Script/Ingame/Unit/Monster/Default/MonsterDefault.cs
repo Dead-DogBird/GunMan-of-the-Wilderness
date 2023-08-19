@@ -125,7 +125,12 @@ public class MonsterDefault : MonoBehaviour
         GameManager.Instance.Effect(dmgInfo.pos, 4,0.4f);
         GameManager.Instance.EffectText(dmgInfo.pos,$"{dmgInfo.Damage}",dmgInfo.color);
         _hp -= dmgInfo.Damage;
-        KnockBack((dmgInfo.pos.x-transform.position.x)*-1,dmgInfo.Damage*0.5f);
+        GameManager.Instance.MoveOrbitEffect(dmgInfo.pos,Random.Range(5,7),1f,
+            new OrbitColors(dmgInfo.color,dmgInfo.color),
+            false,0,2, Random.Range(0f,360f),Random.Range(7,12));
+
+        KnockBack((dmgInfo.pos.x-transform.position.x)*-1,dmgInfo.Damage);
+        
         if (!_targetedPlayer)
         {
             SetTargetPlayer(GameManager.Instance.player);
@@ -164,6 +169,10 @@ public class MonsterDefault : MonoBehaviour
         if (other.CompareTag("RifleUlt"))
         {
             OnDameged(new DamageInfo(GameManager.Instance.player.getDamage*2.5f,GameManager.Instance.player.colors.priColor,transform.position));
+        }
+        if (other.CompareTag("ShotGunUlt"))
+        {
+            OnDameged(new DamageInfo(GameManager.Instance.player.getDamage*3.5f,GameManager.Instance.player.colors.priColor,transform.position));
         }
     }
     protected async UniTaskVoid WalkParticle()
