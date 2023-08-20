@@ -12,17 +12,20 @@ public class PlayerContrl : MonoBehaviour
         bool _leftMouseButton;
         private Vector3 _mousePos;
         private bool _skillKey;
+        bool _rkey;
         public bool SpaceState => _nowSpace;
         public bool LeftMouseState => _leftMouseButton;
         public float AxisState => _nowAxisState;
         public bool SkillKey => _skillKey;
         public Vector3 MousePos => _mousePos;
+        public bool Rkey => _rkey;
         public void InputUpdate()
         {
             _nowAxisState = Input.GetAxisRaw("Horizontal");
             _nowSpace = Input.GetKeyDown(KeyCode.Space);
             _leftMouseButton = Input.GetMouseButton(0);
             _skillKey = Input.GetKeyDown(KeyCode.E);
+            _rkey = Input.GetKey(KeyCode.R);
             _mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
     }

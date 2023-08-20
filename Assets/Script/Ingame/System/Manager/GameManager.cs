@@ -11,6 +11,7 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField] private GameObject Orbit;
     [SerializeField] private GameObject MoveOrbit;
     [SerializeField] private GameObject effectText;
+    [SerializeField] private GameObject inGameCoin;
     public PlayerState player { get; private set; }
 
     void Start()
@@ -18,6 +19,7 @@ public class GameManager : MonoSingleton<GameManager>
         _poolingManager.AddPoolingList<Orbit>(450, Orbit);
         _poolingManager.AddPoolingList<MoveOrbit>(450, MoveOrbit);
         _poolingManager.AddPoolingList<EffectText>(10, effectText);
+        _poolingManager.AddPoolingList<InagmeCoin>(50, inGameCoin);
     }
 
     private void OnEnable()
@@ -28,7 +30,6 @@ public class GameManager : MonoSingleton<GameManager>
     {
         
     }
-
     public void SetPlayer(PlayerState _player)
     {
         if (player != null) return;
@@ -93,6 +94,12 @@ public class GameManager : MonoSingleton<GameManager>
             }
         }
         
+    }
+    public void SpawnCoin(Vector3 pos, int money,float random = 0)
+    {
+        var randomVector = new Vector3(Random.Range(random,-random),Random.Range(random,-random));
+        _poolingManager.Spawn<InagmeCoin>().Init(pos+randomVector,money);
+
     }
     public void SniperSkill(bool _issniperSkill)
     {

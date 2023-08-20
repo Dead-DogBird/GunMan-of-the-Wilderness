@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -31,9 +32,12 @@ public class PlayerFire : MonoBehaviour
     {
         if (_playerState.GetFire())Fire();
         if(_playerState.GetSkill())Skill();
+        if(_playerState.GetReload())_playerState.ReLoad().Forget();
+        
     }
     protected virtual void Fire()
     {
+        UIManager.Instance.SetCursorEffect();
         GameManager.Instance._poolingManager.Spawn<Bullet>().Init( _playerState.GetFireInstance());
         Instantiate(_fireFlame, _playerState.GetFireInstance().firepos,Quaternion.identity);
         GameManager.Instance.MoveOrbitEffect(_playerState.GetFireInstance().firepos,Random.Range(3,5),0.7f,

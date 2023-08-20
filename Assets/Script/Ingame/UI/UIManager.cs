@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
+
 
 public class UIManager : MonoSingleton<UIManager>
 {
@@ -11,44 +14,175 @@ public class UIManager : MonoSingleton<UIManager>
     [SerializeField] private Image Hpbar;
     [SerializeField] private Image Skillbar;
     [SerializeField] private Image HitEffect;
+    [SerializeField] private Image Cursor_;
+
     [SerializeField] private Text PlayerHp;
+    [SerializeField] private Text PlayerSkill;
     [SerializeField] private Text PlayerMoney;
+    [SerializeField] private Text PlayerMag;
+
+    [SerializeField] private Image SniperSkillGauge;
+    [SerializeField] private Image ShotGunSkillImage;
+    private Color ShotGunSkillImageOriginalColor;
     public bool isSniperSkill;
+
+    private float _playerMaxHp;
+    private float _playerMaxSkill;
+    private float _playerHp;
+    private float _playerSkill;
+
+    private int money = 0;
+    private int updateMoney = 0;
+    private bool isEditorEnd = false;
+
+    private int mag;
+    private int Allmag;
+
+    private bool isReload = false;
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.visible = false;
+        
         SniperHud.transform.localScale = new Vector3(5f, 5f, 1.2f);
         SniperHud.transform.localEulerAngles = new Vector3(0, 0, -90);
+        
         SubSniperHud.transform.localScale = new Vector3(5f, 5f, 1.2f);
         SubSniperHud.transform.localEulerAngles = new Vector3(0, 0, 180);
+
+        SniperSkillGauge.fillAmount = 0;
+        
         HitEffect.color = Color.clear;
+        ShotGunSkillImageOriginalColor = ShotGunSkillImage.color + new Color(0,0,0,1f);
+    }
+
+    private void OnEnable()
+    {
+        UpdateMoneyTask().Forget();
     }
 
     // Update is called once per frame
     void Update()
     {
         HitEffect.color += (Color.clear-HitEffect.color)*(Time.unscaledDeltaTime);
+        Hpbar.fillAmount += (_playerHp - Hpbar.fillAmount)*(Time.unscaledDeltaTime*15); 
+        Skillbar.fillAmount += (_playerSkill - Skillbar.fillAmount)*(Time.unscaledDeltaTime*7);
+       
+        PlayerMoney.transform.localScale +=
+            (new Vector3(0.24f,0.24f) - PlayerMoney.transform.localScale) * (Time.unscaledDeltaTime * 7);
+        PlayerMoney.color +=(Color.white-PlayerMoney.color)* (Time.unscaledDeltaTime * 15);
+
+        ShotGunSkillImage.color += (Color.clear - ShotGunSkillImage.color) * (Time.unscaledDeltaTime*5);
+        if(!isReload) {
+            if (mag > 0) {
+                PlayerMag.color +=((mag<=Allmag/5?Color.red:Color.white)-PlayerMag.color)* (Time.unscaledDeltaTime * 10);
+            }else {
+                PlayerMag.color +=(new Color(130/255f,130/255f,150/255f,1f)-PlayerMag.color)*(Time.unscaledDeltaTime * 15);
+            }
+        }
+        PlayerMag.transform.localScale +=
+            (new Vector3(0.2f,0.2f) - PlayerMag.transform.localScale) * (Time.unscaledDeltaTime * 7);
+
+        Cursor_.transform.localScale +=  (Vector3.one-Cursor_.transform.localScale)*(Time.unscaledDeltaTime*10);
+        Cursor_.transform.position =  new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f);
         if (isSniperSkill)
         {
             SniperHud.transform.position =  new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f);
             SubSniperHud.transform.position =  new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f);
         }
     }
-
-    public void SniperSkill(bool _isSkill)
+#if UNITY_EDITOR
+    void OnApplicationQuit()
     {
-        isSniperSkill = _isSkill;
-        SniperHud.SetActive(isSniperSkill);
-        SubSniperHud.SetActive(isSniperSkill);
-        if (isSniperSkill)
+        isEditorEnd = true;
+    }
+#endif
+    
+    public void SetSkillGaougeColor(Color color)
+    {
+        Skillbar.color = color;
+    }
+    public void SetGauge(float hp,float skill)
+    {
+        _playerMaxHp = hp;
+        _playerMaxSkill = skill;
+    }
+   
+    public void UpdateGauge(float hp =0,float skill=0)
+    {
+        if (hp != 0)
         {
-            SniperHudTask().Forget();
+            _playerHp = (hp/_playerMaxHp);
+            PlayerHp.text = $"Hp: {hp}";
+        }
+        if (skill != 0)
+        {
+            _playerSkill = (skill / _playerMaxSkill);
+            PlayerSkill.text = $"Skill: {skill}";
+        }
+    }
+    public void ResetGauge(bool hp = false,bool skill = false)
+    {
+        if (hp)
+        {
+            _playerHp = 0;
+            PlayerHp.text = $"Hp: {0}";
+        }
+        if (skill)
+        {
+            _playerSkill = 0;
+            PlayerSkill.text = $"Skill: {0}";
+        }
+    }
+    
+    public void UpdateMoney(int money)
+    {
+        updateMoney = money;
+        PlayerMoney.transform.localScale += new Vector3(0, 0.1f);
+        PlayerMoney.color = new Color(40/255f, 100/255f, 255/255f, 255f);
+    }
+    async UniTaskVoid UpdateMoneyTask()
+    {
+        while (!isEditorEnd)
+        {
+            money += (updateMoney - money)/3;
+            if (MathF.Abs(money - updateMoney) <= 3)
+            {
+                money = updateMoney;
+            }
+            PlayerMoney.text =(money>0)? $"{money:#,###}" : "0";
+            await UniTask.Yield(PlayerLoopTiming.LastFixedUpdate);
         }
     }
 
+    public void UpdateMag(int _mag, bool isInit = false)
+    {
+        if (isInit)Allmag = _mag;
+        mag = _mag;
+        PlayerMag.text = $"{mag}/{Allmag}";
+        PlayerMag.transform.localScale += new Vector3(-0.02f, 0.01f);
+        PlayerMag.color = GameManager.Instance.player.colors.priColor;
+
+    }
+
+    public void UpdateMagReload(bool _reload = true)
+    {
+        isReload = _reload;
+
+        if (isReload)
+        {
+            PlayerMag.text = $"Reload!";
+            PlayerMag.color  = new Color(130 / 255f, 130 / 255f, 150 / 255f, 1f);
+        }
+
+    }
     public void PlayerHit()
     {
         HitEffect.color = Color.white;
+    }
+    public void SetCursorEffect(float size = 1.2f)
+    {
+        Cursor_.transform.localScale = new Vector3(size, size, 1);
     }
     async UniTaskVoid SniperHudTask()
     {
@@ -77,5 +211,30 @@ public class UIManager : MonoSingleton<UIManager>
         image.color = Color.clear;
         subImage.color = Color.clear;
         outline.effectDistance = new Vector2(100, 100);
+    }
+
+    public void SniperSkillFire()
+    {
+        SubSniperHud.GetComponent<Outline>().effectDistance = new Vector2(60, 60);
+    }
+    public void SniperSkill(bool _isSkill)
+    {
+        isSniperSkill = _isSkill;
+        SniperHud.SetActive(isSniperSkill);
+        SubSniperHud.SetActive(isSniperSkill);
+        if (isSniperSkill)
+        {
+            SniperHudTask().Forget();
+        }
+    }
+
+    public void UpdateSniperSkillGauge(float amount)
+    {
+        SniperSkillGauge.fillAmount = amount;
+    }
+
+    public void ShotGunSkill()
+    {
+        ShotGunSkillImage.color = ShotGunSkillImageOriginalColor;
     }
 }

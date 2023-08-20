@@ -18,6 +18,7 @@ public class SniperFire : PlayerFire
     void Start()
     {
         base.Start();
+        
     }
 
     // Update is called once per frame
@@ -40,9 +41,11 @@ public class SniperFire : PlayerFire
     }
     protected override void Fire()
     {
+        UIManager.Instance.SetCursorEffect(1.5f);
         if (isUlt)
         {
             ultBullet--;
+            UIManager.Instance.SniperSkillFire();
             if (ultBullet == 0)
             {
                 Time.timeScale = 1;
@@ -52,8 +55,10 @@ public class SniperFire : PlayerFire
         }
         IngameCamera.Instance.Shake(0.15f,0,0,1,6f);
         GameManager.Instance._poolingManager.Spawn<Bullet>().Init( _playerState.GetFireInstance());
+      
         Instantiate(_fireFlame, _playerState.GetFireInstance().firepos, Quaternion.identity).
             transform.localEulerAngles = new Vector3(0,0,_playerState._playerGun.rotateDegree);
+       
         GameManager.Instance.MoveOrbitEffect(_playerState.GetFireInstance().firepos,Random.Range(6,7),0.9f,
            new OrbitColors(_playerState.colors.priColor,_playerState.colors.secColor),
             false,0,2, (_playerState._playerGun.rotateDegree+180),Random.Range(7,12),30);
@@ -64,7 +69,9 @@ public class SniperFire : PlayerFire
 
     protected override void Skill()
     {
+        _playerState.SetMaxMag();
         ultBullet = _playerState.getAllMag;
+        IngameCamera.Instance.Shake(0,0.2f,0,1,6f);
         SkillTask().Forget();
     }
     float time;
@@ -76,12 +83,16 @@ public class SniperFire : PlayerFire
         OnskillEffect().Forget();
         while ((ultBullet > 0&&time>0)&&!isDead)
         {
+            
             time -= Time.unscaledDeltaTime;
+            UIManager.Instance.UpdateSniperSkillGauge(time / skilltime);
             await UniTask.Yield(PlayerLoopTiming.Update);
         }
         isUlt = false;
         GameManager.Instance.SniperSkill(isUlt);
         _playerState.SniperUlt(isUlt);
+        _playerState.SetMaxMag();
+        UIManager.Instance.UpdateSniperSkillGauge(0);
         Time.timeScale = 1;
     }
 

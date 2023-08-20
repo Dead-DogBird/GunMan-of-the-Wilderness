@@ -22,7 +22,7 @@ public class RifleFire : PlayerFire
     protected override void Skill()
     {
         var obj = Instantiate(_raser, _playerState.GetFireInstance().mousepos +
-                                      new Vector3(0, 6, 10), quaternion.identity);
+                                      new Vector3(0, 6.5f, 10), quaternion.identity);
         Destroy(obj,2);
     }
 }

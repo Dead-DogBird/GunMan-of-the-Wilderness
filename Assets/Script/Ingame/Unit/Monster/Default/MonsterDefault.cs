@@ -128,9 +128,6 @@ public class MonsterDefault : MonoBehaviour
         GameManager.Instance.MoveOrbitEffect(dmgInfo.pos,Random.Range(5,7),1f,
             new OrbitColors(dmgInfo.color,dmgInfo.color),
             false,0,2, Random.Range(0f,360f),Random.Range(7,12));
-
-        KnockBack((dmgInfo.pos.x-transform.position.x)*-1,dmgInfo.Damage);
-        
         if (!_targetedPlayer)
         {
             SetTargetPlayer(GameManager.Instance.player);
@@ -141,7 +138,7 @@ public class MonsterDefault : MonoBehaviour
         GameManager.Instance.Effect(_bullet.transform.position, 4,0.4f);
         GameManager.Instance.EffectText(_bullet.transform.position,$"{_bullet.damage}",_bullet.orbitColor.priColor);
         _hp -= _bullet.damage;
-        KnockBack(_bullet.toVector.x,_bullet.damage);
+        KnockBack(_bullet.toVector,_bullet.damage);
         GameManager.Instance._poolingManager.Despawn(_bullet);
         GameManager.Instance.player.skillGauge(100/_bullet.damage);
         if (!_targetedPlayer)
@@ -193,10 +190,16 @@ public class MonsterDefault : MonoBehaviour
             SetTargetPlayer(other.GetComponent<PlayerState>());
         }
     }
-    protected void KnockBack(float tovector,float damege)
+    protected void KnockBack(Vector3 tovector,float damege)
     {
         _rigid.velocity = new Vector2(0,_rigid.velocity.y);
-        _rigid.AddForce(new Vector2(tovector*damege*0.5f,0),ForceMode2D.Impulse);
+        var pos = (transform.position - tovector);
+        pos.Normalize();
+        float clamped = Mathf.Clamp(damege, 8, 200);
+        clamped = (clamped-8)/192;
+        clamped = Mathf.Lerp(0.5f, 1, clamped);
+        
+        _rigid.AddForce(new Vector2(tovector.x*clamped,0),ForceMode2D.Impulse);
     }
     protected void LosePlayer(Collider2D other)
     {
@@ -211,6 +214,7 @@ public class MonsterDefault : MonoBehaviour
         isDie = true;
         GameManager.Instance.Effect(transform.position, 4,0.4f);  
         GameManager.Instance.player.skillGauge(100/GameManager.Instance.player.getDamage);
+        GameManager.Instance.SpawnCoin(transform.position, 10);
         Destroy(gameObject);
     }
     protected virtual void SetTargetPlayer(PlayerState _player)

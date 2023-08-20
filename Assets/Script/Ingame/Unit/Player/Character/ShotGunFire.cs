@@ -22,6 +22,7 @@ public class ShotGunFire : PlayerFire
 
     protected override void Fire()
     {
+        UIManager.Instance.SetCursorEffect(1.5f);
         for (int i = 2; i > -3; i--)
         {
             GameManager.Instance._poolingManager.Spawn<Bullet>().Init(_playerState.GetFireInstance(),i*10);
