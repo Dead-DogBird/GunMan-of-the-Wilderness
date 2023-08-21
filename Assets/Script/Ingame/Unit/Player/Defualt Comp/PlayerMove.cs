@@ -20,7 +20,8 @@ public class PlayerMove : MonoBehaviour
     //기타 트리거들
     [SerializeField] private bool _isjumping;
     private int jumpCount = 0;
-    
+
+    [SerializeField] private int MaxJump = 2;
     
     private void Start()
     {
@@ -44,13 +45,16 @@ public class PlayerMove : MonoBehaviour
 
     private void Jump()
     {
-        if (jumpCount >= 2) return;
+        if (jumpCount >= MaxJump) return;
         if (!_playerControll.Userinput.SpaceState) return;
         _isjumping = true;
         jumpCount++;
         float radom = Random.Range(200f/255f, 255f/255f);
-        GameManager.Instance.Effect(transform.position+new Vector3(-0.3f*_playerControll.Userinput.AxisState,0.2f),Random.Range(4,7),0.7f,
-            new OrbitColors(new Color(radom,radom,radom,1),new Color(radom,radom,radom,1)),false,0,2);
+       // GameManager.Instance.Effect(transform.position+new Vector3(-0.3f*_playerControll.Userinput.AxisState,0.2f),Random.Range(4,7),0.7f,
+         //   new OrbitColors(new Color(radom,radom,radom,1),new Color(radom,radom,radom,1)),false,0,2);
+        GameManager.Instance.MoveOrbitEffect(transform.position+new Vector3(-0.3f*_playerControll.Userinput.AxisState,0),
+            Random.Range(4,8),0.8f,new OrbitColors(new Color(radom,radom,radom,1),new Color(radom,radom,radom,1)),false,0,
+            2,270,1,20);
         if (jumpCount == 2)
         {
             _playerState.PlayAnimation("Player@jump",-1,0);

@@ -67,16 +67,22 @@ public class UIManager : MonoSingleton<UIManager>
         HitEffect.color += (Color.clear-HitEffect.color)*(Time.unscaledDeltaTime);
         Hpbar.fillAmount += (_playerHp - Hpbar.fillAmount)*(Time.unscaledDeltaTime*15); 
         Skillbar.fillAmount += (_playerSkill - Skillbar.fillAmount)*(Time.unscaledDeltaTime*7);
-       
+        
+        Cursor_.fillAmount =(isReload)?(1-(doneTime-Time.time)/reloadDelay):1;
+        
         PlayerMoney.transform.localScale +=
             (new Vector3(0.24f,0.24f) - PlayerMoney.transform.localScale) * (Time.unscaledDeltaTime * 7);
         PlayerMoney.color +=(Color.white-PlayerMoney.color)* (Time.unscaledDeltaTime * 15);
 
         ShotGunSkillImage.color += (Color.clear - ShotGunSkillImage.color) * (Time.unscaledDeltaTime*5);
-        if(!isReload) {
-            if (mag > 0) {
+        if(!isReload)
+        {
+            if (mag > 0) 
+            {
                 PlayerMag.color +=((mag<=Allmag/5?Color.red:Color.white)-PlayerMag.color)* (Time.unscaledDeltaTime * 10);
-            }else {
+            }
+            else
+            {
                 PlayerMag.color +=(new Color(130/255f,130/255f,150/255f,1f)-PlayerMag.color)*(Time.unscaledDeltaTime * 15);
             }
         }
@@ -118,7 +124,7 @@ public class UIManager : MonoSingleton<UIManager>
         if (skill != 0)
         {
             _playerSkill = (skill / _playerMaxSkill);
-            PlayerSkill.text = $"Skill: {skill}";
+            PlayerSkill.text = $"Skill: {skill:F1}%";
         }
     }
     public void ResetGauge(bool hp = false,bool skill = false)
@@ -165,12 +171,15 @@ public class UIManager : MonoSingleton<UIManager>
 
     }
 
-    public void UpdateMagReload(bool _reload = true)
+    private float reloadDelay,doneTime;
+    public void UpdateMagReload(bool _reload = true,float _reloadDelay = 0)
     {
         isReload = _reload;
 
         if (isReload)
         {
+            doneTime = _reloadDelay + Time.time;
+            reloadDelay = _reloadDelay;
             PlayerMag.text = $"Reload!";
             PlayerMag.color  = new Color(130 / 255f, 130 / 255f, 150 / 255f, 1f);
         }
@@ -228,6 +237,11 @@ public class UIManager : MonoSingleton<UIManager>
         }
     }
 
+    public void OnPlayerDie()
+    {
+        SniperHud.SetActive(false);
+        SubSniperHud.SetActive(false);
+    }
     public void UpdateSniperSkillGauge(float amount)
     {
         SniperSkillGauge.fillAmount = amount;

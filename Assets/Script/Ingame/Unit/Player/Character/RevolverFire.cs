@@ -51,6 +51,7 @@ public class RevolverFire : PlayerFire
         {
             for (int i = 0; i < 5; i++)
             {
+                _audioManager.PlaySFX(skillSfxId);
                 Instantiate(missle).
                 GetComponent<RevolverRoket>().Init(transform,monster, 
                     2f, 4, 4, 1.5f,_playerState.colors,_playerState.GetFireInstance().damage*2);

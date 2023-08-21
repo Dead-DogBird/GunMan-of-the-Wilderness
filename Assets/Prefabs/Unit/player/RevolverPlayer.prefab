@@ -612,6 +612,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bullet: {fileID: 3468561696563007470, guid: 77b9ce54c3f1702489d74eaee1bef8f1, type: 3}
   _fireFlame: {fileID: 6140996296906423665, guid: 7adb60e6019507f4bb61bdc76a7effe2, type: 3}
+  fireSfxId: 0
+  skillSfxId: 10
   missle: {fileID: 6745832088306231691, guid: 6f4b46b814e4a064699ff44c3dd1460e, type: 3}
 --- !u!114 &5187123015528646504
 MonoBehaviour:
@@ -628,6 +630,7 @@ MonoBehaviour:
   speed: 8
   jumpForce: 1000
   _isjumping: 0
+  MaxJump: 2
 --- !u!114 &8864454078897594378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -640,7 +643,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 604c3e601fe62664eb9437b97395b814, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerMaxHp: 100
   _playerHp: 100
+  _playerMaxSkill: 100
+  _playerSkill: 100
   _allMag: 6
   _nowMag: 6
   _damage: 30
@@ -654,6 +660,8 @@ MonoBehaviour:
   _sceorbitColor: {r: 0.25882354, g: 0.25882354, b: 0.37254903, a: 1}
   targetFigure: 0.1
   Textures: {fileID: 7915174199472143304}
+  isSniperUlt: 0
+  reloadSfxId: 5
 --- !u!114 &842273468
 MonoBehaviour:
   m_ObjectHideFlags: 0

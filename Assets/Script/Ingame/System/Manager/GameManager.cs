@@ -14,12 +14,14 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField] private GameObject inGameCoin;
     public PlayerState player { get; private set; }
 
+    public bool isPlayerDie = false;
     void Start()
     {
         _poolingManager.AddPoolingList<Orbit>(450, Orbit);
         _poolingManager.AddPoolingList<MoveOrbit>(450, MoveOrbit);
         _poolingManager.AddPoolingList<EffectText>(10, effectText);
         _poolingManager.AddPoolingList<InagmeCoin>(50, inGameCoin);
+        
     }
 
     private void OnEnable()
@@ -30,13 +32,13 @@ public class GameManager : MonoSingleton<GameManager>
     {
         
     }
+    
     public void SetPlayer(PlayerState _player)
     {
         if (player != null) return;
         player = _player;
         return;
     }
-
     public void Effect(Vector3 pos, int count,float random = 0.15f)
     {
         for (int i = 0; i < count; i++)
@@ -71,7 +73,6 @@ public class GameManager : MonoSingleton<GameManager>
     {
         _poolingManager.Spawn<EffectText>().Init(pos, color, text);
     }
-
     public void MoveOrbitEffect(Vector3 pos, int count, float scale, OrbitColors colors, bool outlined = true,
         float outline = 0.2f, float reduce = 2,float angle =0,float speed = 10,float randomAngle = 0 )
     {

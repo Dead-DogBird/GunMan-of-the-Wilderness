@@ -11,16 +11,22 @@ using Random = UnityEngine.Random;
 public class PlayerFire : MonoBehaviour
 {
     protected PlayerState _playerState;
+    protected AudioManager _audioManager;
     protected float _myDamage { get; private set; }
     [SerializeField] protected GameObject _bullet;
     [SerializeField] protected GameObject _fireFlame;
     protected bool isDead = false;
+
+
+    [SerializeField] protected int fireSfxId;
+    [SerializeField] protected int skillSfxId;
     protected void Start()
     {
         _playerState = GetComponent<PlayerState>();
         _myDamage = _playerState.getDamage;
         GameManager.Instance._poolingManager.
             AddPoolingList<Bullet>(10,_bullet);
+        _audioManager = AudioManager.Instance;
     }
 
     protected void OnDestroy()
@@ -30,13 +36,25 @@ public class PlayerFire : MonoBehaviour
 
     protected void Update()
     {
-        if (_playerState.GetFire())Fire();
-        if(_playerState.GetSkill())Skill();
-        if(_playerState.GetReload())_playerState.ReLoad().Forget();
+        if (_playerState.GetFire())
+        {
+            _audioManager.PlaySFX(fireSfxId);
+            Fire();
+        }
+
+        if (_playerState.GetSkill())
+        {
+            Skill();
+        }
+        if (_playerState.GetReload())
+        {
+            _playerState.ReLoad().Forget();
+        }
         
     }
     protected virtual void Fire()
     {
+        _audioManager.PlaySFX(fireSfxId);
         UIManager.Instance.SetCursorEffect();
         GameManager.Instance._poolingManager.Spawn<Bullet>().Init( _playerState.GetFireInstance());
         Instantiate(_fireFlame, _playerState.GetFireInstance().firepos,Quaternion.identity);

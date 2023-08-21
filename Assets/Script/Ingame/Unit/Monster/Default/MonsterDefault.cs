@@ -28,6 +28,10 @@ public class MonsterDefault : MonoBehaviour
     protected static readonly int _TargetedPlayer = Animator.StringToHash("TargetedPlayer");
 
     [CanBeNull] protected MonsterDefaultAttack _attack;
+
+    [SerializeField] private int hitSfxId = 16;
+    [SerializeField] private int dieSfxId = 16;
+    
     // Start is called before the first frame update
     protected void Start()
     {
@@ -122,6 +126,7 @@ public class MonsterDefault : MonoBehaviour
 
     public void OnDameged(DamageInfo dmgInfo)
     {
+        AudioManager.Instance.PlaySFX(hitSfxId);
         GameManager.Instance.Effect(dmgInfo.pos, 4,0.4f);
         GameManager.Instance.EffectText(dmgInfo.pos,$"{dmgInfo.Damage}",dmgInfo.color);
         _hp -= dmgInfo.Damage;
@@ -135,6 +140,7 @@ public class MonsterDefault : MonoBehaviour
     }
     protected void onDamaged(Bullet _bullet)
     {
+        AudioManager.Instance.PlaySFX(hitSfxId);
         GameManager.Instance.Effect(_bullet.transform.position, 4,0.4f);
         GameManager.Instance.EffectText(_bullet.transform.position,$"{_bullet.damage}",_bullet.orbitColor.priColor);
         _hp -= _bullet.damage;
@@ -153,10 +159,9 @@ public class MonsterDefault : MonoBehaviour
             onDamaged(other.GetComponent<Bullet>());
         }
 
-        if (other.CompareTag("TurretBullet"))
+        if (other.CompareTag("DMRUlt"))
         {
             OnDameged(new DamageInfo(GameManager.Instance.player.getDamage,GameManager.Instance.player.colors.priColor,transform.position));
-            Destroy(other.gameObject);
         }
         if (other.CompareTag("Missle"))
         {
@@ -212,6 +217,7 @@ public class MonsterDefault : MonoBehaviour
     protected void Die()
     {
         isDie = true;
+        AudioManager.Instance.PlaySFX(dieSfxId);
         GameManager.Instance.Effect(transform.position, 4,0.4f);  
         GameManager.Instance.player.skillGauge(100/GameManager.Instance.player.getDamage);
         GameManager.Instance.SpawnCoin(transform.position, 10);

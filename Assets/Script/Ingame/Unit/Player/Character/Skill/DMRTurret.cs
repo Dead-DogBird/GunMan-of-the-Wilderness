@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -10,11 +11,10 @@ public class DMRTurret : MonoBehaviour
 {
     private PlayerState player;
     private DMRFire _owner;
-    [SerializeField] private GameObject _bullet;
+    [SerializeField] private GameObject _attackObject;
     [SerializeField] private GameObject _thunder;
-    [SerializeField] private Transform firePos;
     private bool isActive = true;
-    
+    [SerializeField] private int sfxId = 12;
     // Start is called before the first frame update
     void Start()
     {
@@ -44,38 +44,22 @@ public class DMRTurret : MonoBehaviour
     {
         while (isActive)
         {
+            AudioManager.Instance.PlaySFX(sfxId);
             TurretFire();
             await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
         }
     }
     void TurretFire()
     {
+        IngameCamera.Instance.Shake(0f,0.2f,0,1,10f);
         Destroy(Instantiate(_thunder, transform.position, Quaternion.identity),0.2f);
-        Collider2D[] colls = Physics2D.OverlapCircleAll(transform.position, 30f);
-        float closestdistance = 20;
-        float distance;
-        Vector3 toVector = default;
+        Collider2D[] colls = Physics2D.OverlapCircleAll(transform.position, 10f);
         foreach (var var_ in colls)
         {
             if (var_.transform.CompareTag("Monster"))
             {
-                distance = Vector2.Distance(var_.transform.position, transform.position);
-                if (distance < closestdistance)
-                {
-                    closestdistance = distance;
-                    toVector = var_.transform.position;
-                    
-                }
+                Instantiate(_attackObject,var_.transform.position,quaternion.identity);
             }
         }
-        if(toVector != default)
-        {
-            Instantiate(_bullet).GetComponent<turretBullet>().Init(
-            new GetFireInstance(firePos.position,firePos.position,toVector,player.getDamage,player.getBulletSpeed,Color.black,
-                player.colors));
-        }
-        
     }
-    
-    
 }

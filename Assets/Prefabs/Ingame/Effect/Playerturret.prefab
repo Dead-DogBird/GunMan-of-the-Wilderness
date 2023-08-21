@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68d9f8db4da49b84c801ec84c84b07de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bullet: {fileID: 7435598397341223545, guid: 338dd4c5755fdf345a23891c04066f8e, type: 3}
+  _attackObject: {fileID: 5774658767082579452, guid: b14189e8ef1e757419a4ee2af91835a5, type: 3}
   _thunder: {fileID: 5774658767082579452, guid: 4699a9e87be5158438bbe27b88eadb86, type: 3}
   firePos: {fileID: 1734359232752629735}
 --- !u!95 &3129988637414359860

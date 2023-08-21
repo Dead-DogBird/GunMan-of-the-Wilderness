@@ -21,6 +21,7 @@ public class DMRFire : PlayerFire
     }
     protected override void Skill()
     {
+        _audioManager.PlaySFX(skillSfxId);
         var turret = Instantiate(Turret, transform.position, quaternion.identity);
             turret.GetComponent<DMRTurret>().
             Init(_playerState,this);

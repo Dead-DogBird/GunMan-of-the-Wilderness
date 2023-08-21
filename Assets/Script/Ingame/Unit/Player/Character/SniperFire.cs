@@ -69,6 +69,7 @@ public class SniperFire : PlayerFire
 
     protected override void Skill()
     {
+        _audioManager.PlaySFX(skillSfxId);
         _playerState.SetMaxMag();
         ultBullet = _playerState.getAllMag;
         IngameCamera.Instance.Shake(0,0.2f,0,1,6f);

@@ -1,10 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
+using Vector3 = UnityEngine.Vector3;
 
 
 // 플레이어의 체력, 기술 게이지, 탄약 등등의 총체적인 상황을 관리
@@ -96,8 +101,9 @@ public class PlayerState : MonoBehaviour
         get { return new OrbitColors(_orbitColor, _sceorbitColor); }
     }
     private FireState_ _fireState;
+    
+    //총 정보
     public int getAllMag => _allMag;
-
     public int NowMag
     {
         get
@@ -113,7 +119,28 @@ public class PlayerState : MonoBehaviour
     public float getDamage => _damage;
     public float getBulletSpeed => _bulletSpeed;
 
+    private bool _isDie = false;
+    public bool IsDie
+    {
+        get
+        {
+            return _isDie;
+        }
+        private set
+        {
+            _isDie = value;
+            GameManager.Instance.isPlayerDie = value;
+            if (value)
+            {
+                UIManager.Instance.OnPlayerDie();
+            }
+        }
+    }
+    private bool dead = false;
+
+    private PlayerFire _playerFire;
     private PlayerContrl _playerContrl;
+    private PlayerMove _playerMove;
     public Player_Gun _playerGun { get; private set; }
     [SerializeField] private GameObject Textures;
     private List<SpriteRenderer> _charSprites = new();
@@ -165,6 +192,8 @@ public class PlayerState : MonoBehaviour
     {
         _playerContrl = GetComponent<PlayerContrl>();
         _playerGun = GetComponent<Player_Gun>();
+        _playerFire = GetComponent<PlayerFire>();
+        _playerMove = GetComponent<PlayerMove>();
         _fireState = FireState_.Default;
         Getsprite(Textures);
         GameManager.Instance.SetPlayer(this);
@@ -176,7 +205,13 @@ public class PlayerState : MonoBehaviour
         UIManager.Instance.SetSkillGaougeColor(_orbitColor);
         UIManager.Instance.UpdateMag(_allMag,true);
     }
-
+    private void Update()
+    {
+        if (_playerHp <= 0 && !IsDie)
+        {
+           DieTask().Forget();
+        }
+    }
     private void Getsprite(GameObject obj)
     {
         for (var i = 0; i < obj.transform.childCount; i++)
@@ -186,12 +221,6 @@ public class PlayerState : MonoBehaviour
         }
 
     }
-
-    private void Update()
-    {
-      
-    }
-
     public bool GetSkill()
     {
         if (!_playerContrl.Userinput.SkillKey ||
@@ -200,26 +229,6 @@ public class PlayerState : MonoBehaviour
         PlayerSkill = 0;
         return true;
     }
-
-    private FireState_ GetFireCommand()
-    {
-        switch (_fireState)
-        {
-            case FireState_.Reload:
-                return _fireState;
-            case FireState_.Default when _nowMag <= 0:
-                _fireState = FireState_.NoMag;
-                ReLoad().Forget();
-                return _fireState;
-            case FireState_.Default:
-                NowMag--;
-                Fired().Forget();
-                return FireState_.Default;
-            default:
-                return _fireState;
-        }
-    }
-
     public bool GetFire()
     {
         if (_playerContrl.Userinput.LeftMouseState &&
@@ -230,16 +239,14 @@ public class PlayerState : MonoBehaviour
         }
         return false;
     }
-
     public bool GetReload()
     {
-        return (_playerContrl.Userinput.Rkey && (_fireState == FireState_.Default));
+        return (_playerContrl.Userinput.Rkey && (_fireState == FireState_.Default||_fireState == FireState_.Delayed));
     }
     public Vector3 GetMousePos()
     {
         return _playerContrl.Userinput.MousePos;
     }
-
     public bool isSniperUlt = false;
     // ReSharper disable Unity.PerformanceAnalysis
     private async UniTaskVoid Fired()
@@ -247,24 +254,26 @@ public class PlayerState : MonoBehaviour
         NowMag--;
         _fireState = FireState_.Delayed;
         await UniTask.Delay(TimeSpan.FromSeconds(_fireDelay), ignoreTimeScale: isSniperUlt);
-        _fireState = FireState_.Default;
+        if(_fireState == FireState_.Delayed)
+            _fireState = FireState_.Default;
         if (NowMag <= 0)
         {
             _fireState = FireState_.NoMag;
             ReLoad().Forget();
         }
     }
+    [SerializeField] protected int reloadSfxId;
     // ReSharper disable Unity.PerformanceAnalysis
     public async UniTaskVoid ReLoad()
     {
-        UIManager.Instance.UpdateMagReload();
+        AudioManager.Instance.PlaySFX(reloadSfxId);
+        UIManager.Instance.UpdateMagReload(true,_reloadDelay);
         _fireState = FireState_.Reload;
         await UniTask.Delay(TimeSpan.FromSeconds(_reloadDelay), ignoreTimeScale: isSniperUlt);
         UIManager.Instance.UpdateMagReload(false);
         NowMag = _allMag;
         _fireState = FireState_.Default;
     }
-
     public void SetMaxMag()
     {
         NowMag = _allMag;
@@ -274,6 +283,7 @@ public class PlayerState : MonoBehaviour
         if (_isimmune) return;
 
         _isimmune = true;
+        AudioManager.Instance.PlaySFX(15,false,1,1);
         GameManager.Instance.Effect(_monsterBullet.transform.position, 4, 0.4f);
         GameManager.Instance.EffectText(_monsterBullet.transform.position,$"-{_monsterBullet.damage}",_monsterBullet.orbitColor.priColor);
         PlayerHp -= _monsterBullet.damage;
@@ -281,7 +291,6 @@ public class PlayerState : MonoBehaviour
         GameManager.Instance._poolingManager.Despawn(_monsterBullet);
         GetDamegeTask().Forget();
     }
-
     void GetDamage(MonsterDefaultAttack monster)
     {
         if (_isimmune) return;
@@ -297,9 +306,13 @@ public class PlayerState : MonoBehaviour
             PlayerHp -= 10;
         }
         GameManager.Instance.Effect(transform.position, 4, 0.4f);
+        if (IsDie)
+        {
+            
+            return;
+        }
         GetDamegeTask().Forget();
     }
-
     async UniTaskVoid GetDamegeTask()
     {
         UIManager.Instance.PlayerHit();
@@ -323,14 +336,43 @@ public class PlayerState : MonoBehaviour
         }
         _isimmune = false;
     }
-
+    private Vector3 _diepos;
+    async UniTaskVoid DieTask()
+    {
+        IsDie = true;
+        _rigidbody.simulated = false;
+        _playerContrl.enabled = false;
+        _playerGun.enabled = false;
+        _playerFire.enabled = false;
+        _playerMove.enabled = false;
+        _diepos = transform.position;
+        IngameCamera.Instance.transform.position = _diepos+new Vector3(0,0,-10);
+        float ypos = 1f;
+        IngameCamera.Instance.Shake(0.05f,0.05f,0,1,60);
+        Time.timeScale = 0.2f;
+        for (int i = 0; i < 100; i++)
+        {
+            AudioManager.Instance.SetMusicPitch((float)(100-i)/100);
+            GameManager.Instance.MoveOrbitEffect(transform.position+new Vector3(0,0.5f),Random.Range(3,5),0.7f,
+                colors, false,0,2, 180,Random.Range(7,12),180);
+            await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime), true);
+        }
+        dead = true;
+        GameManager.Instance.MoveOrbitEffect(transform.position+new Vector3(0,0.5f),Random.Range(3,5),2f,
+            colors, false,0,2, 180,Random.Range(7,12),180);
+        IngameCamera.Instance.Shake(0.3f,0.3f,0,1,20);
+        AudioManager.Instance.PlaySFX(20);
+        transform.localScale = Vector3.zero;
+        await UniTask.Delay(TimeSpan.FromSeconds(0.5f), true);
+        Time.timeScale = 0.1f;
+    }
+    
     public GetFireInstance GetFireInstance()
     {
         
         return new GetFireInstance(transform.position,_gunholePos.position,GetMousePos()-new Vector3(0,0.07f)
         ,_damage,_bulletSpeed,_bulletColor,new OrbitColors(_orbitColor,_sceorbitColor),targetFigure,_spread);
     }
-
     public void GetFireEffect()
     {
         _playerGun.FireEffect();

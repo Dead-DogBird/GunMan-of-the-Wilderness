@@ -10,6 +10,7 @@ public class ShotGunMonsterAttack : MonsterDefaultAttack
     void Start()
     {
         base.Start();
+        attackSfxId = 1;
     }
 
     // Update is called once per frame
@@ -17,12 +18,13 @@ public class ShotGunMonsterAttack : MonsterDefaultAttack
     {
         base.Update();
     }
-
+    
     protected override async UniTaskVoid Attack()
     {
         await UniTask.Delay(TimeSpan.FromSeconds(_attackDelay), ignoreTimeScale: false);
         while (!_monsterDefault.isDie && _monsterDefault._targetedPlayer)
         {
+            
             for (int i = 1; i > -2; i--)
             {
                 GameManager.Instance._poolingManager.Spawn<MonsterBullet>().Init(new GetFireInstance(transform.position,firepos.position,
@@ -30,6 +32,7 @@ public class ShotGunMonsterAttack : MonsterDefaultAttack
                     damage, _monsterDefault.bulletSpeed, bulletColor,
                     new OrbitColors(pricolor, seccolor),0.1f,7*i));
             }
+            AudioManager.Instance.PlaySFX(attackSfxId);
             Instantiate(_fireflame, firepos.position, Quaternion.identity);
             await UniTask.Delay(TimeSpan.FromSeconds(_attackDelay), ignoreTimeScale: false);
         }

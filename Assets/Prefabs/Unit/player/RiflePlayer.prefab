@@ -132,7 +132,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 8197392948503669088}
   m_Bounds:
-    m_Center: {x: 0.0013245195, y: 0.037320808, z: 0}
+    m_Center: {x: 0.0013250113, y: 0.037320808, z: 0}
     m_Extent: {x: 0.097155, y: 0.158315, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -391,6 +391,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bullet: {fileID: 3468561696563007470, guid: 77b9ce54c3f1702489d74eaee1bef8f1, type: 3}
   _fireFlame: {fileID: 6140996296906423665, guid: 7adb60e6019507f4bb61bdc76a7effe2, type: 3}
+  fireSfxId: 3
+  skillSfxId: 13
   _raser: {fileID: 7176293229263669978, guid: 4453325baecede042907591f52adcbbf, type: 3}
 --- !u!114 &-8975775715683262810
 MonoBehaviour:
@@ -407,6 +409,7 @@ MonoBehaviour:
   speed: 8
   jumpForce: 1000
   _isjumping: 0
+  MaxJump: 2
 --- !u!114 &-7174903224283860110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -419,7 +422,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 604c3e601fe62664eb9437b97395b814, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerMaxHp: 100
   _playerHp: 100
+  _playerMaxSkill: 100
+  _playerSkill: 100
   _allMag: 30
   _nowMag: 30
   _damage: 8
@@ -433,6 +439,8 @@ MonoBehaviour:
   _sceorbitColor: {r: 0.18647924, g: 0.213, b: 0.123966, a: 1}
   targetFigure: 0.1
   Textures: {fileID: 8775371011893221207}
+  isSniperUlt: 0
+  reloadSfxId: 8
 --- !u!114 &-4540738209833055244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -714,7 +722,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 5614083081950621339}
   m_Bounds:
-    m_Center: {x: -0.22986275, y: 0.068072826, z: 0}
+    m_Center: {x: -0.22986287, y: 0.068072826, z: 0}
     m_Extent: {x: 0.5174092, y: 0.53671354, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -820,8 +828,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 768925332642593867}
   m_Bounds:
-    m_Center: {x: -0.3483472, y: 0.064526945, z: 0}
-    m_Extent: {x: 0.8014033, y: 0.3888574, z: 0}
+    m_Center: {x: -0.34834707, y: 0.064526945, z: 0}
+    m_Extent: {x: 0.8014034, y: 0.3888574, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -1072,7 +1080,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 255512820059099772}
   m_Bounds:
-    m_Center: {x: 0.001685001, y: 0.03568083, z: 0}
+    m_Center: {x: 0.001684986, y: 0.03568083, z: 0}
     m_Extent: {x: 0.09331501, y: 0.15995502, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -1241,7 +1249,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 9007350997220628035}
   m_Bounds:
-    m_Center: {x: 0, y: 0.03633064, z: 0}
+    m_Center: {x: -0.00000008940697, y: 0.03633064, z: 0}
     m_Extent: {x: 0.08, y: 0.16291499, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1

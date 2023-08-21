@@ -19,6 +19,7 @@ public class RevolverRoket : MonoBehaviour
     public float Damege { get; private set; }
     public GameObject LockOn;
     private GameObject targeted;
+    [SerializeField] private int sfxId = 19;
     public void Init(Transform _startTr, Transform _endTr, float _speed, float _newPointDistanceFromStartTr,
         float _newPointDistanceFromEndTr, float _timer, OrbitColors colors, float damege)
     {
@@ -109,10 +110,6 @@ public class RevolverRoket : MonoBehaviour
             GameManager.Instance._poolingManager.Spawn<Orbit>().Init(new OrbitInfo(true, transform.position
                 + new Vector3(Random.Range(0.15f, -0.15f), Random.Range(0.15f, -0.15f)),
                 transform.localScale.x + Random.Range(-0.2f, 0.02f), 0.2f, _colors), 0.45f);
-            /*  random =  Random.Range(200f/255f, 255f/255f);
-              GameManager.Instance.Effect(transform.position,Random.Range(1,4),0.7f,
-                  new OrbitColors(new Color(random,random,random,1),new Color(random,random,random,1)),true,0.2f,3);
-              */
             await UniTask.Delay(TimeSpan.FromSeconds(OrbitDelay), ignoreTimeScale: false);
         }
     }
@@ -162,13 +159,13 @@ public class RevolverRoket : MonoBehaviour
 
     public void Explosion()
     {
+        AudioManager.Instance.PlaySFX(sfxId);
         Collider2D[] colls = Physics2D.OverlapCircleAll(transform.position, 3.0f);
         foreach (var var_ in colls)
         {
             if (var_.transform.CompareTag("Monster"))
             {
                 var_.GetComponent<MonsterDefault>().OnDameged(new DamageInfo(Damege,_colors.priColor,transform.position));
-                
             }
         }
         for (int i = 0; i < Random.Range(3, 6); i++)
