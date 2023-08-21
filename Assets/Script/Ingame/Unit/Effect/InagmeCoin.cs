@@ -88,6 +88,7 @@ public class InagmeCoin : PoolableObj
         {
             _player.SetMoney(_money);
             var random = Random.Range(2, 6);
+            AudioManager.Instance.PlaySFX(18,false,1,1);
             for(int i =0;i<random;i++)
             {
                 var paticle = Instantiate(Particle);

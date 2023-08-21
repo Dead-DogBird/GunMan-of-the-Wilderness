@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class AudioManager : MonoSingleton<AudioManager>
@@ -53,6 +55,16 @@ public class AudioManager : MonoSingleton<AudioManager>
         BgmSource.clip = BgmClip[index];
     }
 
+    public void PlaySfXDelayed(int index,float delaytime,bool loop = false, float volume = 0.5f, float pitch = 1)
+    {
+        PlaySfxTask(index, delaytime, loop, volume, pitch).Forget();
+    }
+
+    async UniTaskVoid PlaySfxTask(int index,float delaytime,bool loop = false, float volume = 0.5f, float pitch = 1)
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(delaytime), true);
+        PlaySFX(index, loop, volume, pitch);
+    }
     public void SetMusicPitch(float var)
     {
         BgmSource.pitch = var;

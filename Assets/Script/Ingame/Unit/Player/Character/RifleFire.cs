@@ -21,7 +21,7 @@ public class RifleFire : PlayerFire
     }
     protected override void Skill()
     {
-        _audioManager.PlaySFX(skillSfxId,false,1,1);
+        _audioManager.PlaySfXDelayed(skillSfxId,0.3f,false,1,1);
         var obj = Instantiate(_raser, _playerState.GetFireInstance().mousepos +
                                       new Vector3(0, 6.5f, 10), quaternion.identity);
         Destroy(obj,2);

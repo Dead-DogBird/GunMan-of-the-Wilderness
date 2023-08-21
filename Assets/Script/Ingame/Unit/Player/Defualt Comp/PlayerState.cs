@@ -350,6 +350,7 @@ public class PlayerState : MonoBehaviour
         float ypos = 1f;
         IngameCamera.Instance.Shake(0.05f,0.05f,0,1,60);
         Time.timeScale = 0.2f;
+        AudioManager.Instance.PlaySFX(20);
         for (int i = 0; i < 100; i++)
         {
             AudioManager.Instance.SetMusicPitch((float)(100-i)/100);
@@ -361,7 +362,6 @@ public class PlayerState : MonoBehaviour
         GameManager.Instance.MoveOrbitEffect(transform.position+new Vector3(0,0.5f),Random.Range(3,5),2f,
             colors, false,0,2, 180,Random.Range(7,12),180);
         IngameCamera.Instance.Shake(0.3f,0.3f,0,1,20);
-        AudioManager.Instance.PlaySFX(20);
         transform.localScale = Vector3.zero;
         await UniTask.Delay(TimeSpan.FromSeconds(0.5f), true);
         Time.timeScale = 0.1f;
