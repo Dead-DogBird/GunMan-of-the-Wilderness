@@ -88,9 +88,10 @@ public class InagmeCoin : PoolableObj
         {
             _player.SetMoney(_money);
             var random = Random.Range(2, 6);
-            AudioManager.Instance.PlaySFX(18,false,1,1);
+            AudioManager.Instance.PlaySfXDelayed(18,0.1f*random,false,0.6f,1);
             for(int i =0;i<random;i++)
             {
+                AudioManager.Instance.PlaySfXDelayed(18,0.2f,false,0.6f,1);
                 var paticle = Instantiate(Particle);
                 paticle.transform.position = transform.position + new Vector3(Random.Range(0.3f,-0.3f),Random.Range(0.3f,-0.3f));
                 paticle.transform.localScale *= Random.Range(0.5f,0.8f); 

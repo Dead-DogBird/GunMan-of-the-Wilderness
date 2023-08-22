@@ -7,13 +7,13 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using Range = UnityEngine.SocialPlatforms.Range;
 
-
 public class SniperFire : PlayerFire
 {
 
     private bool isUlt = false;
     public float skilltime = 7;
     private int ultBullet = 5;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -31,10 +31,12 @@ public class SniperFire : PlayerFire
             {
                 Time.timeScale = 0.2f;
                 GameManager.Instance.SniperSkill(true);
+                AudioManager.Instance.SetMusicPitch(0.2f,true);
             }
             if (Input.GetMouseButtonUp(1))
             {
                 Time.timeScale = 1;
+                AudioManager.Instance.SetMusicPitch(1,false);
                 GameManager.Instance.SniperSkill(false);
             }
         }
@@ -94,6 +96,7 @@ public class SniperFire : PlayerFire
         _playerState.SniperUlt(isUlt);
         _playerState.SetMaxMag();
         UIManager.Instance.UpdateSniperSkillGauge(0);
+        AudioManager.Instance.SetMusicPitch(1);
         Time.timeScale = 1;
     }
 
@@ -101,15 +104,13 @@ public class SniperFire : PlayerFire
     {
         while ((ultBullet > 0&&time>0)&&!isDead)
         {
-            float randomAngle = Random.Range(0.0f, 360.0f);
-            float radianAngle = randomAngle * Mathf.Deg2Rad;
-            float x = 0.7f * Mathf.Cos(radianAngle);
-            float y = 0.7f * Mathf.Sin(radianAngle);
-            
-            float radom = Random.Range(90f/255f, 235f/255f);
-            GameManager.Instance.MoveOrbitEffect(transform.position+new Vector3(x, y+0.5f),1,0.7f,
-            new OrbitColors(new Color(radom-100/255f,radom-100/255f,255/255f,0.2f),new Color(radom,radom,255/255f,1f)),
-            false,0,2,90,Random.Range(7,12),15);
+            float angle = Random.Range(0f, 360f); // 0부터 360도 사이의 랜덤한 각도
+            float radians = angle * Mathf.Deg2Rad; // 각도를 라디안으로 변환
+            float x = 2f * Mathf.Cos(radians); // x 좌표 계산
+            float y = 2f * Mathf.Sin(radians);
+            GameManager.Instance.MoveOrbitEffect(transform.position+new Vector3(x-0.3f,y+0.7f),Random.Range(3,5),0.7f,
+                new OrbitColors(Color.white, _playerState.colors.priColor), false,0,2,CustomAngle.PointDirection(transform.position,transform.position+new Vector3(x-0.3f,y+0.7f))-150,Random.Range(7,12),0);
+
             await UniTask.Delay(TimeSpan.FromSeconds(0.01f),true);
         }
     }

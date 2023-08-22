@@ -30,7 +30,7 @@ public class MonsterDefault : MonoBehaviour
     [CanBeNull] protected MonsterDefaultAttack _attack;
 
     [SerializeField] private int hitSfxId = 16;
-    [SerializeField] private int dieSfxId = 16;
+    [SerializeField] private int dieSfxId = 21;
     
     // Start is called before the first frame update
     protected void Start()
@@ -43,9 +43,9 @@ public class MonsterDefault : MonoBehaviour
 
     protected void OnEnable()
     {
-        
         colliderCallbackController.onColiderEnter += Findedplayer;
         colliderCallbackController.onColiderExit += LosePlayer;
+        _hp +=_hp*(GameManager.Instance.wolrd * 1.5f);
     }
 
     // Update is called once per frame
@@ -214,13 +214,14 @@ public class MonsterDefault : MonoBehaviour
         }
     }
 
+    [SerializeField] private int dropMoney = 100;
     protected void Die()
     {
         isDie = true;
         AudioManager.Instance.PlaySFX(dieSfxId);
         GameManager.Instance.Effect(transform.position, 4,0.4f);  
         GameManager.Instance.player.skillGauge(100/GameManager.Instance.player.getDamage);
-        GameManager.Instance.SpawnCoin(transform.position, 10);
+        GameManager.Instance.SpawnCoin(transform.position, dropMoney);
         Destroy(gameObject);
     }
     protected virtual void SetTargetPlayer(PlayerState _player)

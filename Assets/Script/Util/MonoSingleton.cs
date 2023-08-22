@@ -16,6 +16,7 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
                     return null;
             }
 
+            
             return _instance;
         }
     }
@@ -28,6 +29,9 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
         }
         else
         {
+            Debug.Log($"{typeof(T)}이미 있대서 삭제함 ㅅㄱ");
+            Debug.Log(_instance.name);
+            Debug.Log(gameObject.name);
             Destroy(gameObject);
         }
     }

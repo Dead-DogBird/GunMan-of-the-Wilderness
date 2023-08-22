@@ -65,8 +65,23 @@ public class AudioManager : MonoSingleton<AudioManager>
         await UniTask.Delay(TimeSpan.FromSeconds(delaytime), true);
         PlaySFX(index, loop, volume, pitch);
     }
-    public void SetMusicPitch(float var)
+    public void SetMusicPitch(float var,bool isSmooth = false)
     {
+        if (!isSmooth)
+        {
+            BgmSource.pitch = var;
+            return;
+        }
+        MusicPitchTask(var).Forget();
+    }
+
+    async UniTaskVoid MusicPitchTask(float var)
+    {
+        while ((var-BgmSource.pitch).Abs() > 0.01f)
+        {
+            BgmSource.pitch += (var-BgmSource.pitch)/10;
+            await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledTime), true);
+        }
         BgmSource.pitch = var;
     }
 }

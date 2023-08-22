@@ -23,6 +23,9 @@ public class UIManager : MonoSingleton<UIManager>
 
     [SerializeField] private Image SniperSkillGauge;
     [SerializeField] private Image ShotGunSkillImage;
+
+    [SerializeField] private Image FadeImage;
+    
     private Color ShotGunSkillImageOriginalColor;
     public bool isSniperSkill;
 
@@ -39,6 +42,8 @@ public class UIManager : MonoSingleton<UIManager>
     private int Allmag;
 
     private bool isReload = false;
+
+    private bool fade = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -96,6 +101,9 @@ public class UIManager : MonoSingleton<UIManager>
             SniperHud.transform.position =  new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f);
             SubSniperHud.transform.position =  new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f);
         }
+
+        FadeImage.color += ((!fade ? Color.clear : Color.black) - FadeImage.color) * (Time.unscaledDeltaTime * 20);
+
     }
 #if UNITY_EDITOR
     void OnApplicationQuit()
@@ -119,7 +127,7 @@ public class UIManager : MonoSingleton<UIManager>
         if (hp != 0)
         {
             _playerHp = (hp/_playerMaxHp);
-            PlayerHp.text = $"Hp: {hp}";
+            PlayerHp.text = $"Hp: {hp:F1}";
         }
         if (skill != 0)
         {
@@ -250,5 +258,11 @@ public class UIManager : MonoSingleton<UIManager>
     public void ShotGunSkill()
     {
         ShotGunSkillImage.color = ShotGunSkillImageOriginalColor;
+    }
+
+    public async UniTaskVoid SetFade(bool value = false,float Delay = 3)
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(Delay), true);
+        fade = value;
     }
 }

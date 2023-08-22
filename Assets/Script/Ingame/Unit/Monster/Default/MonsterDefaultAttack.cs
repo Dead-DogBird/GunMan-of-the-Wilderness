@@ -50,7 +50,7 @@ public class MonsterDefaultAttack : MonoBehaviour
         await UniTask.Delay(TimeSpan.FromSeconds(_attackDelay), ignoreTimeScale: false);
         while (!_monsterDefault.isDie&&_monsterDefault._targetedPlayer)
         {
-            AudioManager.Instance.PlaySFX(attackSfxId);
+            AudioManager.Instance.PlaySFX(attackSfxId,false,1);
             GameManager.Instance._poolingManager.Spawn<MonsterBullet>().Init( new GetFireInstance(transform.position,firepos.position,_monsterDefault.player.transform.position,
                damage,_monsterDefault.bulletSpeed,bulletColor,new OrbitColors(pricolor,seccolor)));
             Instantiate(_fireflame,firepos.position,Quaternion.identity);

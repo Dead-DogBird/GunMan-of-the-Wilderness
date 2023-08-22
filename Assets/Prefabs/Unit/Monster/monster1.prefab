@@ -883,8 +883,10 @@ MonoBehaviour:
   _speed: 2.5
   distanceFromPlayer: 0.5
   colliderCallbackController: {fileID: 706309227}
-  damage: 0
   bulletSpeed: 0
+  hitSfxId: 16
+  dieSfxId: 21
+  dropMoney: 100
 --- !u!1 &6810888488062508657
 GameObject:
   m_ObjectHideFlags: 0

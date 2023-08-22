@@ -1,17 +1,29 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+[Serializable]
+public class Stage
+{
+    public GameObject[] map;
+}
 public class GameManager : MonoSingleton<GameManager>
 {
     internal PoolingManager _poolingManager;
-    [SerializeField] private GameObject Stage;
+   
     [SerializeField] private GameObject Orbit;
     [SerializeField] private GameObject MoveOrbit;
     [SerializeField] private GameObject effectText;
     [SerializeField] private GameObject inGameCoin;
+    [SerializeField] private Stage[] _stages;
+
+    [SerializeField] private GameObject[] stores;
+    [SerializeField] private GameObject storeManager;
+
+    [SerializeField] private GameObject[] Players;
     public PlayerState player { get; private set; }
 
     public bool isPlayerDie = false;
@@ -21,18 +33,16 @@ public class GameManager : MonoSingleton<GameManager>
         _poolingManager.AddPoolingList<MoveOrbit>(450, MoveOrbit);
         _poolingManager.AddPoolingList<EffectText>(10, effectText);
         _poolingManager.AddPoolingList<InagmeCoin>(50, inGameCoin);
-        
     }
-
     private void OnEnable()
     {
+        player = Instantiate(Players[0], new Vector3(-6, -1), Quaternion.identity).GetComponent<PlayerState>();
+        nowStage = Instantiate(_stages[wolrd].map[stage], new Vector3(0, 0), Quaternion.identity);
     }
-
     void Update()
     {
         
     }
-    
     public void SetPlayer(PlayerState _player)
     {
         if (player != null) return;
@@ -106,5 +116,34 @@ public class GameManager : MonoSingleton<GameManager>
     {
         UIManager.Instance.SniperSkill(_issniperSkill);
         IngameCamera.Instance.SniperSkill(_issniperSkill);
+    }
+
+    public int wolrd;
+    public int stage;
+    private bool isStore = false;
+    private GameObject nowStage;
+    private GameObject store;
+    public void GetNextStage()
+    {
+        UIManager.Instance.SetFade(true, 0).Forget();
+        player.transform.position = new Vector3(-6, -1);
+        Destroy(nowStage.gameObject);
+        if ((stage == 0 || stage == 2) && (!isStore))
+        {
+            isStore = true;
+            nowStage = Instantiate(stores[wolrd],new Vector3(0,0),Quaternion.identity);
+        }
+        else
+        {
+            if (stage == 3)
+            {
+                wolrd++;
+                stage = 0;
+            }
+            stage++;
+            isStore = false;
+            nowStage = Instantiate(_stages[wolrd].map[stage], new Vector3(0, 0), Quaternion.identity);
+        }
+        UIManager.Instance.SetFade(false, 2).Forget();
     }
 }

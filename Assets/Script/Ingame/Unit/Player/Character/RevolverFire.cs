@@ -26,7 +26,6 @@ public class RevolverFire : PlayerFire
     {
         Missle().Forget();
     }
-
     async UniTaskVoid Missle()
     {
         Debug.Log("미사일 발싸");

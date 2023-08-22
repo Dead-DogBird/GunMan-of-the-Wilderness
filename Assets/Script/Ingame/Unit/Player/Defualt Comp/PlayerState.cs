@@ -37,6 +37,10 @@ public class PlayerState : MonoBehaviour
                 UIManager.Instance.ResetGauge(true);
         }
     }
+
+    public float playerMaxHp => _playerMaxHp;
+    public float playerMaxSkill => _playerMaxSkill;
+    
     [SerializeField] private float _playerMaxSkill = 100;
     [SerializeField] private float _playerSkill = 100;
     public float PlayerSkill
@@ -188,6 +192,16 @@ public class PlayerState : MonoBehaviour
         Delayed,
         NoMag
     };
+    private enum PlayerType
+    {
+        Revolver,
+        ShotGun,
+        DMR,
+        Rifle,
+        Sniper
+    };
+
+    [SerializeField] private PlayerType _playerType;
     private void Start()
     {
         _playerContrl = GetComponent<PlayerContrl>();
@@ -196,7 +210,7 @@ public class PlayerState : MonoBehaviour
         _playerMove = GetComponent<PlayerMove>();
         _fireState = FireState_.Default;
         Getsprite(Textures);
-        GameManager.Instance.SetPlayer(this);
+        //GameManager.Instance.SetPlayer(this);
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody2D>();
         UIManager.Instance.SetGauge(_playerMaxHp,_playerMaxSkill);
@@ -204,6 +218,8 @@ public class PlayerState : MonoBehaviour
         PlayerSkill = _playerMaxSkill/2;
         UIManager.Instance.SetSkillGaougeColor(_orbitColor);
         UIManager.Instance.UpdateMag(_allMag,true);
+        if(_playerType == PlayerType.Sniper)
+            SniperPassiveTask().Forget();
     }
     private void Update()
     {
@@ -283,7 +299,7 @@ public class PlayerState : MonoBehaviour
         if (_isimmune) return;
 
         _isimmune = true;
-        AudioManager.Instance.PlaySFX(15,false,1,1);
+        
         GameManager.Instance.Effect(_monsterBullet.transform.position, 4, 0.4f);
         GameManager.Instance.EffectText(_monsterBullet.transform.position,$"-{_monsterBullet.damage}",_monsterBullet.orbitColor.priColor);
         PlayerHp -= _monsterBullet.damage;
@@ -316,6 +332,7 @@ public class PlayerState : MonoBehaviour
     async UniTaskVoid GetDamegeTask()
     {
         UIManager.Instance.PlayerHit();
+        AudioManager.Instance.PlaySFX(15,false,1,1);
         IngameCamera.Instance.Shake(0.1f,0.1f,3,1.1f,10);
         
         Time.timeScale = 0;
@@ -353,7 +370,7 @@ public class PlayerState : MonoBehaviour
         AudioManager.Instance.PlaySFX(20);
         for (int i = 0; i < 100; i++)
         {
-            AudioManager.Instance.SetMusicPitch((float)(100-i)/100);
+            AudioManager.Instance.SetMusicPitch((float)(120-i)/100);
             GameManager.Instance.MoveOrbitEffect(transform.position+new Vector3(0,0.5f),Random.Range(3,5),0.7f,
                 colors, false,0,2, 180,Random.Range(7,12),180);
             await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime), true);
@@ -365,11 +382,80 @@ public class PlayerState : MonoBehaviour
         transform.localScale = Vector3.zero;
         await UniTask.Delay(TimeSpan.FromSeconds(0.5f), true);
         Time.timeScale = 0.1f;
+        if (!isResurrection && _playerType == PlayerType.ShotGun)
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(1f), true);
+            ResurrectionTask().Forget();
+        }
+        
     }
-    
+
+    private bool isResurrection = false;
+    async UniTaskVoid ResurrectionTask()
+    {
+        isResurrection = true;
+        IsDie = false;
+        _playerContrl.enabled = true;
+        _playerGun.enabled = true;
+        _playerFire.enabled = true;
+        _playerMove.enabled = true;
+        PlayerHp = _playerMaxHp;
+        /*transform.position = _diepos + new Vector3(0, 1);
+        _diepos += new Vector3(0, 1);
+        */
+        IngameCamera.Instance.transform.position = _diepos+new Vector3(0,0,-10);
+        float ypos = 1f;
+        IngameCamera.Instance.Shake(0.05f,0.05f,0,1,60);
+        Time.timeScale = 0.2f;
+        AudioManager.Instance.PlaySFX(20,false,0.5f,-1);
+        for (int i = 0; i < 100; i++)
+        {
+            AudioManager.Instance.SetMusicPitch((float)i/100);
+            float angle = Random.Range(0f, 360f); // 0부터 360도 사이의 랜덤한 각도
+            float radians = angle * Mathf.Deg2Rad; // 각도를 라디안으로 변환
+            float x = 2f * Mathf.Cos(radians); // x 좌표 계산
+            float y = 2f * Mathf.Sin(radians);
+            GameManager.Instance.MoveOrbitEffect(_diepos+new Vector3(x,y),Random.Range(3,5),0.7f,
+                colors, false,0,2,CustomAngle.PointDirection(_diepos,_diepos+new Vector3(x,y))-180,Random.Range(7,12),0);
+            await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime), true);
+        }
+        _rigidbody.simulated = true;
+        dead = false;
+        IngameCamera.Instance.Shake(0.3f,0.3f,0,1,20);
+        transform.localScale = Vector3.one;
+        Time.timeScale = 1;
+        _isimmune = true;
+        for (int i = 0; i < 14; i++)
+        {
+            foreach (var sprite in _charSprites)
+            {
+                sprite.color = new Color(1,1,1,(i % 2 == 0) ? 0.5f : 1);
+            }
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f), ignoreTimeScale: false);
+        }
+        foreach (var sprite in _charSprites)
+        {
+            sprite.color = new Color(1,1,1,1);
+        }
+        _isimmune = false;
+    }
+
+    async UniTaskVoid SniperPassiveTask()
+    {
+        while (!_isDie)
+        {
+            PlayerHp += Random.Range(0.0f, 2.0f);
+            if (PlayerHp > _playerMaxHp) PlayerHp = _playerMaxHp;
+            await UniTask.Delay(TimeSpan.FromSeconds(1.5f), false);
+        }
+    }
     public GetFireInstance GetFireInstance()
     {
-        
+        if (_playerType == PlayerType.Revolver && (NowMag == 0))
+        {
+            return new GetFireInstance(transform.position,_gunholePos.position,GetMousePos()-new Vector3(0,0.07f)
+                ,_damage*2,_bulletSpeed*1.5f,_bulletColor,new OrbitColors(_orbitColor,_sceorbitColor),targetFigure,_spread);
+        }
         return new GetFireInstance(transform.position,_gunholePos.position,GetMousePos()-new Vector3(0,0.07f)
         ,_damage,_bulletSpeed,_bulletColor,new OrbitColors(_orbitColor,_sceorbitColor),targetFigure,_spread);
     }
@@ -380,6 +466,14 @@ public class PlayerState : MonoBehaviour
 
     public void SetMoney(int _money)
     {
+        if (_money > 0 && _playerType == PlayerType.Rifle)
+        {
+            if (Random.Range(0, 3) ==0)
+            {
+                Money += _money*2;
+                return;
+            }
+        }
         Money += _money;
     }
     public void PlayAnimation(string name, int layer, float normalizedtime)
@@ -411,6 +505,11 @@ public class PlayerState : MonoBehaviour
         if (other.CompareTag("Coin"))
         {
             other.GetComponent<InagmeCoin>().Getplayer(this);
+        }
+
+        if (other.CompareTag("Gate"))
+        {
+            GameManager.Instance.GetNextStage();
         }
     }
     public void SniperUlt(bool active)

@@ -16,6 +16,7 @@ TagManager:
   - ShotGunUlt
   - Coin
   - DMRUlt
+  - Gate
   layers:
   - Default
   - TransparentFX

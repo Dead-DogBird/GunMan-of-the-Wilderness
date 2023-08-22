@@ -951,6 +951,7 @@ MonoBehaviour:
   pricolor: {r: 0.73146677, g: 0, b: 1, a: 1}
   seccolor: {r: 0.19922778, g: 0.16776432, b: 0.24528301, a: 1}
   damage: 20
+  attackSfxId: 17
 --- !u!114 &1975927759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -964,10 +965,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hp: 100
-  _speed: 0.32
+  _speed: 1.5
   distanceFromPlayer: 0.1
   colliderCallbackController: {fileID: 205333722663112809}
   bulletSpeed: 8
+  hitSfxId: 16
+  dieSfxId: 21
+  dropMoney: 150
 --- !u!1 &6846044398947763589
 GameObject:
   m_ObjectHideFlags: 0
