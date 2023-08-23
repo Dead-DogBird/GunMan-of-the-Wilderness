@@ -47,11 +47,19 @@ public class RevolverRoket : MonoBehaviour
             _endP = -_endTr.position;
             _endT_ = _endTr;
         }
-        if(!CheckForChild(_endT_.gameObject,"LockOn(Clone)"))
-            targeted = Instantiate(LockOn, _endT_);
-        transform.position = _startTr.position;
-        MakeOrbit().Forget();
-        Destroy(gameObject, 2f);
+
+        try
+        {
+            if (!CheckForChild(_endT_.gameObject, "LockOn(Clone)"))
+                targeted = Instantiate(LockOn, _endT_);
+            transform.position = _startTr.position;
+            MakeOrbit().Forget();
+            Destroy(gameObject, 2f);
+        }
+        catch (NullReferenceException e)
+        {
+            Explosion();
+        }
     }
 
     void Update()

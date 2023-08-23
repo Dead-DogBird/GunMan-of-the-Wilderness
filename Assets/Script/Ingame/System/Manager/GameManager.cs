@@ -27,6 +27,12 @@ public class GameManager : MonoSingleton<GameManager>
     public PlayerState player { get; private set; }
 
     public bool isPlayerDie = false;
+    
+    private string[] stageNames = new string[3] {"황야로 내몰린 총잡이들","몰락한 그라운드 플랫폼 타운",
+        "최후의 궤도 아공간도약 플랫폼"};
+
+    private string[] BossNames = new string[3] {"스케빈저 사이보그","킹 오브 타운","퍼스트 건맨"};
+
     void Start()
     {
         _poolingManager.AddPoolingList<Orbit>(450, Orbit);
@@ -36,8 +42,9 @@ public class GameManager : MonoSingleton<GameManager>
     }
     private void OnEnable()
     {
-        player = Instantiate(Players[0], new Vector3(-6, -1), Quaternion.identity).GetComponent<PlayerState>();
+        player = Instantiate(Players[3], new Vector3(-6, -1), Quaternion.identity).GetComponent<PlayerState>();
         nowStage = Instantiate(_stages[wolrd].map[stage], new Vector3(0, 0), Quaternion.identity);
+
     }
     void Update()
     {
@@ -118,8 +125,8 @@ public class GameManager : MonoSingleton<GameManager>
         IngameCamera.Instance.SniperSkill(_issniperSkill);
     }
 
-    public int wolrd;
-    public int stage;
+    public int wolrd { get; private set; }
+    public int stage { get; private set; }
     private bool isStore = false;
     private GameObject nowStage;
     private GameObject store;
@@ -131,7 +138,10 @@ public class GameManager : MonoSingleton<GameManager>
         if ((stage == 0 || stage == 2) && (!isStore))
         {
             isStore = true;
+            player.GetComponent<PlayerFire>().enabled = false;
             nowStage = Instantiate(stores[wolrd],new Vector3(0,0),Quaternion.identity);
+            UIManager.Instance.SetStage($"{wolrd+1}-Store");
+            UIManager.Instance.SetStageName($"상점");
         }
         else
         {
@@ -140,10 +150,30 @@ public class GameManager : MonoSingleton<GameManager>
                 wolrd++;
                 stage = 0;
             }
-            stage++;
+            else
+                stage++;
             isStore = false;
+            storeManager.SetActive(false);
+            player.GetComponent<PlayerFire>().enabled = true;
+            UIManager.Instance.SetStage($"{wolrd+1}-{stage+1}");
+            UIManager.Instance.SetStageName($"{stageNames[wolrd]}");
             nowStage = Instantiate(_stages[wolrd].map[stage], new Vector3(0, 0), Quaternion.identity);
         }
         UIManager.Instance.SetFade(false, 2).Forget();
+    }
+
+    public void GameOver()
+    {
+        
+    }
+
+    public void GetStore(bool value)
+    {
+        if(!storeManager.activeSelf)
+            storeManager.SetActive(value);
+        else
+        {
+            storeManager.GetComponent<ShopManager>().ReActive();
+        }
     }
 }

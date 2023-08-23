@@ -15,6 +15,7 @@ using Vector3 = UnityEngine.Vector3;
 // 플레이어의 체력, 기술 게이지, 탄약 등등의 총체적인 상황을 관리
 // 충돌 등등에도 관여.
 // ReSharper disable once CheckNamespace
+
 public class PlayerState : MonoBehaviour
 {
     //체력 및 스킬
@@ -39,7 +40,6 @@ public class PlayerState : MonoBehaviour
     }
 
     public float playerMaxHp => _playerMaxHp;
-    public float playerMaxSkill => _playerMaxSkill;
     
     [SerializeField] private float _playerMaxSkill = 100;
     [SerializeField] private float _playerSkill = 100;
@@ -155,7 +155,7 @@ public class PlayerState : MonoBehaviour
     private static readonly int Move = Animator.StringToHash("Move");
     private static readonly int Ground = Animator.StringToHash("Ground");
     private bool _isimmune = false;
-
+    private bool isResurrection = false;
     private Rigidbody2D _rigidbody;
     public bool isMove
     {
@@ -220,6 +220,8 @@ public class PlayerState : MonoBehaviour
         UIManager.Instance.UpdateMag(_allMag,true);
         if(_playerType == PlayerType.Sniper)
             SniperPassiveTask().Forget();
+        if (_playerType == PlayerType.ShotGun)
+            isResurrection = true;
     }
     private void Update()
     {
@@ -293,6 +295,8 @@ public class PlayerState : MonoBehaviour
     public void SetMaxMag()
     {
         NowMag = _allMag;
+        _fireState = FireState_.Default;
+        UIManager.Instance.UpdateMagReload(false);
     }
     public void GetDamage(MonsterBullet _monsterBullet)
     {
@@ -382,27 +386,29 @@ public class PlayerState : MonoBehaviour
         transform.localScale = Vector3.zero;
         await UniTask.Delay(TimeSpan.FromSeconds(0.5f), true);
         Time.timeScale = 0.1f;
-        if (!isResurrection && _playerType == PlayerType.ShotGun)
+        if (isResurrection)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(1f), true);
             ResurrectionTask().Forget();
         }
-        
+        else
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(1f), true);
+            GameManager.Instance.GameOver();
+        }
     }
 
-    private bool isResurrection = false;
+   
     async UniTaskVoid ResurrectionTask()
     {
-        isResurrection = true;
+        isResurrection = false;
         IsDie = false;
         _playerContrl.enabled = true;
         _playerGun.enabled = true;
         _playerFire.enabled = true;
         _playerMove.enabled = true;
         PlayerHp = _playerMaxHp;
-        /*transform.position = _diepos + new Vector3(0, 1);
-        _diepos += new Vector3(0, 1);
-        */
+        
         IngameCamera.Instance.transform.position = _diepos+new Vector3(0,0,-10);
         float ypos = 1f;
         IngameCamera.Instance.Shake(0.05f,0.05f,0,1,60);
@@ -520,6 +526,111 @@ public class PlayerState : MonoBehaviour
         {
             NowMag = _allMag;
         }
+    }
+    
+    
+    
+    //이하 업그레이드 메서드들
+    private int bulletVelocity =0;
+    private int reloadspeed = 0;
+    private int rpm = 0;
+    private int damage = 0;
+    private int maxmag = 0;
+
+    public int Upgrade(int UpgradeId)
+    {
+        if ((bulletVelocity + reloadspeed + rpm + damage + maxmag) >= 25)
+            return -2;
+        switch (UpgradeId)
+        {
+            case 0:
+            {
+                if (bulletVelocity < 5)
+                {
+                    bulletVelocity++;
+                    _bulletSpeed += _bulletSpeed * 0.05f;
+                    return 0;
+                }
+            }
+                break;
+            case 1:
+            {
+                if (reloadspeed < 5)
+                {
+                    reloadspeed++;
+                    _reloadDelay -= _reloadDelay * 0.1f;
+                    return 1;
+                }
+            }
+                break;
+            case 2:
+            {
+                if (rpm < 5)
+                {
+                    rpm++;
+                    _fireDelay -= _fireDelay * 0.05f;
+                    return 2;
+                }
+            }
+                break;
+            case 3:
+            {
+                if (damage < 5)
+                {
+                    damage++;
+                    _damage += _damage * 0.3f;
+                    return 3;
+                }
+            }
+                break;
+            case 4:
+            {
+                if (maxmag < 5)
+                {
+                    maxmag++;
+                    _allMag += 1;
+                    SetMaxMag();
+                    UIManager.Instance.UpdateMag(_allMag,true);
+                    return 4;
+                }
+            }
+                break;
+        }
+        return -1;
+    }
+
+    public void UpgradeStat(int UpgradeId)
+    {
+        switch (UpgradeId)
+        {
+            case 1:
+                PlayerHp = playerMaxHp;
+                break;
+            case 2:
+                _playerMove.UpgradeStat();
+                break;
+            case 3:
+                _playerMove.UpgradeStat(false);
+                break;
+            case 4:
+                float orMaxHp = _playerMaxHp; 
+                _playerMaxHp += _playerMaxHp * 0.2f;
+                UIManager.Instance.SetGauge(_playerMaxHp,_playerMaxSkill);
+                PlayerHp += (_playerMaxHp-orMaxHp);
+                break;
+            case 5:
+                _playerMaxSkill -= _playerMaxSkill * 0.15f;
+                if (_playerSkill > _playerMaxSkill)
+                    PlayerSkill = _playerMaxSkill;
+                UIManager.Instance.SetGauge(_playerMaxHp,_playerMaxSkill);
+                UIManager.Instance.UpdateGauge(0,_playerSkill);
+                break;
+            case 6:
+                if (!isResurrection)
+                    isResurrection = true;
+                break;
+        }
+        
     }
 }
 

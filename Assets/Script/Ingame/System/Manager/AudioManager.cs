@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class AudioManager : MonoSingleton<AudioManager>
 {
@@ -19,6 +20,18 @@ public class AudioManager : MonoSingleton<AudioManager>
     // Update is called once per frame
     void Update()
     {
+        if (!BgmSource.isPlaying)
+        {
+            if (GameManager.Instance.wolrd < 2)
+            {
+                BgmSource.clip = BgmClip[Random.Range(0, 6)];
+            }
+            else
+            {
+                BgmSource.clip = BgmClip[Random.Range(6, 8)];
+            }
+            BgmSource.Play();
+        }
         
     }
     AudioSource GetEmptySource()

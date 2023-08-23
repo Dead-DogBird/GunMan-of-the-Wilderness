@@ -45,12 +45,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2bcfdd8672a42b4cbfc22bbbe158a5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Stage: {fileID: 0}
   Orbit: {fileID: 1835886177089315850, guid: faf3a2802abd9ff41a38a0b1f2412a76, type: 3}
   MoveOrbit: {fileID: 1835886177089315850, guid: 219140af92af48249b556619e6039336, type: 3}
   effectText: {fileID: 7986566995291811730, guid: e08df11802b6d7243b91e42671686f90, type: 3}
   inGameCoin: {fileID: 5020445927302352742, guid: 21b1c0d8a1afa9741bc2a655a9896b1b, type: 3}
+  _stages:
+  - map:
+    - {fileID: 5553828074893688294, guid: 5d0d9d031fa9813419445a623f899c67, type: 3}
+    - {fileID: 5553828074893688294, guid: 42497150a77872345a03bc50eb5f0e8a, type: 3}
+    - {fileID: 5553828074893688294, guid: eb7960b744698474faca24ce23b80a56, type: 3}
+    - {fileID: 5553828074893688294, guid: 830d8ff0d73e66d48b44c7fb3bfcb8e8, type: 3}
+  - map:
+    - {fileID: 5553828074893688294, guid: dff0bfdec3b3c0049a8cfe382710eb9a, type: 3}
+    - {fileID: 5553828074893688294, guid: aac01b4a1c75d684087e48d2d89c1ff5, type: 3}
+    - {fileID: 5553828074893688294, guid: c057e67f35263154e91bc25e1a388560, type: 3}
+    - {fileID: 5553828074893688294, guid: cab9f173d37441c4788fd2375f2a0a40, type: 3}
+  - map:
+    - {fileID: 5553828074893688294, guid: 120c6f99598693648bb850f991a6f82c, type: 3}
+    - {fileID: 5553828074893688294, guid: 28d6664395672e94aa368c8606907d8a, type: 3}
+    - {fileID: 5553828074893688294, guid: 1dc4af0fe3c942244821a0da5bda33e7, type: 3}
+    - {fileID: 5553828074893688294, guid: 01aa04aa01f5e9442b7491fba684a4bb, type: 3}
+  stores:
+  - {fileID: 4808176406438398870, guid: cb12cede873315544bc1906da3691838, type: 3}
+  - {fileID: 4808176406438398870, guid: 2743edadf6fcb0d4b8895e96c591b21b, type: 3}
+  - {fileID: 4808176406438398870, guid: 85ae85a08256ba2408c461e7bbe541ca, type: 3}
+  storeManager: {fileID: 0}
+  Players:
+  - {fileID: 7915174197810081471, guid: e54ed3a54aae1b641a1c4f735a8b2919, type: 3}
+  - {fileID: 1369290805643978099, guid: fbfb8952b31ecff44aab601f4e442ad1, type: 3}
+  - {fileID: 1369290805643978099, guid: 5e65a37b104a6884fba65513c482c870, type: 3}
+  - {fileID: 1369290805643978099, guid: 7a87fb0b93c8fc04a98084cb73ff8d87, type: 3}
+  - {fileID: 1369290805643978099, guid: 75d10ea227947e8458362509546c62d1, type: 3}
   isPlayerDie: 0
+  wolrd: 0
+  stage: 0
 --- !u!114 &8481128084592499895
 MonoBehaviour:
   m_ObjectHideFlags: 0

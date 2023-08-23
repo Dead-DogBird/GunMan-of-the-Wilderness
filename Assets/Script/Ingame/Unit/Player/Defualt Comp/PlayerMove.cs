@@ -112,4 +112,16 @@ public class PlayerMove : MonoBehaviour
             await UniTask.Delay(TimeSpan.FromSeconds(0.1f),ignoreTimeScale:false);
         }
     }
+
+    public void UpgradeStat(bool isSpeed = true)
+    {
+        if (isSpeed)
+        {
+            speed += speed * 0.05f;
+        }
+        else
+        {
+            jumpForce += jumpForce * 0.05f;
+        }
+    }
 }

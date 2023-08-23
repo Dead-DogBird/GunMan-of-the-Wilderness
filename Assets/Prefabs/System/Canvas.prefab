@@ -565,7 +565,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 696005385}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1994493814}
+        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
+        m_MethodName: RestockButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &696005383
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -892,7 +904,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 822549080}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1994493814}
+        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
+        m_MethodName: GetBuy
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &822549078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1047,7 +1071,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 868846644}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1994493814}
+        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
+        m_MethodName: GetBuy
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &868846642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1406,7 +1442,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 948791295}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1994493814}
+        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
+        m_MethodName: CancleButton
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &948791293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1922,7 +1970,7 @@ RectTransform:
   - {fileID: 1481405886}
   - {fileID: 269753506}
   m_Father: {fileID: 1994493810}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2587,7 +2635,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1994493810}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2703,7 +2751,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.301
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -2928,7 +2976,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1611127750}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1994493814}
+        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
+        m_MethodName: GetBuy
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1611127748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3729,6 +3789,7 @@ RectTransform:
   - {fileID: 646904494}
   - {fileID: 696005381}
   - {fileID: 1795698846}
+  - {fileID: 3930805995700655414}
   - {fileID: 1376990068}
   - {fileID: 1133680718}
   m_Father: {fileID: 3401885703240109493}
@@ -3834,17 +3895,18 @@ MonoBehaviour:
   - {fileID: 1233622362}
   restorepriceText: {fileID: 1159850213}
   SourceImage:
-  - {fileID: 21300000, guid: 19b0dfa3605df184b865071d307dc3db, type: 3}
-  - {fileID: 21300000, guid: 19b0dfa3605df184b865071d307dc3db, type: 3}
-  - {fileID: 21300000, guid: 19b0dfa3605df184b865071d307dc3db, type: 3}
-  - {fileID: 21300000, guid: 19b0dfa3605df184b865071d307dc3db, type: 3}
-  - {fileID: 21300000, guid: 19b0dfa3605df184b865071d307dc3db, type: 3}
-  - {fileID: 21300000, guid: 19b0dfa3605df184b865071d307dc3db, type: 3}
-  - {fileID: 21300000, guid: 19b0dfa3605df184b865071d307dc3db, type: 3}
+  - {fileID: 21300000, guid: 0196b66529204a847896460fb8fedc4f, type: 3}
+  - {fileID: 21300000, guid: 4fa7ba572cdecd34497b35322c3c1e7c, type: 3}
+  - {fileID: 21300000, guid: ab79133c194c55d4fa174686b13b73c4, type: 3}
+  - {fileID: 21300000, guid: 9e45657d8344eab4794ee0abce798728, type: 3}
+  - {fileID: 21300000, guid: cc74d13ddf7733a468140a5c31f99d11, type: 3}
+  - {fileID: 21300000, guid: 7affd704193c5e543a8be7eb0c01a9b9, type: 3}
+  - {fileID: 21300000, guid: 3ea3d252d327e554c9e1b5b92cb08184, type: 3}
   PlayerMoney: {fileID: 1795698849}
   PlayerHpText: {fileID: 269753508}
   PlayerHpImage: {fileID: 1481405887}
   Cursor: {fileID: 1376990069}
+  GunUpgradeText: {fileID: 5406277136420165402}
 --- !u!1 &2130418790
 GameObject:
   m_ObjectHideFlags: 0
@@ -3936,6 +3998,102 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
   m_EffectDistance: {x: 0, y: -7.3}
+  m_UseGraphicAlpha: 1
+--- !u!1 &432662754487238725
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3930805995700655414}
+  - component: {fileID: 124814788678944057}
+  - component: {fileID: 5406277136420165402}
+  - component: {fileID: 3148411119128148537}
+  m_Layer: 5
+  m_Name: GunUpgradeText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &3930805995700655414
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432662754487238725}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 0.33828765}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1994493810}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 2560, y: 1097.5}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &124814788678944057
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432662754487238725}
+  m_CullTransparentMesh: 1
+--- !u!114 &5406277136420165402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432662754487238725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: b3653dbe6d1aaa149a537f7e5d1a41f2, type: 3}
+    m_FontSize: 177
+    m_FontStyle: 2
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 300
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: "\uAC00\uB098\uB2E4\uB77C \uB9C8\uBC14\uC0AC\uC544"
+--- !u!114 &3148411119128148537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432662754487238725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 10.9, y: 10.1}
   m_UseGraphicAlpha: 1
 --- !u!1 &675102975705220644
 GameObject:
@@ -5821,6 +5979,8 @@ MonoBehaviour:
   SniperSkillGauge: {fileID: 3401885703023380039}
   ShotGunSkillImage: {fileID: 3401885702250430527}
   FadeImage: {fileID: 1621702045796142475}
+  stageText: {fileID: 3401885702753695541}
+  stageNameText: {fileID: 3401885702993733409}
   isSniperSkill: 0
 --- !u!1 &3401885703475201455
 GameObject:

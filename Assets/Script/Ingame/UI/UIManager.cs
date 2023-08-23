@@ -25,6 +25,9 @@ public class UIManager : MonoSingleton<UIManager>
     [SerializeField] private Image ShotGunSkillImage;
 
     [SerializeField] private Image FadeImage;
+
+    [SerializeField] private Text stageText;
+    [SerializeField] private Text stageNameText;
     
     private Color ShotGunSkillImageOriginalColor;
     public bool isSniperSkill;
@@ -44,11 +47,14 @@ public class UIManager : MonoSingleton<UIManager>
     private bool isReload = false;
 
     private bool fade = false;
+    
+    
+    
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.visible = false;
         
+        Cursor.visible = false;
         SniperHud.transform.localScale = new Vector3(5f, 5f, 1.2f);
         SniperHud.transform.localEulerAngles = new Vector3(0, 0, -90);
         
@@ -64,6 +70,8 @@ public class UIManager : MonoSingleton<UIManager>
     private void OnEnable()
     {
         UpdateMoneyTask().Forget();
+        
+        
     }
 
     // Update is called once per frame
@@ -132,7 +140,7 @@ public class UIManager : MonoSingleton<UIManager>
         if (skill != 0)
         {
             _playerSkill = (skill / _playerMaxSkill);
-            PlayerSkill.text = $"Skill: {skill:F1}%";
+            PlayerSkill.text = $"Skill: {(_playerSkill*100f):F1}%";
         }
     }
     public void ResetGauge(bool hp = false,bool skill = false)
@@ -145,7 +153,7 @@ public class UIManager : MonoSingleton<UIManager>
         if (skill)
         {
             _playerSkill = 0;
-            PlayerSkill.text = $"Skill: {0}";
+            PlayerSkill.text = $"Skill: {0}%";
         }
     }
     
@@ -159,10 +167,13 @@ public class UIManager : MonoSingleton<UIManager>
     {
         while (!isEditorEnd)
         {
-            money += (updateMoney - money)/3;
-            if (MathF.Abs(money - updateMoney) <= 3)
+            if (MathF.Abs(money - updateMoney) > 3)
             {
-                money = updateMoney;
+                money += (updateMoney - money) / 3;
+                if (MathF.Abs(money - updateMoney) <= 3)
+                {
+                    money = updateMoney;
+                }
             }
             PlayerMoney.text =(money>0)? $"{money:#,###}" : "0";
             await UniTask.Yield(PlayerLoopTiming.LastFixedUpdate);
@@ -259,10 +270,19 @@ public class UIManager : MonoSingleton<UIManager>
     {
         ShotGunSkillImage.color = ShotGunSkillImageOriginalColor;
     }
-
     public async UniTaskVoid SetFade(bool value = false,float Delay = 3)
     {
         await UniTask.Delay(TimeSpan.FromSeconds(Delay), true);
         fade = value;
+    }
+
+    public void SetStageName(string name)
+    {
+        stageNameText.text = name;
+    }
+
+    public void SetStage(string stage)
+    {
+        stageText.text = stage;
     }
 }
