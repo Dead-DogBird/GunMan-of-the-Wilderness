@@ -310,7 +310,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -1.5}
   m_SizeDelta: {x: 3827.1, y: 1783.1277}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &474394016
@@ -334,7 +334,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: d4e3f798f742fe34b99176027bc7e1f2, type: 3}
+    m_Font: {fileID: 12800000, guid: b3653dbe6d1aaa149a537f7e5d1a41f2, type: 3}
     m_FontSize: 300
     m_FontStyle: 0
     m_BestFit: 0
@@ -390,8 +390,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -62}
-  m_SizeDelta: {x: 344.12, y: 3.19}
+  m_AnchoredPosition: {x: 0, y: -51.27301}
+  m_SizeDelta: {x: 344.12, y: 12.044}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &667510791
 MonoBehaviour:
@@ -1056,9 +1056,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: d4e3f798f742fe34b99176027bc7e1f2, type: 3}
+    m_Font: {fileID: 12800000, guid: b3653dbe6d1aaa149a537f7e5d1a41f2, type: 3}
     m_FontSize: 300
-    m_FontStyle: 0
+    m_FontStyle: 3
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 300
@@ -1166,6 +1166,7 @@ GameObject:
   - component: {fileID: 2146956535}
   - component: {fileID: 2146956534}
   - component: {fileID: 2146956533}
+  - component: {fileID: 2146956536}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1239,3 +1240,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2146956536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146956532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9981defc095ff1846b6a611ce5fbd2f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NextScene: 1.MainMenu

@@ -31,8 +31,8 @@ public class GameManager : MonoSingleton<GameManager>
     private string[] stageNames = new string[3] {"황야로 내몰린 총잡이들","몰락한 그라운드 플랫폼 타운",
         "최후의 궤도 아공간도약 플랫폼"};
 
-    private string[] BossNames = new string[3] {"스케빈저 사이보그","킹 오브 타운","퍼스트 건맨"};
-
+    public readonly  string[] BossNames = new string[3] {"스케빈저 사이보그","킹 오브 타운","퍼스트 건맨"};
+    public readonly  string[] BossInfos = new string[3] {"황야의 수수께끼 로봇","몰락한 마을의 왕","최초의 총잡이"};
     void Start()
     {
         _poolingManager.AddPoolingList<Orbit>(450, Orbit);
@@ -42,19 +42,14 @@ public class GameManager : MonoSingleton<GameManager>
     }
     private void OnEnable()
     {
-        player = Instantiate(Players[3], new Vector3(-6, -1), Quaternion.identity).GetComponent<PlayerState>();
+        player = Instantiate(Players[PlayerPrefs.GetInt("Player")], new Vector3(-6, -1), Quaternion.identity).GetComponent<PlayerState>();
         nowStage = Instantiate(_stages[wolrd].map[stage], new Vector3(0, 0), Quaternion.identity);
 
     }
     void Update()
     {
-        
-    }
-    public void SetPlayer(PlayerState _player)
-    {
-        if (player != null) return;
-        player = _player;
-        return;
+        if (Input.GetKeyDown(KeyCode.Escape))
+            GetPause(true);
     }
     public void Effect(Vector3 pos, int count,float random = 0.15f)
     {
@@ -135,6 +130,7 @@ public class GameManager : MonoSingleton<GameManager>
         UIManager.Instance.SetFade(true, 0).Forget();
         player.transform.position = new Vector3(-6, -1);
         Destroy(nowStage.gameObject);
+        _poolingManager.AllDespawn<InagmeCoin>();
         if ((stage == 0 || stage == 2) && (!isStore))
         {
             isStore = true;
@@ -156,7 +152,7 @@ public class GameManager : MonoSingleton<GameManager>
             storeManager.SetActive(false);
             player.GetComponent<PlayerFire>().enabled = true;
             UIManager.Instance.SetStage($"{wolrd+1}-{stage+1}");
-            UIManager.Instance.SetStageName($"{stageNames[wolrd]}");
+            UIManager.Instance.SetStageName($"{((stage == 3)?BossInfos[wolrd]:stageNames[wolrd])}");
             nowStage = Instantiate(_stages[wolrd].map[stage], new Vector3(0, 0), Quaternion.identity);
         }
         UIManager.Instance.SetFade(false, 2).Forget();
@@ -164,7 +160,8 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void GameOver()
     {
-        
+        AudioManager.Instance.StopMusic();
+        UIManager.Instance.SetActiveGameoverUI();
     }
 
     public void GetStore(bool value)
@@ -175,5 +172,31 @@ public class GameManager : MonoSingleton<GameManager>
         {
             storeManager.GetComponent<ShopManager>().ReActive();
         }
+    }
+    public void GetPause(bool var = true)
+    {
+        Time.timeScale = var ? 0 : 1;
+        UIManager.Instance.SetActivePauseUI(var);
+    }
+
+    public bool isGameEnd = false;
+    public void GoToMain()
+    {
+        _poolingManager.Clear<Orbit>(); 
+        _poolingManager.Clear<MoveOrbit>();
+        _poolingManager.Clear<EffectText>();
+        _poolingManager.Clear<InagmeCoin>();
+        Time.timeScale = 1;
+        AudioManager.Instance.PlaySFX(25,false,1);
+        LoadingSceneManager.LoadScene("1.MainMenu");
+    }
+    public void GetEnding()
+    {
+        _poolingManager.Clear<Orbit>(); 
+        _poolingManager.Clear<MoveOrbit>();
+        _poolingManager.Clear<EffectText>();
+        _poolingManager.Clear<InagmeCoin>();
+        Time.timeScale = 1;
+        LoadingSceneManager.LoadScene("3.EndingScene");
     }
 }

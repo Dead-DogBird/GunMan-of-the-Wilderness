@@ -79,8 +79,8 @@ public class ShopManager : MonoBehaviour
         {
             Id[i] = GetRandomPrizeNonDuple();
         }
-        reStok = 500;
-        restorepriceText.text = $"{reStok}";
+        reStok = 3;
+        restorepriceText.text = $"{reStok}/3";
         for (int i = 0; i < 3; i++)
         {
             panners[i].color = _prices[Id[i]].color;
@@ -207,12 +207,11 @@ public class ShopManager : MonoBehaviour
     private bool gunMaxUpgrade = false;
     public void RestockButton()
     {
-        if (reStok > GameManager.Instance.player.Money) return;
-        
-        GameManager.Instance.player.SetMoney(-reStok);
-        updateMoney = GameManager.Instance.player.Money;
-        reStok += reStok/2;
-        restorepriceText.text = $"{reStok}";
+        if (reStok <=0) return;
+        AudioManager.Instance.PlaySFX(25,false,1);
+       
+        reStok --;
+        restorepriceText.text = $"{reStok}/3";
         
         for (int i = 0; i < 3; i++)
         {
@@ -236,8 +235,8 @@ public class ShopManager : MonoBehaviour
     }
     public void CancleButton(bool var)
     {
+        AudioManager.Instance.PlaySFX(25,false,1);
         transform.localScale = new Vector3(1, 0);
-
     }
     
     
@@ -271,7 +270,7 @@ public class ShopManager : MonoBehaviour
         int var = GetRandomPrize();
         for(int i =0;i<3;i++)
         {
-            if (Id[i] == var||((gunMaxUpgrade)&&var==0))
+            if (Id[i] == var||((gunMaxUpgrade)&&var==0)||(GameManager.Instance.player.isResurrection&&var==6))
             {
                 return GetRandomPrizeNonDuple();
             }

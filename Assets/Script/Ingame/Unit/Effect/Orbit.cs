@@ -56,7 +56,11 @@ public class Orbit : PoolableObj
 #endif
     protected override async UniTaskVoid ReleseReserv(float delay = 2)
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(delay), ignoreTimeScale: false);
+        for (float i = 0; i <= delay; i += 0.1f)
+        {
+            if (!GameManager.Instance) return;
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f), ignoreTimeScale: false);
+        }
         GameManager.Instance._poolingManager.Despawn(this); 
     }
     public virtual Orbit Init(OrbitInfo info, bool isSize =false, float reduction =2)

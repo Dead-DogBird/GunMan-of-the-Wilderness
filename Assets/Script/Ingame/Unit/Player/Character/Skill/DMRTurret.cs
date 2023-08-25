@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Unity.Mathematics;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
 
 public class DMRTurret : MonoBehaviour
@@ -56,7 +55,7 @@ public class DMRTurret : MonoBehaviour
         Collider2D[] colls = Physics2D.OverlapCircleAll(transform.position, 10f);
         foreach (var var_ in colls)
         {
-            if (var_.transform.CompareTag("Monster"))
+            if (var_.transform.CompareTag("Monster")||var_.transform.CompareTag("BossMonster"))
             {
                 Instantiate(_attackObject,var_.transform.position,quaternion.identity);
             }

@@ -24,7 +24,7 @@ public class PlayerContrl : MonoBehaviour
             _nowAxisState = Input.GetAxisRaw("Horizontal");
             _nowSpace = Input.GetKeyDown(KeyCode.Space);
             _leftMouseButton = Input.GetMouseButton(0);
-            _skillKey = Input.GetKeyDown(KeyCode.E);
+            _skillKey = Input.GetKeyDown(KeyCode.LeftShift);
             _rkey = Input.GetKey(KeyCode.R);
             _mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }

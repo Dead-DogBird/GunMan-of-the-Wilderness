@@ -424,7 +424,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerMaxHp: 100
   _playerHp: 100
-  _playerMaxSkill: 100
+  _playerMaxSkill: 1200
   _playerSkill: 100
   _allMag: 30
   _nowMag: 30
@@ -454,6 +454,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cfbb190c1901dc4e9875fdc63c166c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UpgradeBulletSpeed: 3
+  UpgradeReloadDelay: 0.15
+  UpgradeFireDelay: 0.005
+  UpgradeDamage: 5
+  UpgradeMaxmag: 5
 --- !u!1 &2292042568355709004
 GameObject:
   m_ObjectHideFlags: 0

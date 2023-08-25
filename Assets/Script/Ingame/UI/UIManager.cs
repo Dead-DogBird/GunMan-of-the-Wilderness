@@ -29,6 +29,9 @@ public class UIManager : MonoSingleton<UIManager>
     [SerializeField] private Text stageText;
     [SerializeField] private Text stageNameText;
     
+    [SerializeField] private BossUI _bossUI;
+    [SerializeField] private GameObject _GameOverUI;
+    [SerializeField] private GameObject _PauseUI;
     private Color ShotGunSkillImageOriginalColor;
     public bool isSniperSkill;
 
@@ -70,13 +73,19 @@ public class UIManager : MonoSingleton<UIManager>
     private void OnEnable()
     {
         UpdateMoneyTask().Forget();
-        
+        _GameOverUI.SetActive(false);
         
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (_GameOverUI.activeSelf)
+            _GameOverUI.transform.localScale +=
+                (Vector3.one - _GameOverUI.transform.localScale) * (Time.unscaledDeltaTime * 15);
+        
+        
+        
         HitEffect.color += (Color.clear-HitEffect.color)*(Time.unscaledDeltaTime);
         Hpbar.fillAmount += (_playerHp - Hpbar.fillAmount)*(Time.unscaledDeltaTime*15); 
         Skillbar.fillAmount += (_playerSkill - Skillbar.fillAmount)*(Time.unscaledDeltaTime*7);
@@ -285,4 +294,23 @@ public class UIManager : MonoSingleton<UIManager>
     {
         stageText.text = stage;
     }
+    public void SetBossUI(DefaultBossMonster _boss)
+    {
+        _bossUI.gameObject.SetActive(true);
+        _bossUI.Init(_boss);
+    }
+    public void SetBossUI()
+    {
+        _bossUI.gameObject.SetActive(false);
+    }
+
+    public void SetActiveGameoverUI()
+    {
+        _GameOverUI.SetActive(true);
+    }
+    public void SetActivePauseUI(bool var = true)
+    {
+        _PauseUI.SetActive(var);
+    }
+
 }

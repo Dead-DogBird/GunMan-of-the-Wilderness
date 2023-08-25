@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 47
+  m_SortingOrder: 7
   m_Sprite: {fileID: 5577200031180380794, guid: 0069d5ece9c5ceb4ea2ba1b2018f8bbe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -179,7 +179,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 46
+  m_SortingOrder: 7
   m_Sprite: {fileID: -1963870669156682716, guid: 0069d5ece9c5ceb4ea2ba1b2018f8bbe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -324,7 +324,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 42
+  m_SortingOrder: 4
   m_Sprite: {fileID: 4861736514938221231, guid: 0069d5ece9c5ceb4ea2ba1b2018f8bbe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -357,6 +357,37 @@ MonoBehaviour:
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
+--- !u!1 &2828743908883944629
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 857593853459244298}
+  m_Layer: 0
+  m_Name: Gunpos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &857593853459244298
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2828743908883944629}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.283, y: 0.044, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4850448411300080633}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3791043528911619334
 GameObject:
   m_ObjectHideFlags: 0
@@ -430,7 +461,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 45
+  m_SortingOrder: 7
   m_Sprite: {fileID: 955185730155805532, guid: 0069d5ece9c5ceb4ea2ba1b2018f8bbe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -597,7 +628,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 44
+  m_SortingOrder: 5
   m_Sprite: {fileID: -6640694262377826171, guid: 0069d5ece9c5ceb4ea2ba1b2018f8bbe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -682,7 +713,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 43
+  m_SortingOrder: 7
   m_Sprite: {fileID: -4453301428616642102, guid: 0069d5ece9c5ceb4ea2ba1b2018f8bbe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -850,7 +881,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 41
+  m_SortingOrder: 4
   m_Sprite: {fileID: -994622834170005755, guid: 0069d5ece9c5ceb4ea2ba1b2018f8bbe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1025,7 +1056,8 @@ Transform:
   m_LocalPosition: {x: -0.424, y: -0.012, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 857593853459244298}
   m_Father: {fileID: 8028266961527649330}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1041,9 +1073,10 @@ GameObject:
   - component: {fileID: 2361574173076178654}
   - component: {fileID: 173777408715893837}
   - component: {fileID: 2238063984585809470}
+  - component: {fileID: 8842820331220443666}
   m_Layer: 0
   m_Name: Boss3
-  m_TagString: Untagged
+  m_TagString: BossMonster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1105,12 +1138,12 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 5
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &2238063984585809470
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1137,3 +1170,29 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.857785}
   m_EdgeRadius: 0
+--- !u!114 &8842820331220443666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9196978882049698897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2c975e7f190ea14294a438c11d2ad40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hp: 7500
+  _speed: 3.5
+  BulletColor: {r: 0.21951199, g: 0, b: 1, a: 1}
+  priColor: {r: 0.33713722, g: 0, b: 1, a: 1}
+  secColor: {r: 0.1792453, g: 0.085395165, b: 0.085395165, a: 1}
+  hitSfxId: 16
+  dieSfxId: 21
+  ConnectDamage: 25
+  Gate: {fileID: 0}
+  SkillDamage: 25
+  firepos: {fileID: 857593853459244298}
+  Gun: {fileID: 4850448411300080633}
+  Explosion: {fileID: 5498995205485047122, guid: 52c706dad623ea642bdf15dd3a52f284, type: 3}
+  Raser: {fileID: 7176293229263669978, guid: 3fc5e3a2503d5214c948e7b4bd351442, type: 3}

@@ -25,6 +25,9 @@ public class IngameCamera : MonoSingleton<IngameCamera>
     
     private float lastTime;
     private const float OneFrameDeltaTime = 1 / 120f;
+
+    private bool isFocusBoss = false;
+    private Vector3 bossPos;
     void Start()
     {
         
@@ -47,9 +50,18 @@ public class IngameCamera : MonoSingleton<IngameCamera>
             ShakeUpdate();
             return;
         }
-        var player_position = _player.transform.position + new Vector3(5, 1, 0);
+
+        var player_position = _player.transform.position;
+       
         if(isSniperSkill)
             player_position = Vector3.Lerp(player_position,Camera.main.ScreenToWorldPoint(Input.mousePosition),0.5f)-new Vector3(0,0,10);
+        else
+        {
+            player_position = Vector3.Lerp(player_position,Camera.main.ScreenToWorldPoint(Input.mousePosition),0.2f)-new Vector3(0,0,10);
+        }
+        if(isFocusBoss)
+            player_position = bossPos;
+        
         position += (Vector2)((player_position - transform.position) / smooth);
         ShakeUpdate();
     }
@@ -93,5 +105,10 @@ public class IngameCamera : MonoSingleton<IngameCamera>
     public void SniperSkill(bool _isSniperSkill)
     {
         isSniperSkill = _isSniperSkill;
+    }
+    public void FocusBoss(bool isfocus = true, Vector3 pos = new Vector3())
+    {
+        isFocusBoss = isfocus;
+        bossPos = pos;
     }
 }

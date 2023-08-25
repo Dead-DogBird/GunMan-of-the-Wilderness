@@ -46,9 +46,9 @@ public class ShotGunFire : PlayerFire
     async UniTaskVoid SkillTask()
     {
         Vector3 pos = transform.position;
+        _audioManager.PlaySFX(skillSfxId,false,1);
         for (int i = 1; i <= 4; i++)
         {
-            _audioManager.PlaySFX(skillSfxId);
             IngameCamera.Instance.Shake(0, 0.1f, 0, 1, 20);
             RaycastHit2D ground = Physics2D.Raycast(pos + new Vector3(2.3f*i, 0), Vector2.down, 30,
                 LayerMask.GetMask("Platform"));

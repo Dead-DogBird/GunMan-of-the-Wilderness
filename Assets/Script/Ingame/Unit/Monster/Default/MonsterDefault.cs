@@ -31,7 +31,8 @@ public class MonsterDefault : MonoBehaviour
 
     [SerializeField] private int hitSfxId = 16;
     [SerializeField] private int dieSfxId = 21;
-    
+
+
     // Start is called before the first frame update
     protected void Start()
     {
@@ -45,7 +46,7 @@ public class MonsterDefault : MonoBehaviour
     {
         colliderCallbackController.onColiderEnter += Findedplayer;
         colliderCallbackController.onColiderExit += LosePlayer;
-        _hp +=_hp*(GameManager.Instance.wolrd * 1.5f);
+        _hp +=_hp*(GameManager.Instance.wolrd * 0.7f);
     }
 
     // Update is called once per frame
@@ -93,6 +94,15 @@ public class MonsterDefault : MonoBehaviour
         if (Physics2D.Raycast(frontVec, Vector3.up, 1, LayerMask.GetMask("Platform")))
         {
             _rigid.AddForce(new Vector2(0,1),ForceMode2D.Impulse);
+        }
+
+        var obj =  Physics2D.Raycast(frontVec, Vector3.up, 1);
+        if(obj)
+        {
+            if (obj.transform.CompareTag("Monster"))
+            {
+                _rigid.AddForce(new Vector2(0,1),ForceMode2D.Impulse);
+            }
         }
     }
     protected void NontargetPlayerMove()
@@ -146,7 +156,7 @@ public class MonsterDefault : MonoBehaviour
         _hp -= _bullet.damage;
         KnockBack(_bullet.toVector,_bullet.damage);
         GameManager.Instance._poolingManager.Despawn(_bullet);
-        GameManager.Instance.player.skillGauge(100/_bullet.damage);
+        GameManager.Instance.player.skillGauge(_bullet.damage);
         if (!_targetedPlayer)
         {
             SetTargetPlayer(GameManager.Instance.player);
@@ -234,6 +244,8 @@ public class MonsterDefault : MonoBehaviour
         WalkParticle().Forget();
         _attack?.startAttack();
     }
+
+
 }
 
 public class DamageInfo

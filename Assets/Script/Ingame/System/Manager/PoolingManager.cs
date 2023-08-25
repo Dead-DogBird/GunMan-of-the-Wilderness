@@ -62,6 +62,14 @@ public class PoolingManager : MonoBehaviour
             (poolingList as PoolingList).Clear();
         }
     }
+
+    public void AllDespawn<T>() where T : PoolableObj
+    {
+        if (poolingLists.TryGetValue(typeof(T), out object poolingList) && poolingList is PoolingList)
+        {
+            (poolingList as PoolingList).AllDespawn();
+        }
+    }
 }
 
 
@@ -71,7 +79,6 @@ public class PoolingList : MonoBehaviour
     public List<GameObject> Allpool;
     private LinkedList<GameObject> PoolList;
     private LinkedList<GameObject> ActiveList;
-
     private GameObject originalObject;
     private GameObject ojectPar;
     public void Initialize(string type,int initialSize,GameObject pObj)
@@ -131,4 +138,16 @@ public class PoolingList : MonoBehaviour
         PoolList.Clear();
         ActiveList.Clear();
     }
+    public void AllDespawn()
+    {
+        if (ActiveList.Count <= 0) return;
+        while(ActiveList.Count>0)
+        {
+            ActiveList.First.Value.SetActive(false);
+            PoolList.AddLast(ActiveList.First.Value);
+            ActiveList.RemoveFirst();
+        }
+    }
+
+    
 }

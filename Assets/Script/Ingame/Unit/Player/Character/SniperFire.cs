@@ -80,21 +80,22 @@ public class SniperFire : PlayerFire
     float time;
     async UniTaskVoid SkillTask()
     {
+        skilltime = _playerState.getAllMag+2.5f;
         time = skilltime;
         isUlt = true;
+        _playerState.isCanChargeSkill = false;
         _playerState.SniperUlt(isUlt);
         OnskillEffect().Forget();
         while ((ultBullet > 0&&time>0)&&!isDead)
         {
-            
             time -= Time.unscaledDeltaTime;
             UIManager.Instance.UpdateSniperSkillGauge(time / skilltime);
             await UniTask.Yield(PlayerLoopTiming.Update);
         }
         isUlt = false;
+        _playerState.isCanChargeSkill = true;
         GameManager.Instance.SniperSkill(isUlt);
         _playerState.SniperUlt(isUlt);
-        _playerState.SetMaxMag();
         UIManager.Instance.UpdateSniperSkillGauge(0);
         AudioManager.Instance.SetMusicPitch(1);
         Time.timeScale = 1;

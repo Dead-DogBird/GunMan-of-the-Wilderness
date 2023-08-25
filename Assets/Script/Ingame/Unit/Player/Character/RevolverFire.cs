@@ -35,7 +35,7 @@ public class RevolverFire : PlayerFire
         float distance;
         foreach (var var_ in colls)
         {
-            if (var_.transform.CompareTag("Monster"))
+            if (var_.transform.CompareTag("Monster")||var_.transform.CompareTag("BossMonster"))
             {
                 distance = Vector2.Distance( var_.transform.position, transform.position);
                 if (distance < closestdistance)

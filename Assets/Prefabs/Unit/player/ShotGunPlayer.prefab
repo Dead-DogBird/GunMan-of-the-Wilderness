@@ -132,7 +132,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 8197392948503669088}
   m_Bounds:
-    m_Center: {x: 0.0013249964, y: 0.037320808, z: 0}
+    m_Center: {x: 0.0013250113, y: 0.037320808, z: 0}
     m_Extent: {x: 0.097155, y: 0.158315, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -325,9 +325,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 604c3e601fe62664eb9437b97395b814, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerMaxHp: 100
-  _playerHp: 100
-  _playerMaxSkill: 100
+  _playerMaxHp: 150
+  _playerHp: 150
+  _playerMaxSkill: 1200
   _playerSkill: 100
   _allMag: 2
   _nowMag: 2
@@ -357,6 +357,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cfbb190c1901dc4e9875fdc63c166c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UpgradeBulletSpeed: 1
+  UpgradeReloadDelay: 0.2
+  UpgradeFireDelay: 0.01
+  UpgradeDamage: 5
+  UpgradeMaxmag: 1
 --- !u!1 &1532208976644693286
 GameObject:
   m_ObjectHideFlags: 0
@@ -626,8 +631,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 5614083081950621339}
   m_Bounds:
-    m_Center: {x: -0.1315301, y: 0.1562731, z: 0}
-    m_Extent: {x: 0.5420818, y: 0.4837868, z: 0}
+    m_Center: {x: -0.13153046, y: 0.1562731, z: 0}
+    m_Extent: {x: 0.5420818, y: 0.48378676, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -732,7 +737,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 768925332642593867}
   m_Bounds:
-    m_Center: {x: -0.18863273, y: 0.10069859, z: 0}
+    m_Center: {x: -0.18863237, y: 0.10069859, z: 0}
     m_Extent: {x: 0.7220944, y: 0.2989359, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -984,7 +989,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 255512820059099772}
   m_Bounds:
-    m_Center: {x: 0.001685001, y: 0.03568083, z: 0}
+    m_Center: {x: 0.001684986, y: 0.03568083, z: 0}
     m_Extent: {x: 0.09331501, y: 0.15995502, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -1153,7 +1158,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 9007350997220628035}
   m_Bounds:
-    m_Center: {x: 0, y: 0.03633064, z: 0}
+    m_Center: {x: -0.00000008940697, y: 0.03633064, z: 0}
     m_Extent: {x: 0.08, y: 0.16291499, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1

@@ -76,7 +76,11 @@ public class PlayerMove : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D other)
     {
-
+        if ((other.gameObject.CompareTag("Monster")||other.gameObject.CompareTag("BossMonster")))
+        {
+            _isjumping = false;
+            jumpCount = 0;
+        }
     }
 
     private void OnCollisionStay2D(Collision2D other)
@@ -85,10 +89,6 @@ public class PlayerMove : MonoBehaviour
         {
             _isjumping = false;
             jumpCount = 0;
-            if (_playerControll.Userinput.AxisState != 0)
-            {
-                
-            }
         }
     }
 
@@ -117,11 +117,11 @@ public class PlayerMove : MonoBehaviour
     {
         if (isSpeed)
         {
-            speed += speed * 0.05f;
+            speed += 0.5f;
         }
         else
         {
-            jumpForce += jumpForce * 0.05f;
+            jumpForce += 20f;
         }
     }
 }

@@ -129,7 +129,7 @@ public class RevolverRoket : MonoBehaviour
         float distance;
         foreach (var var_ in colls)
         {
-            if (var_.transform.CompareTag("Monster"))
+            if (var_.transform.CompareTag("Monster")||var_.transform.CompareTag("BossMonster"))
             {
                 distance = Vector2.Distance(var_.transform.position, transform.position);
                 if (distance < closestdistance)
@@ -174,6 +174,13 @@ public class RevolverRoket : MonoBehaviour
             if (var_.transform.CompareTag("Monster"))
             {
                 var_.GetComponent<MonsterDefault>().OnDameged(new DamageInfo(Damege,_colors.priColor,transform.position));
+            }
+
+            if (var_.transform.CompareTag("BossMonster"))
+            {
+                {
+                    var_.GetComponent<DefaultBossMonster>().OnDameged(new DamageInfo(Damege,_colors.priColor,transform.position));
+                }
             }
         }
         for (int i = 0; i < Random.Range(3, 6); i++)
