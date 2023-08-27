@@ -232,6 +232,9 @@ public class PlayerState : MonoBehaviour
     }
     private void Update()
     {
+        if(Input.GetKey(KeyCode.E))
+            Debug.Log(_fireState);
+        
         if (_playerHp <= 0 && !IsDie)
         {
            DieTask().Forget();
@@ -266,7 +269,7 @@ public class PlayerState : MonoBehaviour
     }
     public bool GetReload()
     {
-        return (_playerContrl.Userinput.Rkey && (_fireState == FireState_.Default||_fireState == FireState_.Delayed));
+        return (_playerContrl.Userinput.Rkey && _fireState == FireState_.Default);
     }
     public Vector3 GetMousePos()
     {
@@ -291,7 +294,11 @@ public class PlayerState : MonoBehaviour
     // ReSharper disable Unity.PerformanceAnalysis
     public async UniTaskVoid ReLoad()
     {
-        if (_fireState == FireState_.Reload) return;
+        if (_fireState == FireState_.Reload)
+        {
+            Debug.Log(_fireState);
+            return;
+        }
         AudioManager.Instance.PlaySFX(reloadSfxId);
         UIManager.Instance.UpdateMagReload(true,_reloadDelay);
         _fireState = FireState_.Reload;
@@ -300,9 +307,7 @@ public class PlayerState : MonoBehaviour
             if (breakReload)
             {
                 breakReload = false;
-                UIManager.Instance.UpdateMagReload(false);
-                NowMag = _allMag;
-                return;
+                break;
             }
             await UniTask.Delay(TimeSpan.FromSeconds(0.1f), ignoreTimeScale: isSniperUlt);
         }
@@ -314,9 +319,12 @@ public class PlayerState : MonoBehaviour
     private bool breakReload=false;
     public void SetMaxMag()
     {
-        breakReload = true;
+        if (_fireState == FireState_.Reload)
+        {
+            breakReload = true;
+            _fireState = FireState_.Default;
+        }
         NowMag = _allMag;
-        _fireState = FireState_.Default;
     }
     public void GetDamage(MonsterBullet _monsterBullet)
     {
@@ -549,10 +557,10 @@ public class PlayerState : MonoBehaviour
 
     }
 
-    public bool isCanChargeSkill = true;
+    
     public void skillGauge(float num)
     {
-        if (!isCanChargeSkill) return;
+        if (isSniperUlt) return;
         PlayerSkill += num;
         if (PlayerSkill > _playerMaxSkill)
             PlayerSkill = _playerMaxSkill;
@@ -583,7 +591,7 @@ public class PlayerState : MonoBehaviour
         isSniperUlt = active;
         if (isSniperUlt)
         {
-            NowMag = _allMag;
+            SetMaxMag();
         }
     }
     
@@ -654,6 +662,7 @@ public class PlayerState : MonoBehaviour
                     }
                     else 
                         _allMag += _playerUpgrade.UpgradeMaxmag;
+                    
                     SetMaxMag();
                     UIManager.Instance.UpdateMag(_allMag,true);
                     return 4;

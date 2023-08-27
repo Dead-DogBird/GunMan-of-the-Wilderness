@@ -94,6 +94,9 @@ public class BossMonster3 : DefaultBossMonster
             if (isDie) return;
             await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
         }
+        transform.position = new Vector3(_player.transform.position.x+2, _player.transform.position.y + 2);
+        _rigid.velocity = Vector2.zero;
+        _rigid.simulated = false;
         for (int i = 0; i < 30; i++)
         {
             if (isDie) return;
@@ -104,10 +107,9 @@ public class BossMonster3 : DefaultBossMonster
             GameManager.Instance.MoveOrbitEffect(transform.position+new Vector3(x,y),1,0.7f,
                 colors,false,0,2,CustomAngle.PointDirection(transform.position,transform.position+new Vector3(x,y))-180);
         }
-        transform.localScale = Vector3.one;
-        _rigid.velocity = Vector2.zero;
+        _rigid.simulated = true;
+        transform.localScale = new Vector3(1.5f,1.5f);
         _speed = orispeed;
-        transform.position = new Vector3(_player.transform.position.x+2, _player.transform.position.y + 2);
         for (int i = 10; i >= 0; i--)
         {
             if (isDie) return;

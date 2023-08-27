@@ -116,6 +116,7 @@ public class GameManager : MonoSingleton<GameManager>
     }
     public void SniperSkill(bool _issniperSkill)
     {
+        
         UIManager.Instance.SniperSkill(_issniperSkill);
         IngameCamera.Instance.SniperSkill(_issniperSkill);
     }

@@ -72,7 +72,6 @@ public class SniperFire : PlayerFire
     protected override void Skill()
     {
         _audioManager.PlaySFX(skillSfxId);
-        _playerState.SetMaxMag();
         ultBullet = _playerState.getAllMag;
         IngameCamera.Instance.Shake(0,0.2f,0,1,6f);
         SkillTask().Forget();
@@ -83,7 +82,6 @@ public class SniperFire : PlayerFire
         skilltime = _playerState.getAllMag+2.5f;
         time = skilltime;
         isUlt = true;
-        _playerState.isCanChargeSkill = false;
         _playerState.SniperUlt(isUlt);
         OnskillEffect().Forget();
         while ((ultBullet > 0&&time>0)&&!isDead)
@@ -93,7 +91,6 @@ public class SniperFire : PlayerFire
             await UniTask.Yield(PlayerLoopTiming.Update);
         }
         isUlt = false;
-        _playerState.isCanChargeSkill = true;
         GameManager.Instance.SniperSkill(isUlt);
         _playerState.SniperUlt(isUlt);
         UIManager.Instance.UpdateSniperSkillGauge(0);
