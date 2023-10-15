@@ -5,6 +5,17 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+struct SfxSourceStruct
+{
+    public AudioSource _audioSource;
+    public int _index;
+
+    public SfxSourceStruct(AudioSource audio, int _pindex)
+    {
+        _audioSource = audio;
+        _index = _pindex;
+    }
+}
 public class AudioManager : MonoSingleton<AudioManager>
 {
     [SerializeField] private AudioSource BgmSource;
@@ -41,7 +52,7 @@ public class AudioManager : MonoSingleton<AudioManager>
         }
         
     }
-    AudioSource GetEmptySource()
+    SfxSourceStruct GetEmptySource()
     {
         int fastindex = 0;
         float lageProgress = 0;
@@ -49,7 +60,7 @@ public class AudioManager : MonoSingleton<AudioManager>
         {
             if (!SfxSource[i].isPlaying)
             {
-                return SfxSource[i];
+                return new SfxSourceStruct(SfxSource[fastindex],i);
             }
             float progress = SfxSource[i].time / SfxSource[i].clip.length;
             if (progress > lageProgress && !SfxSource[i].loop)
@@ -58,18 +69,19 @@ public class AudioManager : MonoSingleton<AudioManager>
                 lageProgress = progress;
             }
         }
-        return SfxSource[fastindex];
+        return new SfxSourceStruct(SfxSource[fastindex],fastindex);
     }
-    public void PlaySFX(int index, bool loop = false, float volume = 0.5f ,float pitch = 1)//효과음 재생
+    public int PlaySFX(int index, bool loop = false, float volume = 0.5f ,float pitch = 1)//효과음 재생
     {
-        AudioSource a = GetEmptySource();
+        SfxSourceStruct _temp = GetEmptySource(); 
+        AudioSource a = _temp._audioSource;
         a.loop = loop;
         a.pitch = pitch;
         a.volume = volume*sfxVolume;
         a.clip = SfxClip[index];
         a.Play();
+        return _temp._index;
     }
-
     public void PlaySFXOnce(int index, bool loop = false, float volume = 0.5f, float pitch = 1) //효과음 재생
     {
         for (int i = 0; i < SfxSource.Length; i++)
@@ -80,6 +92,11 @@ public class AudioManager : MonoSingleton<AudioManager>
             }
         }
         PlaySFX(index, loop, volume, pitch);
+    }
+
+    public void StopLoopedSfx(int index)
+    {
+        SfxSource[index].Stop();
     }
     public void PlayBgm(int index)
     {

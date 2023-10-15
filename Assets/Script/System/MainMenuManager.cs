@@ -29,17 +29,17 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
 
     [SerializeField] private Slider musicSlider, sfxSlider, masterSlider;
     
-    string[]charname = { "라스트 건맨","디†에고","골드테이커","별:바람","Sn1-p3r"};
+    string[]charname = { "라스트 건맨","디†에고","골드테이커","별:바람","Sn1-p3r","헤비레인"};
     string[]charinfo = { "밸런스 잡힌 리볼버 입니다.","근거리에서 파괴적인 샷건입니다.",
-        "빠른 연사를 자랑하는 돌격소총입니다.","높은 정확도와 준수한 공격력을 가진 반자동 소총입니다.","강력한 저격총입니다. 신중한 발사를 요합니다" };
+        "빠른 연사를 자랑하는 돌격소총입니다.","높은 정확도와 준수한 공격력을 가진 반자동 소총입니다.","강력한 저격총입니다. 신중한 발사를 요합니다","근거리에서 막강한 파괴력을 자랑하는 개틀링건 입니다." };
 
-    private string[] ultname = { "추적 미사일","알타 데 라 무에르테","Subspace Raser ","천둥새:바람","시퀀스-강습저격" };
+    private string[] ultname = { "추적 미사일","알타 데 라 무에르테","Subspace Raser ","천둥새:바람","시퀀스-강습저격","요격터렛"};
     string[]ultinfo = { "적을 추적하는 미사일을 발사합니다.","캐릭터의 양 옆으로 제단을 내리 꽂아 공격합니다.","커서의 위치에 강력한 피해를 입히는 레이저를 아공간에서 발사합니다.",
-        "적을 자동으로 공격하는 토템을 설치합니다.","총이 강화 됩니다. 우클릭을 하여 정조준을 할 수 있습니다." };
+        "적을 자동으로 공격하는 토템을 설치합니다.","총이 강화 됩니다. 우클릭을 하여 정조준을 할 수 있습니다.","적 혹은 적의 총알을 요격하는 터렛을 소환합니다." };
     
-    private string[] passive = { "One In the Chamber","단자 데 라 무에르테 ","Gold Rush","산들:바람","시퀀스-손상복구" };
+    private string[] passive = { "One In the Chamber","단자 데 라 무에르테 ","Gold Rush","산들:바람","시퀀스-손상복구","고철재활용" };
     string[]passiveInfo = { "첫번째와 마지막 총알이 강화됩니다.","1회 부활 합니다.","일정 확률로 더 많은 재화를 획득합니다.",
-        "이동속도가 좀 더 빠르고 3단 점프를 합니다.","일정시간마다 체력을 조금씩 회복합니다." };
+        "이동속도가 좀 더 빠르고 3단 점프를 합니다.","일정시간마다 체력을 조금씩 회복합니다.","적을 처치시 탄창이 일정량 장전 됩니다." };
 
     
     
@@ -75,7 +75,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
     {
         if (isUp)
         {
-            if (focusImage < 4)
+            if (focusImage < 5)
                 focusImage++;
         }
         else
@@ -84,8 +84,8 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
                 focusImage--;
         }
 
-        if (focusImage > 4)
-            focusImage = 4;
+        if (focusImage > 5)
+            focusImage = 5;
         if (focusImage < 0)
             focusImage = 0;
         

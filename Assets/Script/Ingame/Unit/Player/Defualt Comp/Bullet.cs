@@ -49,7 +49,7 @@ public class Bullet : PoolableObj
     {
     }
 
-    public virtual GameObject Init(GetFireInstance getinfo)
+    public virtual GameObject Init(GetFireInstance getinfo,float delay = 2)
     {
        
         time = 0;
@@ -65,11 +65,11 @@ public class Bullet : PoolableObj
             CustomAngle.PointDirection(getinfo.firepos, getinfo.mousepos));
 
         MakeOrbit().Forget();
-        ReleseReserv().Forget();
+        ReleseReserv(delay).Forget();
         return gameObject;
     }
 
-    public GameObject Init(GetFireInstance getinfo, float angle)
+    public GameObject Init(GetFireInstance getinfo, float angle,float delay = 2)
     {
         transform.position = getinfo.firepos;
         toVector = CustomAngle.VectorRotation(CustomAngle.PointDirection(getinfo.playerpos,
@@ -83,7 +83,7 @@ public class Bullet : PoolableObj
             CustomAngle.PointDirection(getinfo.firepos, getinfo.mousepos));
 
         MakeOrbit().Forget();
-        ReleseReserv().Forget();
+        ReleseReserv(delay).Forget();
         return gameObject;
     }
 

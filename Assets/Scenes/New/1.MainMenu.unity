@@ -2526,6 +2526,7 @@ MonoBehaviour:
   - {fileID: 1228420284}
   - {fileID: 1877914339}
   - {fileID: 849077232}
+  - {fileID: 849077232}
   CharNameText: {fileID: 450867534}
   CharInfoText: {fileID: 1742046272}
   CharUltText: {fileID: 333573508}

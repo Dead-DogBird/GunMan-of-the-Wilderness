@@ -18,7 +18,7 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerState : MonoBehaviour
 {
-    //체력 및 스킬
+    [Header("체력")]
     [SerializeField] private float _playerMaxHp = 100;
     [SerializeField] private float _playerHp = 100;
     public float PlayerHp
@@ -43,7 +43,7 @@ public class PlayerState : MonoBehaviour
     }
 
     public float playerMaxHp => _playerMaxHp;
-    
+    [Header("스킬관련")]
     [SerializeField] private float _playerMaxSkill = 100;
     [SerializeField] private float _playerSkill = 100;
     public float PlayerSkill
@@ -62,7 +62,7 @@ public class PlayerState : MonoBehaviour
         }
     }
     
-    //탄창
+    [Header("탄창")]
     [SerializeField] private int _allMag;
     [SerializeField] private int _nowMag;
 
@@ -83,10 +83,10 @@ public class PlayerState : MonoBehaviour
     }
 
     //대미지
+    [Header("공격 관련")]
     [SerializeField] private float _damage;
-
     [SerializeField] private float _spread;
-
+    [SerializeField] private float _startspread;
     //발사 딜레이
     [SerializeField] private float _fireDelay;
     private float _nowFireDelay;
@@ -99,10 +99,22 @@ public class PlayerState : MonoBehaviour
 
     //총구 위치,색깔
     [SerializeField] private Transform _gunholePos;
+    public Transform GetGunholePos
+    {
+        get
+        {
+            return _gunholePos;
+        }
+    }
     [SerializeField] private Color _bulletColor;
     [SerializeField] private Color _orbitColor;
     [SerializeField] private Color _sceorbitColor = new(66 / 255f, 66 / 255f, 95 / 255f, 255 / 255f);
     [SerializeField] private float targetFigure = 0.1f;
+    
+    //총반동 이펙트 크기
+    [SerializeField] private float GuneffectSize = 0.5f;
+    [SerializeField] private float GuneffectDegree = 25;
+    [SerializeField] private float Guneffectpos = 0.5f;
     public OrbitColors colors
     {
         get { return new OrbitColors(_orbitColor, _sceorbitColor); }
@@ -147,7 +159,7 @@ public class PlayerState : MonoBehaviour
     private bool dead = false;
 
     private PlayerFire _playerFire;
-    private PlayerContrl _playerContrl;
+    public PlayerContrl _playerContrl { get; private set; }
     private PlayerMove _playerMove;
     private PlayerUpgrade _playerUpgrade;
     
@@ -524,7 +536,7 @@ public class PlayerState : MonoBehaviour
     }
     public void GetFireEffect()
     {
-        _playerGun.FireEffect();
+        _playerGun.FireEffect(Guneffectpos,GuneffectDegree,GuneffectSize);
     }
 
     public void SetMoney(int _money)
@@ -719,8 +731,9 @@ public struct GetFireInstance
     public float spread;
     public Vector3 playerpos;
     public float targetFigure;
+    public float startspread;
     public GetFireInstance(Vector3 playerpos, Vector3 firepos, Vector3 mousepos, float damage, 
-        float speed, Color bulletColor, OrbitColors orbitcolors,float targetFigure = 0.1f,float spread = 0)
+        float speed, Color bulletColor, OrbitColors orbitcolors,float targetFigure = 0.1f,float spread = 0,float startspread =0)
     {
         this.playerpos = playerpos;
         this.firepos = firepos;
@@ -731,6 +744,7 @@ public struct GetFireInstance
         this.orbitcolors = orbitcolors;
         this.spread = spread;
         this.targetFigure = targetFigure;
+        this.startspread = startspread;
     }
     
     

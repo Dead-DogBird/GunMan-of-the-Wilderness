@@ -303,6 +303,7 @@ MonoBehaviour:
   size: 1
   isDefault: 1
   Randompos: {x: 4.92, y: 0}
+  Outline: 0
 --- !u!1 &5690036270190780785
 GameObject:
   m_ObjectHideFlags: 0

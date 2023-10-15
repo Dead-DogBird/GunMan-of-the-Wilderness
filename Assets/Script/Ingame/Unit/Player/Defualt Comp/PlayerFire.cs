@@ -12,7 +12,7 @@ public class PlayerFire : MonoBehaviour
 {
     protected PlayerState _playerState;
     protected AudioManager _audioManager;
-    protected float _myDamage { get; private set; }
+    protected float _myDamage { get; set; }
     [SerializeField] protected GameObject _bullet;
     [SerializeField] protected GameObject _fireFlame;
     protected bool isDead = false;

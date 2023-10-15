@@ -185,8 +185,10 @@ public class RevolverRoket : MonoBehaviour
         }
         for (int i = 0; i < Random.Range(3, 6); i++)
         {
-            GameManager.Instance.Effect(transform.position,
-                1, Random.Range(1f, 2f), _colors);
+            /*GameManager.Instance.Effect(transform.position,
+                1, Random.Range(1f, 2f), _colors);*/
+            GameManager.Instance.Effect(transform.position+new Vector3(Random.Range(-1.0f,1.0f),Random.Range(-1.0f,1.0f)),Random.Range(3,5),
+                Random.Range(3.0f,6.0f),new OrbitColors(Color.white, new Color(255/255f,0/255f,55/255f)),false,0,20);
         }
         IngameCamera.Instance.Shake(0.05f,0.05f,0,1.03f,10f);
         Destroy(gameObject);
