@@ -37,7 +37,7 @@ public class GatlingFire : PlayerFire
                 transform.localEulerAngles = new Vector3(0,0,_playerState._playerGun.rotateDegree);
         }
         _audioManager.PlaySFX(fireSfxId);
-        GameManager.Instance._poolingManager.Spawn<Bullet>().Init( instance,0.3f);
+        GameManager.Instance._poolingManager.Spawn<Bullet>().Init(instance,0.13f);
         GameManager.Instance.MoveOrbitEffect(instance.firepos,Random.Range(3,5),0.7f,
             _playerState.colors,
             false,0,2, (_playerState._playerGun.rotateDegree+180),Random.Range(7,12),30);

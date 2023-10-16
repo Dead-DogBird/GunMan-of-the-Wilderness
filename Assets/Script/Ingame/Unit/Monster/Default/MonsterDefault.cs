@@ -134,7 +134,7 @@ public class MonsterDefault : MonoBehaviour
         }
     }
 
-    public void OnDameged(DamageInfo dmgInfo)
+    public void OnDameged(DamageInfo dmgInfo,bool isLaseAttack = false)
     {
         AudioManager.Instance.PlaySFX(hitSfxId);
         GameManager.Instance.Effect(dmgInfo.pos, 4,0.4f);
@@ -143,6 +143,8 @@ public class MonsterDefault : MonoBehaviour
         GameManager.Instance.MoveOrbitEffect(dmgInfo.pos,Random.Range(5,7),1f,
             new OrbitColors(dmgInfo.color,dmgInfo.color),
             false,0,2, Random.Range(0f,360f),Random.Range(7,12));
+        if(isLaseAttack)
+            GameManager.Instance.player.skillGauge(dmgInfo.Damage);
         if (!_targetedPlayer)
         {
             SetTargetPlayer(GameManager.Instance.player);
@@ -168,7 +170,10 @@ public class MonsterDefault : MonoBehaviour
         {
             onDamaged(other.GetComponent<Bullet>());
         }
-
+        if (other.CompareTag("LaserAttack"))
+        {
+            OnDameged(new DamageInfo(GameManager.Instance.player.getDamage,GameManager.Instance.player.colors.priColor,transform.position),true);
+        }
         if (other.CompareTag("DMRUlt"))
         {
             OnDameged(new DamageInfo(GameManager.Instance.player.getDamage,GameManager.Instance.player.colors.priColor,transform.position));

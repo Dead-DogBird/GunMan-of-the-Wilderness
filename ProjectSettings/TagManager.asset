@@ -18,6 +18,7 @@ TagManager:
   - Gate
   - BossMonster
   - BossAttack
+  - LaserAttack
   layers:
   - Default
   - TransparentFX

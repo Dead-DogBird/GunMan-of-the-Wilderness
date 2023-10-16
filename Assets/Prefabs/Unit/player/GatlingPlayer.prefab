@@ -940,7 +940,7 @@ MonoBehaviour:
   _startspread: 0
   _fireDelay: 0.03
   _reloadDelay: 2.1
-  _bulletSpeed: 30
+  _bulletSpeed: 45
   _gunholePos: {fileID: 465292482079136949}
   _bulletColor: {r: 0, g: 0, b: 0, a: 1}
   _orbitColor: {r: 1, g: 0, b: 0, a: 1}
