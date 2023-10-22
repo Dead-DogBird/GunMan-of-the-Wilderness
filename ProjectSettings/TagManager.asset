@@ -19,6 +19,7 @@ TagManager:
   - BossMonster
   - BossAttack
   - LaserAttack
+  - LasertUlt
   layers:
   - Default
   - TransparentFX

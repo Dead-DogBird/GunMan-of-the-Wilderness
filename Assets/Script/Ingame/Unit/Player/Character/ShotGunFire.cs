@@ -25,7 +25,7 @@ public class ShotGunFire : PlayerFire
         UIManager.Instance.SetCursorEffect(1.5f);
         for (int i = 2; i > -3; i--)
         {
-            GameManager.Instance._poolingManager.Spawn<Bullet>().Init(_playerState.GetFireInstance(),i*10);
+            GameManager.Instance._poolingManager.Spawn<Bullet>().Init(_playerState.GetFireInstance(),i*10,2);
         }
 
         Instantiate(_fireFlame, _playerState.GetFireInstance().firepos, Quaternion.identity).transform

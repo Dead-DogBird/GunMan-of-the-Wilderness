@@ -35,6 +35,9 @@ public class GatlingBullet : Bullet
 
     protected void OnDisable()
     {
+        GameManager.Instance.MoveOrbitEffect(transform.position,Random.Range(3,5),0.4f,
+            orbitColor,
+            false,0,2, transform.rotation.eulerAngles.z,Random.Range(12,20),0);
         _lineRenderer.enabled = false;
     }
 

@@ -137,6 +137,7 @@ public class MonsterDefault : MonoBehaviour
     public void OnDameged(DamageInfo dmgInfo,bool isLaseAttack = false)
     {
         AudioManager.Instance.PlaySFX(hitSfxId);
+        GameManager.Instance.player.GetDamegedCallBack();
         GameManager.Instance.Effect(dmgInfo.pos, 4,0.4f);
         GameManager.Instance.EffectText(dmgInfo.pos,$"{dmgInfo.Damage}",dmgInfo.color);
         _hp -= dmgInfo.Damage;
@@ -152,6 +153,7 @@ public class MonsterDefault : MonoBehaviour
     }
     protected void onDamaged(Bullet _bullet)
     {
+        GameManager.Instance.player.GetDamegedCallBack();
         AudioManager.Instance.PlaySFX(hitSfxId);
         GameManager.Instance.Effect(_bullet.transform.position, 4,0.4f);
         GameManager.Instance.EffectText(_bullet.transform.position,$"{_bullet.damage}",_bullet.orbitColor.priColor);
@@ -182,7 +184,10 @@ public class MonsterDefault : MonoBehaviour
         {
             other.GetComponent<RevolverRoket>().Explosion();
         }
-
+        if (other.CompareTag("LasertUlt"))
+        {
+            OnDameged(new DamageInfo(GameManager.Instance.player.getDamage*15,GameManager.Instance.player.colors.priColor,transform.position));
+        }
         if (other.CompareTag("RifleUlt"))
         {
             OnDameged(new DamageInfo(GameManager.Instance.player.getDamage*2.5f,GameManager.Instance.player.colors.priColor,transform.position));
@@ -237,6 +242,7 @@ public class MonsterDefault : MonoBehaviour
         GameManager.Instance.Effect(transform.position, 4,0.4f);  
         GameManager.Instance.player.skillGauge(100/GameManager.Instance.player.getDamage);
         GameManager.Instance.SpawnCoin(transform.position, dropMoney);
+        GameManager.Instance.player.GetKillCallBack();
         Destroy(gameObject);
     }
     protected virtual void SetTargetPlayer(PlayerState _player)

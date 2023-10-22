@@ -38,7 +38,6 @@ public class PlayerFire : MonoBehaviour
     {
         if (_playerState.GetFire())
         {
-            _audioManager.PlaySFX(fireSfxId);
             Fire();
         }
 

@@ -60,7 +60,7 @@ public class AudioManager : MonoSingleton<AudioManager>
         {
             if (!SfxSource[i].isPlaying)
             {
-                return new SfxSourceStruct(SfxSource[fastindex],i);
+                return new SfxSourceStruct(SfxSource[i],i);
             }
             float progress = SfxSource[i].time / SfxSource[i].clip.length;
             if (progress > lageProgress && !SfxSource[i].loop)

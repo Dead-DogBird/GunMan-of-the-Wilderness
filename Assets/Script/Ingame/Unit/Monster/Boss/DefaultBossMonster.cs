@@ -119,7 +119,11 @@ public class DefaultBossMonster : MonoBehaviour
         {
             other.GetComponent<RevolverRoket>().Explosion();
         }
-
+        if (other.CompareTag("LasertUlt"))
+        {
+            
+            OnDameged(new DamageInfo(GameManager.Instance.player.getDamage*15,GameManager.Instance.player.colors.priColor,transform.position));
+        }
         if (other.CompareTag("RifleUlt"))
         {
             OnDameged(new DamageInfo(GameManager.Instance.player.getDamage*2.5f,GameManager.Instance.player.colors.priColor,transform.position));

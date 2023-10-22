@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class LaserGunControll : MonoBehaviour
 {
-    private Animator _animator;
-    private bool varbool;
+    public bool isDone;
     // Start is called before the first frame update
     void Start()
     {
-        _animator = GetComponent<Animator>();
+        
     }
 
     public void Setbool()
     {
-        _animator.SetTrigger("isStartover");
+        isDone = true;
+    }
+
+    public void Shake()
+    {
+        IngameCamera.Instance.Shake(0.15f,0,0,1,4f);
     }
     // Update is called once per frame
     void Update()

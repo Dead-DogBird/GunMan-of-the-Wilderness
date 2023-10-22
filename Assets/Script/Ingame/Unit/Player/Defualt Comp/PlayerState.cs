@@ -216,7 +216,9 @@ public class PlayerState : MonoBehaviour
         ShotGun,
         DMR,
         Rifle,
-        Sniper
+        Sniper,
+        Gatling,
+        Laser
     };
 
     [SerializeField] private PlayerType _playerType;
@@ -606,8 +608,33 @@ public class PlayerState : MonoBehaviour
             SetMaxMag();
         }
     }
-    
-    
+
+    public void GetKillCallBack()
+    {
+        if (_playerType == PlayerType.Gatling)
+        {
+            if (_fireState != FireState_.Reload&&_fireState != FireState_.NoMag)
+            {
+                NowMag += _allMag / 5;
+                if (NowMag > _allMag) NowMag = _allMag;
+            }
+        }
+    }
+
+    public void GetDamegedCallBack()
+    {
+        if (_playerType == PlayerType.Laser)
+        {
+            if (Random.Range(0, 100) > 85)
+            {
+                PlayerHp += 1;
+                if (PlayerHp > _playerMaxHp)
+                {
+                    PlayerHp = _playerMaxHp;
+                }
+            }
+        }
+    }
     
     //이하 업그레이드 메서드들
     private int bulletVelocity =0;
