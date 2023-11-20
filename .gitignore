@@ -96,7 +96,7 @@ crashlytics-build.properties
 # Packed Addressables
 /[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bit*
 *.TTF
-Assets/Font/A?�이?�이??TTF.meta
+Assets/Font/A?�이?�이??TTF.meta
 Assets/ConsolePro.meta
 
 Assets/ConsolePro/
@@ -104,3 +104,5 @@ Assets/Sound/
 Assets/Sound
 Assets/Plugins/
 Assets/Plugins
+Assets/OneLine
+Assets/OneLine/

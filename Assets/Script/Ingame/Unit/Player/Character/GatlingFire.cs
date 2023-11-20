@@ -62,6 +62,7 @@ public class GatlingFire : PlayerFire
         {
            AudioManager.Instance.PlaySFX(26,false,0.2f);
         }
+        _playerState.GetFireEffect();
         GameManager.Instance._poolingManager.Spawn<Bullet>().Init(instance,0.13f);
         GameManager.Instance.MoveOrbitEffect(instance.firepos,Random.Range(3,5),0.7f,
             _playerState.colors,

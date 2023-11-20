@@ -173,5 +173,8 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         AudioManager.Instance.musicVolume = vol.value*PlayerPrefs.GetFloat("MusicVolume");
         AudioManager.Instance.SetMusicVolume();
     }
-    
+    public void SetShakePower(Slider shake)
+    {
+        PlayerPrefs.SetFloat("ShakePower",shake.value);
+    }
 }

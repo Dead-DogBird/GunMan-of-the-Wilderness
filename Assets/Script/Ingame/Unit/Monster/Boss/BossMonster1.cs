@@ -84,12 +84,26 @@ public class BossMonster1 : DefaultBossMonster
     {
         float oriSpeed = _speed;
         isBossPattern = true;
+        _speed =0;
+        isCharge = true;
+        
         for(int i =0;i<3;i++)
         {    
-            if (isDie) return;
-            for (int j = 0; j < 100; j++)
+            float Tospeed = 1.2f*8* (_player.transform.position.x > transform.position.x ? 2 : -2);
+            if (_player.transform.position.x < transform.position.x&&transform.localScale.x<0)
             {
-                _speed =oriSpeed*5f;
+                transform.localScale = new Vector3(1.5f, 1.5f, 1);
+            }
+            else if (_player.transform.position.x > transform.position.x&&transform.localScale.x>0)
+            {
+                transform.localScale = new Vector3(-1.5f, 1.5f, 1);
+            }
+            if (isDie) return;
+            float timer = 1f;
+            while(timer>0)
+            {
+                timer -= Time.deltaTime;
+                transform.Translate(new Vector3(Tospeed, 0) * Time.deltaTime);
                 await UniTask.Yield(PlayerLoopTiming.LastUpdate);
             }
             _speed = oriSpeed;
@@ -99,6 +113,7 @@ public class BossMonster1 : DefaultBossMonster
                 await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
             }
         }
+        isCharge = false;
         _speed = oriSpeed;
         for (int i = 15; i >= 0; i--)
         {
@@ -134,8 +149,11 @@ public class BossMonster1 : DefaultBossMonster
         }
         isBossPattern = false;
     }
+
+    private bool isCharge = false;
     void MoveToPlayer()
     {
+        if (isCharge) return;
         transform.Translate(new Vector3(_speed*(_player.transform.position.x > transform.position.x? 2 : -2), 0) * Time.deltaTime);
         if (_player.transform.position.x < transform.position.x&&transform.localScale.x<0)
         {

@@ -35,6 +35,7 @@ public class IngameCamera : MonoSingleton<IngameCamera>
         _camera = GetComponent<Camera>();
         camera_size = _camera.orthographicSize;
         lastTime = Time.unscaledTime;
+        power *= PlayerPrefs.GetFloat("ShakePower");
     }
 
     void Update()
@@ -61,7 +62,9 @@ public class IngameCamera : MonoSingleton<IngameCamera>
         }
         if(isFocusBoss)
             player_position = bossPos;
-        
+
+        if (player_position.y < -2.49)
+            player_position.y = -2.49f;
         position += (Vector2)((player_position - transform.position) / smooth);
         ShakeUpdate();
     }

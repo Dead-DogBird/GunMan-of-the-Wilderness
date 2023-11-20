@@ -430,6 +430,7 @@ MonoBehaviour:
   _nowMag: 5
   _damage: 80
   _spread: 0
+  _startspread: 0
   _fireDelay: 1
   _reloadDelay: 2
   _bulletSpeed: 120
@@ -438,6 +439,9 @@ MonoBehaviour:
   _orbitColor: {r: 0.11273098, g: 0, b: 1, a: 1}
   _sceorbitColor: {r: 0.22084165, g: 0.20309716, b: 0.26415092, a: 1}
   targetFigure: 0.1
+  GuneffectSize: 0.5
+  GuneffectDegree: 25
+  Guneffectpos: 0.5
   Textures: {fileID: 8775371011893221207}
   _playerType: 4
   isSniperUlt: 0
@@ -806,7 +810,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 7
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: ec59c25a070b3bf46b49520151d95eaf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

@@ -430,7 +430,7 @@ MonoBehaviour:
   _playerSkill: 100
   _allMag: 30
   _nowMag: 30
-  _damage: 8
+  _damage: 6
   _spread: 7
   _startspread: 0
   _fireDelay: 1

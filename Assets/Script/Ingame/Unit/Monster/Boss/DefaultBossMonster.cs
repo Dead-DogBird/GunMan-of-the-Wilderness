@@ -80,6 +80,7 @@ public class DefaultBossMonster : MonoBehaviour
     protected virtual async UniTaskVoid DieTask()
     {
         isDie = true;
+        GetComponent<BoxCollider2D>().enabled = false;
         Time.timeScale = 0.3f;
         IngameCamera.Instance.Shake(0.05f,0.05f,0,1,60);
         await UniTask.Delay(TimeSpan.FromSeconds(0.4f),true);

@@ -43,6 +43,7 @@ public class SniperFire : PlayerFire
     }
     protected override void Fire()
     {
+        _audioManager.PlaySFX(fireSfxId);
         UIManager.Instance.SetCursorEffect(1.5f);
         if (isUlt)
         {
